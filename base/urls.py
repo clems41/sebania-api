@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from base.views.user import *
+from base.views.auth import *
 
 router = routers.SimpleRouter()
 # router.register(r'configurations', ConfigViewSet)
