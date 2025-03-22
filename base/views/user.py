@@ -1,9 +1,8 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from base.serializers import UserSerializer
+from base.serializers.user import UserSerializer
 
 
 # Create your views here.

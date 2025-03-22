@@ -1,5 +1,6 @@
 services:
  db:
+   container_name: sebania-db
    image: postgres:17
    environment:
      POSTGRES_DB: ${DATABASE_NAME}
@@ -8,23 +9,23 @@ services:
    ports:
      - "5432:5432"
    volumes:
-     - postgres_data_msv:/var/lib/postgresql/data
+     - sebania_data:/var/lib/postgresql/data
    env_file:
      - .env
 
- agrizen-api:
+ api:
    build: .
-   container_name: agrizen-api
+   container_name: sebania-api
    ports:
      - "8000:8000"
    depends_on:
      - db
    environment:
      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-     DJANGO_SETTINGS_MODULE: agrizen_api.settings.development
+     DJANGO_SETTINGS_MODULE: Sebania.settings.development
      DEBUG: True
      DJANGO_LOGLEVEL: info
-     DJANGO_ALLOWED_HOSTS: localhost
+     DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
      DATABASE_ENGINE: postgresql_psycopg2
      DATABASE_NAME: ${DATABASE_NAME}
      DATABASE_USERNAME: ${DATABASE_USERNAME}
@@ -34,4 +35,4 @@ services:
    env_file:
      - .env
 volumes:
-   postgres_data_msv:
+   sebania_data:
