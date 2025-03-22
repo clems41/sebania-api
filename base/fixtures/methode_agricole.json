@@ -1,0 +1,34 @@
+[
+  {
+    "model": "api.MethodeAgricole",
+    "pk": 1,
+    "fields": {
+      "nom": "Conventionnelle",
+      "label": "Conventionnelle"
+    }
+  },
+  {
+    "model": "api.MethodeAgricole",
+    "pk": 2,
+    "fields": {
+      "nom": "Agriculture Biologique",
+      "label": "AB"
+    }
+  },
+  {
+    "model": "api.MethodeAgricole",
+    "pk": 3,
+    "fields": {
+      "nom": "Maraîchage Sol Vivant",
+      "label": "MSV"
+    }
+  },
+  {
+    "model": "api.MethodeAgricole",
+    "pk": 4,
+    "fields": {
+      "nom": "Agriculture Bio-Dynamique",
+      "label": "demeter"
+    }
+  }
+]

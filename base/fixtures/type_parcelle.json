@@ -1,0 +1,16 @@
+[
+  {
+    "model": "api.TypeParcelle",
+    "pk": 1,
+    "fields": {
+      "nom": "Tunnel"
+    }
+  },
+  {
+    "model": "api.TypeParcelle",
+    "pk": 2,
+    "fields": {
+      "nom": "Planche"
+    }
+  }
+]

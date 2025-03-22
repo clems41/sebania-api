@@ -1,0 +1,442 @@
+[
+  {
+    "model": "api.Culture",
+    "pk": 1,
+    "fields": {
+      "nom": "Ail",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 2,
+    "fields": {
+      "nom": "Artichaut",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 3,
+    "fields": {
+      "nom": "Asperge",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 4,
+    "fields": {
+      "nom": "Aubergine",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 5,
+    "fields": {
+      "nom": "Betterave",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 6,
+    "fields": {
+      "nom": "Blette",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 7,
+    "fields": {
+      "nom": "Brocoli",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 8,
+    "fields": {
+      "nom": "Butternut",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 9,
+    "fields": {
+      "nom": "Carotte",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 10,
+    "fields": {
+      "nom": "Chou chinois",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 11,
+    "fields": {
+      "nom": "Chou frisé",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 12,
+    "fields": {
+      "nom": "Chou kale",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 13,
+    "fields": {
+      "nom": "Chou rouge",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 14,
+    "fields": {
+      "nom": "Chou-fleur",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 15,
+    "fields": {
+      "nom": "Concombre",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 16,
+    "fields": {
+      "nom": "Courge musquée",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 17,
+    "fields": {
+      "nom": "Courge spaghetti",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 18,
+    "fields": {
+      "nom": "Courgette",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 19,
+    "fields": {
+      "nom": "Céleri branche",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 20,
+    "fields": {
+      "nom": "Céleri-rave",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 21,
+    "fields": {
+      "nom": "Endive",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 22,
+    "fields": {
+      "nom": "Fenouil",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 23,
+    "fields": {
+      "nom": "Haricot vert",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 24,
+    "fields": {
+      "nom": "Laitue",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 25,
+    "fields": {
+      "nom": "Manioc",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 26,
+    "fields": {
+      "nom": "Melon",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 27,
+    "fields": {
+      "nom": "Mâche",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 28,
+    "fields": {
+      "nom": "Navet",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 29,
+    "fields": {
+      "nom": "Oignon",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 30,
+    "fields": {
+      "nom": "Panais",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 31,
+    "fields": {
+      "nom": "Pastèque",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 32,
+    "fields": {
+      "nom": "Patate douce",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 33,
+    "fields": {
+      "nom": "Patidou",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 34,
+    "fields": {
+      "nom": "Piment",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 35,
+    "fields": {
+      "nom": "Poireau",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 36,
+    "fields": {
+      "nom": "Poivron",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 37,
+    "fields": {
+      "nom": "Pomme de terre",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 38,
+    "fields": {
+      "nom": "Potimarron",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 39,
+    "fields": {
+      "nom": "Potiron",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 40,
+    "fields": {
+      "nom": "Pâtisson",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 41,
+    "fields": {
+      "nom": "Radis",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 42,
+    "fields": {
+      "nom": "Roquette",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 43,
+    "fields": {
+      "nom": "Tomate",
+      "default": true,
+      "categorie_default": "fruit",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "api.Culture",
+    "pk": 44,
+    "fields": {
+      "nom": "Épinard",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 1
+    }
+  }
+]

@@ -1,0 +1,322 @@
+[
+  {
+    "model": "api.Activite",
+    "pk": 1,
+    "fields": {
+      "nom": "Auto-production de plants",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 2,
+    "fields": {
+      "nom": "Broyage/Roulage (résidus ou couvert végétal)",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 3,
+    "fields": {
+      "nom": "Travail du sol/Préparation de planches",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 4,
+    "fields": {
+      "nom": "Occultation (en précédent)",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 5,
+    "fields": {
+      "nom": "Apport MO",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 6,
+    "fields": {
+      "nom": "Fertilisation",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 7,
+    "fields": {
+      "nom": "Paillage (pour implantation)",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 8,
+    "fields": {
+      "nom": "Bâchage (pour implantation)",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 9,
+    "fields": {
+      "nom": "Implantation",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 10,
+    "fields": {
+      "nom": "Voilage (thermique)",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 11,
+    "fields": {
+      "nom": "Gestion des ravageurs",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 12,
+    "fields": {
+      "nom": "Gestion des maladies",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 13,
+    "fields": {
+      "nom": "Irrigation",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 14,
+    "fields": {
+      "nom": "Désherbage manuel",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 15,
+    "fields": {
+      "nom": "Désherbage mécanique",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 16,
+    "fields": {
+      "nom": "Taille/Palissage",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 17,
+    "fields": {
+      "nom": "Suivi des cultures",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 18,
+    "fields": {
+      "nom": "Récolte",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 19,
+    "fields": {
+      "nom": "Lavage/Parage/Stockage",
+      "default": true,
+      "categorie_default": "cultures",
+      "need_culture": true
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 20,
+    "fields": {
+      "nom": "Bricolage/Rangement",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 21,
+    "fields": {
+      "nom": "Champignons",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 22,
+    "fields": {
+      "nom": "Réunions internes",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 23,
+    "fields": {
+      "nom": "Réunions externes",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 24,
+    "fields": {
+      "nom": "Livraison",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 25,
+    "fields": {
+      "nom": "Bureau",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 26,
+    "fields": {
+      "nom": "Fabrication de boissons",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 27,
+    "fields": {
+      "nom": "Commercialisation",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 28,
+    "fields": {
+      "nom": "Mécanique",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 29,
+    "fields": {
+      "nom": "Verger",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 30,
+    "fields": {
+      "nom": "Autoproduction de semences",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 31,
+    "fields": {
+      "nom": "Divers",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  },
+  {
+    "model": "api.Activite",
+    "pk": 27,
+    "fields": {
+      "nom": "Préparation des commandes",
+      "default": true,
+      "categorie_default": "autres",
+      "need_culture": false
+    }
+  }
+]
