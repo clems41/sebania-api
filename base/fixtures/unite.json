@@ -1,6 +1,6 @@
 [
   {
-    "model": "api.Unite",
+    "model": "base.Unite",
     "pk": 1,
     "fields": {
       "nom": "Kilogramme",
@@ -8,7 +8,7 @@
     }
   },
   {
-    "model": "api.Unite",
+    "model": "base.Unite",
     "pk": 2,
     "fields": {
       "nom": "Pièce",

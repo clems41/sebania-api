@@ -1,13 +1,13 @@
 [
   {
-    "model": "api.TypeParcelle",
+    "model": "base.TypeParcelle",
     "pk": 1,
     "fields": {
       "nom": "Tunnel"
     }
   },
   {
-    "model": "api.TypeParcelle",
+    "model": "base.TypeParcelle",
     "pk": 2,
     "fields": {
       "nom": "Planche"

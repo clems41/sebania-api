@@ -1,6 +1,6 @@
 [
   {
-    "model": "api.MethodeAgricole",
+    "model": "base.MethodeAgricole",
     "pk": 1,
     "fields": {
       "nom": "Conventionnelle",
@@ -8,7 +8,7 @@
     }
   },
   {
-    "model": "api.MethodeAgricole",
+    "model": "base.MethodeAgricole",
     "pk": 2,
     "fields": {
       "nom": "Agriculture Biologique",
@@ -16,7 +16,7 @@
     }
   },
   {
-    "model": "api.MethodeAgricole",
+    "model": "base.MethodeAgricole",
     "pk": 3,
     "fields": {
       "nom": "Maraîchage Sol Vivant",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "model": "api.MethodeAgricole",
+    "model": "base.MethodeAgricole",
     "pk": 4,
     "fields": {
       "nom": "Agriculture Bio-Dynamique",

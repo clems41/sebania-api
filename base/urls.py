@@ -6,14 +6,12 @@ from base.views.auth import *
 
 router = routers.SimpleRouter()
 # router.register(r'configurations', ConfigViewSet)
+router.register(r'auth', AuthViewSet, basename='auth')
 urlpatterns = router.urls
 
 urlpatterns += [
     path('auth/token/access/', TokenObtainPairView.as_view(), name='get_access_token'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
-
-    ### AUTH ###
-    path('auth/register', RegisterUser.as_view(), name='authentication'),
 
     ### CONFIG ###
     # path('configurations/methodes-agricoles', get_all_methode_agricole, name='config'),

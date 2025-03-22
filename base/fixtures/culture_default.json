@@ -1,6 +1,6 @@
 [
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 1,
     "fields": {
       "nom": "Ail",
@@ -10,7 +10,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 2,
     "fields": {
       "nom": "Artichaut",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 3,
     "fields": {
       "nom": "Asperge",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 4,
     "fields": {
       "nom": "Aubergine",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 5,
     "fields": {
       "nom": "Betterave",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 6,
     "fields": {
       "nom": "Blette",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 7,
     "fields": {
       "nom": "Brocoli",
@@ -70,7 +70,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 8,
     "fields": {
       "nom": "Butternut",
@@ -80,7 +80,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 9,
     "fields": {
       "nom": "Carotte",
@@ -90,7 +90,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 10,
     "fields": {
       "nom": "Chou chinois",
@@ -100,7 +100,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 11,
     "fields": {
       "nom": "Chou frisé",
@@ -110,7 +110,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 12,
     "fields": {
       "nom": "Chou kale",
@@ -120,7 +120,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 13,
     "fields": {
       "nom": "Chou rouge",
@@ -130,7 +130,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 14,
     "fields": {
       "nom": "Chou-fleur",
@@ -140,7 +140,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 15,
     "fields": {
       "nom": "Concombre",
@@ -150,7 +150,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 16,
     "fields": {
       "nom": "Courge musquée",
@@ -160,7 +160,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 17,
     "fields": {
       "nom": "Courge spaghetti",
@@ -170,7 +170,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 18,
     "fields": {
       "nom": "Courgette",
@@ -180,7 +180,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 19,
     "fields": {
       "nom": "Céleri branche",
@@ -190,7 +190,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 20,
     "fields": {
       "nom": "Céleri-rave",
@@ -200,7 +200,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 21,
     "fields": {
       "nom": "Endive",
@@ -210,7 +210,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 22,
     "fields": {
       "nom": "Fenouil",
@@ -220,7 +220,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 23,
     "fields": {
       "nom": "Haricot vert",
@@ -230,7 +230,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 24,
     "fields": {
       "nom": "Laitue",
@@ -240,7 +240,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 25,
     "fields": {
       "nom": "Manioc",
@@ -250,7 +250,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 26,
     "fields": {
       "nom": "Melon",
@@ -260,7 +260,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 27,
     "fields": {
       "nom": "Mâche",
@@ -270,7 +270,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 28,
     "fields": {
       "nom": "Navet",
@@ -280,7 +280,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 29,
     "fields": {
       "nom": "Oignon",
@@ -290,7 +290,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 30,
     "fields": {
       "nom": "Panais",
@@ -300,7 +300,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 31,
     "fields": {
       "nom": "Pastèque",
@@ -310,7 +310,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 32,
     "fields": {
       "nom": "Patate douce",
@@ -320,7 +320,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 33,
     "fields": {
       "nom": "Patidou",
@@ -330,7 +330,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 34,
     "fields": {
       "nom": "Piment",
@@ -340,7 +340,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 35,
     "fields": {
       "nom": "Poireau",
@@ -350,7 +350,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 36,
     "fields": {
       "nom": "Poivron",
@@ -360,7 +360,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 37,
     "fields": {
       "nom": "Pomme de terre",
@@ -370,7 +370,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 38,
     "fields": {
       "nom": "Potimarron",
@@ -380,7 +380,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 39,
     "fields": {
       "nom": "Potiron",
@@ -390,7 +390,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 40,
     "fields": {
       "nom": "Pâtisson",
@@ -400,7 +400,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 41,
     "fields": {
       "nom": "Radis",
@@ -410,7 +410,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 42,
     "fields": {
       "nom": "Roquette",
@@ -420,7 +420,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 43,
     "fields": {
       "nom": "Tomate",
@@ -430,7 +430,7 @@
     }
   },
   {
-    "model": "api.Culture",
+    "model": "base.Culture",
     "pk": 44,
     "fields": {
       "nom": "Épinard",
