@@ -1,0 +1,7 @@
+Django
+djangorestframework
+drf_spectacular
+djangorestframework_simplejwt
+gunicorn
+django-debug-toolbar
+psycopg2-binary
