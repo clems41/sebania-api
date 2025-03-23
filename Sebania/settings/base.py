@@ -86,12 +86,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("SMTP_HOST")
+EMAIL_HOST_USER = os.environ.get("SMTP_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD")
+EMAIL_PORT = os.environ.get("SMTP_PORT")
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "bonjour@sebania.fr"
+
 ROOT_URLCONF = 'Sebania.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
