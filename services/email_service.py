@@ -1,8 +1,12 @@
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+import logging
 
 from base.models.email import Email
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 def send_email(subject: str, receiver:str, template_name: str, template_context):
@@ -28,6 +32,6 @@ def send_email(subject: str, receiver:str, template_name: str, template_context)
     try:
         email.send()
     except Exception as e:
-        print(e)
+        logger.error(e)
         email_db.error = e
         email_db.save()

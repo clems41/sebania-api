@@ -1,15 +1,12 @@
 import secrets
 import string
 
-from django.core.mail import EmailMessage
 from django.db import transaction
-from django.template.loader import render_to_string
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from django.conf import settings
 from base.models import MethodeAgricole, User, Ferme
-from base.services import email_service
+from services import email_service
 
 
 class MethodeAgricoleSerializer(ModelSerializer):
