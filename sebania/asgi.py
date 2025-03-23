@@ -1,5 +1,5 @@
 """
-ASGI config for Sebania project.
+ASGI config for sebania project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Sebania.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sebania.settings')
 
 application = get_asgi_application()

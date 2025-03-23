@@ -37,7 +37,7 @@ def _generate_password():
     return ''.join(secrets.choice(alphabet) for i in range(12))  # mot de passe de longueur 12
 
 def _send_email_to_new_employe(responsable: User, ferme: Ferme, employe: User, employe_password: str):
-    subject = "Bienvenue sur Sebania"
+    subject = "Bienvenue sur sebania"
     template_context = {
         "employe_prenom": employe.first_name,
         "responsable_prenom": responsable.first_name,

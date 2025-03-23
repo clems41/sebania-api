@@ -17,7 +17,7 @@ services:
    depends_on:
      - db
    environment:
-     DJANGO_SETTINGS_MODULE: Sebania.settings.development
+     DJANGO_SETTINGS_MODULE: sebania.settings.development
    env_file:
      - .env
 volumes:

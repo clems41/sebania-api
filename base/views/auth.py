@@ -10,7 +10,8 @@ from base.serializers.user import UserSerializer
 class AuthViewSet(ViewSet):
     serializer_class = None
 
-    @action(detail=False, methods=['post'], url_path='register', serializer_class=RegisterUserSerializer, permission_classes=[], authentication_classes=[])
+    @action(detail=False, methods=['post'], url_path='register', serializer_class=RegisterUserSerializer,
+            permission_classes=[], authentication_classes=[], url_name="register", basename="auth-register")
     def register_user(self, request):
         register_user_data = self.serializer_class(data=request.data)
         register_user_data.is_valid(raise_exception=True)
