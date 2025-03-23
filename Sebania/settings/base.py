@@ -72,6 +72,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Sebania est une application permettant de faciliter le travail des maraîchers en les guidant dans leur travail quotidien',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]',
     # OTHER SETTINGS
 }
 

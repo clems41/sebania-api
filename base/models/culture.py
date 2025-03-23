@@ -1,6 +1,6 @@
 from django.db import models
 
-from base.models import User
+from base.models import User, Ferme
 
 
 class Unite(models.Model):
@@ -13,9 +13,9 @@ class Culture(models.Model):
     default = models.BooleanField(default=False)
     categorie_default = models.CharField(max_length=50, null=True)
 
-class CultureUser(models.Model):
+class CultureFerme(models.Model):
     class Meta:
-        db_table = "base_culture_user"
-    culture = models.ForeignKey(Culture, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+        db_table = "base_culture_ferme"
+    culture = models.ForeignKey(Culture, on_delete=models.DO_NOTHING)
+    ferme = models.ForeignKey(Ferme, on_delete=models.DO_NOTHING)
     categorie = models.CharField(max_length=15)

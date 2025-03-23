@@ -1,6 +1,6 @@
 from django.db import models
 
-from base.models import User
+from base.models import User, Ferme
 
 
 class Activite(models.Model):
@@ -9,9 +9,9 @@ class Activite(models.Model):
     categorie_default = models.CharField(max_length=50, null=True)
     need_culture = models.BooleanField(default=False)
 
-class ActiviteUser(models.Model):
+class ActiviteFerme(models.Model):
     class Meta:
-        db_table = "base_activite_user"
-    activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+        db_table = "base_activite_ferme"
+    activite = models.ForeignKey(Activite, on_delete=models.DO_NOTHING)
+    ferme = models.ForeignKey(Ferme, on_delete=models.DO_NOTHING)
     categorie = models.CharField(max_length=15)
