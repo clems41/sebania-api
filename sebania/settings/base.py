@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'django_extensions'
 ]
 
 REST_FRAMEWORK = {

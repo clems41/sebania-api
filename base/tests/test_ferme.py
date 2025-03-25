@@ -1,14 +1,73 @@
 import json
 
 from django.core import mail
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from rest_framework import status
 
 from base.models import Ferme
-from base.serializers.ferme import FermeViewSerializer
 from sebania.services import crypto_service
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
+
+
+class FermeDeleteEmployeTestCase(SebaniaTestCase):
+    def test_delete_employe_ok(self):
+        # Création du responsable et de la ferme et des employés
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable)
+
+        # Suppresion d'un employé
+        employe_id = ferme.employes.first().id
+        url = reverse('fermes-delete-employe', kwargs={'user_id': employe_id})
+        response = self.client.delete(url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Vérification de la réponse
+        response_data = json.loads(response.content)
+        self.assertEqual(response_data.get('id'), ferme.id)
+        self.assertEqual(response_data.get('nom'), ferme.nom)
+        self.assertEqual(response_data.get('adresse'), ferme.adresse)
+        self.assertEqual(response_data.get('superficie_cultivee'), ferme.superficie_cultivee)
+        response_employes = response_data.get('employes')
+        self.assertEqual(len(response_employes), 1)
+        new_employe_found = False
+        for employe in response_employes:
+            if employe.get('id') == employe_id:
+                new_employe_found = True
+                break
+        self.assertEqual(new_employe_found, False)
+
+        # Vérification en base de données
+        ferme_db = Ferme.objects.get(id=ferme.id)
+        self.assertEqual(ferme_db.nom, ferme.nom)
+        self.assertEqual(ferme_db.adresse, ferme.adresse)
+        self.assertEqual(ferme_db.superficie_cultivee, ferme.superficie_cultivee)
+        self.assertFalse(ferme_db.employes.filter(id=employe_id).exists())
+
+
+    def test_delete_employe_nok_bad_permission(self):
+        # Création du responsable et de la ferme et des employés
+        responsable = test_fixtures.create_user()
+        employes = [self.init_current_user(), test_fixtures.create_user()] # le user qui va s'authentifier fait partie des employés et non responsable
+        ferme = test_fixtures.create_ferme(responsable, employes)
+
+        # Suppresion d'un employé, mais en se connectant avec le compte employé
+        employe_id = ferme.employes.last().id
+        url = reverse_lazy('fermes-delete-employe', kwargs={'user_id': employe_id})
+        response = self.client.delete(url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+    def test_delete_employe_nok_pas_employe(self):
+        # Création du responsable et de la ferme et des employés
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable)
+        user_pas_employe = test_fixtures.create_user()
+
+        # Suppresion d'un employé, mais en se connectant avec le compte employé
+        url = reverse_lazy('fermes-delete-employe', kwargs={'user_id': user_pas_employe.id})
+        response = self.client.delete(url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class FermeAddEmployeTestCase(SebaniaTestCase):
