@@ -21,6 +21,15 @@ def send_email_to_new_employe(responsable_prenom: str, ferme: Ferme, employe: Us
     template_name = "emails/send-employe-password.html"
     _send_email(subject, employe.email, template_name, template_context)
 
+def send_reset_password(user: User, new_password: str):
+    subject = "[Sebania] Réinitialisation de votre mot de passe"
+    template_context = {
+        "user_prenom": user.first_name,
+        "new_password": new_password,
+    }
+    template_name = "emails/reset-password.html"
+    _send_email(subject, user.email, template_name, template_context)
+
 
 
 

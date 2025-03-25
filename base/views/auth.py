@@ -5,9 +5,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from base.serializers.dto.auth import RegisterUserSerializer, ChangePasswordSerializer
+from base.models import User
+from base.serializers.dto.auth import RegisterUserSerializer, ChangePasswordSerializer, ResetPasswordSerializer
 from base.serializers.user import UserSerializer
-from sebania.errors.auth import change_password_wrong_old_password_response
 
 
 class AuthViewSet(ViewSet):
@@ -34,11 +34,15 @@ class AuthViewSet(ViewSet):
                    description="Modification du mot de passe de l'utilisateur authentifié à partir de son ancien mot de passe")
     @action(detail=False, methods=['put'], url_path='change-password', serializer_class=ChangePasswordSerializer, url_name="change-password", basename="auth-change-password")
     def change_password(self, request):
-        old_password = request.data['old_password']
-        new_password = request.data['new_password']
-        user = self.request.user
-        if not user.check_password(old_password):
-            return change_password_wrong_old_password_response
-        user.set_password(new_password)
-        user.save()
+        form = self.serializer_class(data=request.data)
+        form.change_password(request)
+        return Response(status=status.HTTP_200_OK)
+
+    @extend_schema(responses=None,
+                   description="En cas de mot de passe perdu : envoi d'un email à l'utilisateur avec un mot de passe temporaire")
+    @action(detail=False, methods=['get'], url_path='reset-password', serializer_class=ResetPasswordSerializer,
+            permission_classes=[], authentication_classes=[], url_name="reset-password", basename="auth-reset-password")
+    def reset_password(self, request):
+        form = self.serializer_class(data=request.data, context={'request': request})
+        form.reset_password()
         return Response(status=status.HTTP_200_OK)
