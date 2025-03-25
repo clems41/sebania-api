@@ -9,11 +9,11 @@ from base.models.email import Email
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-def send_email_to_new_employe(responsable_prenom: str, ferme: Ferme, employe: User, employe_password: str):
+def send_email_to_new_employe(ferme: Ferme, employe: User, employe_password: str):
     subject = "Bienvenue sur sebania"
     template_context = {
         "employe_prenom": employe.first_name,
-        "responsable_prenom": responsable_prenom,
+        "responsable_prenom": ferme.responsable.first_name,
         "nom_ferme": ferme.nom,
         "app_url": "TODO",
         "password_employe": employe_password,

@@ -5,7 +5,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from base.models import User
 from base.serializers.dto.auth import RegisterUserSerializer, ChangePasswordSerializer, ResetPasswordSerializer
 from base.serializers.user import UserSerializer
 
@@ -16,8 +15,7 @@ class AuthViewSet(ViewSet):
     @extend_schema(responses=UserSerializer,
                    description="Créer un compte pour un nouvel utilisateur, avec création de la ferme et des comptes utilisateurs des employés")
     @action(detail=False, methods=['post'], url_path='register', serializer_class=RegisterUserSerializer,
-            permission_classes=[], authentication_classes=[], url_name="register", basename="auth-register",
-            schema="")
+            permission_classes=[], authentication_classes=[], url_name="register", basename="auth-register")
     def register_user(self, request):
         register_user_data = self.serializer_class(data=request.data)
         register_user_data.is_valid(raise_exception=True)

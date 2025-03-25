@@ -56,7 +56,7 @@ class AuthChangePasswordTestCase(SebaniaTestCase):
         self.assertTrue(self.client.login(email=email, password=new_password), "User cannot log with new password")
         self.assertFalse(self.client.login(email=email, password=old_password), "User should not be able to log with old password")
 
-    def test_update_password_wrong_old_password(self):
+    def test_update_password_nok_wrong_old_password(self):
         wrong_old_password = crypto_service.generate_password()
         new_password = crypto_service.generate_password()
 

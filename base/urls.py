@@ -5,10 +5,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from base.views.auth import *
 from base.views.config import ConfigViewSet
+from base.views.ferme import FermeViewSet
 
 router = routers.SimpleRouter()
 router.register(r'configurations', ConfigViewSet, basename='configurations')
 router.register(r'auth', AuthViewSet, basename='auth')
+router.register(r'fermes', FermeViewSet, basename='fermes')
 urlpatterns = router.urls
 
 urlpatterns += [

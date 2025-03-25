@@ -3,8 +3,17 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme
+from base.serializers.user import UserSerializer
 from sebania.services import crypto_service, email_service
 
+def _create_employe_and_send_password(validated_data, ferme: Ferme) -> User:
+    employe_group = Group.objects.get(name='EMPLOYE')
+    employe_password= crypto_service.generate_password()
+    employe = User.objects.create_user(password=employe_password, **validated_data)
+    employe_group.user_set.add(employe)
+    ferme.employes.add(employe)
+    email_service.send_email_to_new_employe(ferme, employe, employe_password)
+    return employe
 
 class MethodeAgricoleSerializer(ModelSerializer):
     class Meta:
@@ -16,6 +25,10 @@ class EmployeSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name']
+
+    def create(self, validated_data):
+        ferme = self.context.get('ferme')
+        return _create_employe_and_send_password(validated_data, ferme)
 
 
 class FermeSerializer(ModelSerializer):
@@ -38,18 +51,18 @@ class FermeSerializer(ModelSerializer):
         ferme = Ferme.objects.create(**validated_data)
 
         # Création des employés (avec rôle EMPLOYE) et ajout à la ferme
-        employes = []
-        employe_group = Group.objects.get(name='EMPLOYE')
         for emp_data in employes_data:
-            emp_password= crypto_service.generate_password()
-            employe = User.objects.create_user(password=emp_password, **emp_data)
-            employe_group.user_set.add(employe)
-            employes.append(employe)
-            email_service.send_email_to_new_employe(responsable.first_name, ferme, employe, emp_password)
-
-        ferme.employes.set(employes)  # Associer les employés à la ferme
+            _create_employe_and_send_password(emp_data, ferme)
 
         # Ajout des méthodes agricoles
         methodes_agricoles = MethodeAgricole.objects.filter(id__in=methodes_agricoles_ids)
         ferme.methodes.set(methodes_agricoles)
         return ferme
+
+class FermeViewSerializer(ModelSerializer):
+    methodes = MethodeAgricoleSerializer(many=True)
+    responsable = UserSerializer(read_only=True)
+    employes = EmployeSerializer(many=True)
+    class Meta:
+        model = Ferme
+        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes"]
