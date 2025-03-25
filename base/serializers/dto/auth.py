@@ -1,6 +1,7 @@
 import secrets
 import string
 
+from django.contrib.auth.models import Group
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -63,18 +64,22 @@ class RegisterUserSerializer(ModelSerializer):
         employes_data = ferme_data.pop('employes', [])
         methodes_agricoles_ids = ferme_data.pop('methodes_agricoles', [])
 
-        # Création du responsable
+        # Création du responsable et ajout du groupe RESPONSABLE
         password = validated_data.pop('password')
         responsable = User.objects.create_user(password=password, **validated_data)
+        responsable_group = Group.objects.get(name='RESPONSABLE')
+        responsable_group.user_set.add(responsable)
 
         # Création de la ferme
         ferme = Ferme.objects.create(responsable=responsable, **ferme_data)
 
-        # Création des employés et ajout à la ferme
+        # Création des employés (avec rôle EMPLOYE) et ajout à la ferme
         employes = []
+        employe_group = Group.objects.get(name='EMPLOYE')
         for emp_data in employes_data:
             emp_password=_generate_password()
             employe = User.objects.create_user(password=emp_password, **emp_data)
+            employe_group.user_set.add(employe)
             employes.append(employe)
             _send_email_to_new_employe(responsable, ferme, employe, emp_password)
 
