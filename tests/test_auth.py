@@ -7,19 +7,24 @@ from rest_framework import status
 
 from base.models import User, Ferme
 from tests.SebaniaTestCase import SebaniaTestCase
-from tests.data.auth import register_user_request
+from tests.data.auth import register_user_request_0employes, register_user_request_2employes
 
 
 # Create your tests here.
 class AuthTestCase(SebaniaTestCase):
+    url = reverse_lazy('auth-register')
 
-    def test_register_ok(self):
+    def test_register_avec_employes_ok(self):
+        self._test_register(register_user_request_2employes)
+
+    def test_register_sans_employes_ok(self):
+        self._test_register(register_user_request_0employes)
+
+    def _test_register(self, request):
         # envoi requête pour enregistrer le responsable, la ferme et les employés
-        url = reverse_lazy('auth-register')
-        request = register_user_request
         request_data = json.dumps(request)
         responsable_password = request.get('password')
-        response = self.client.post(url, request_data, content_type="application/json")
+        response = self.client.post(self.url, request_data, content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # verification de la création du responsable et de son rôle RESPONSABLE
@@ -49,23 +54,24 @@ class AuthTestCase(SebaniaTestCase):
         for methode in ferme.methodes.all():
             self.assertTrue(methode.id in methodes_ids)
 
-        # verification de la création des employés et qu'ils ont le rôle EMPLOYE
-        employe_group = Group.objects.get(name='EMPLOYE')
         employes_data = ferme_request_data.get('employes')
-        for employe_data in employes_data:
-            employe = User.objects.get(email=employe_data.get('email'))
-            self.assertIsNotNone(employe)
-            self.assertEqual(employe.first_name, employe_data.get('first_name'))
-            self.assertEqual(employe.last_name, employe_data.get('last_name'))
-            self.assertTrue(employe_group.user_set.filter(id=employe.id).exists())
+        if len(employes_data) > 0:
+            # verification de la création des employés et qu'ils ont le rôle EMPLOYE
+            employe_group = Group.objects.get(name='EMPLOYE')
+            for employe_data in employes_data:
+                employe = User.objects.get(email=employe_data.get('email'))
+                self.assertIsNotNone(employe)
+                self.assertEqual(employe.first_name, employe_data.get('first_name'))
+                self.assertEqual(employe.last_name, employe_data.get('last_name'))
+                self.assertTrue(employe_group.user_set.filter(id=employe.id).exists())
 
-        # verification que les employés ont reçu un mail avec leur mot de passe et qu'ils peuvent se connecter
-        emails = mail.outbox
-        self.assertEqual(len(emails), len(employes_data))
-        for email in emails:
-            email_employe = email.to[0]
-            start_password = email.body.find('<td> ') + len('<td> ')
-            stop_password = email.body.find(' </td>')
-            password = email.body[start_password : stop_password]
-            self.assertTrue(self.client.login(email=email_employe, password=password))
+            # verification que les employés ont reçu un mail avec leur mot de passe et qu'ils peuvent se connecter
+            emails = mail.outbox
+            self.assertEqual(len(emails), len(employes_data))
+            for email in emails:
+                email_employe = email.to[0]
+                start_password = email.body.find('<td> ') + len('<td> ')
+                stop_password = email.body.find(' </td>')
+                password = email.body[start_password : stop_password]
+                self.assertTrue(self.client.login(email=email_employe, password=password))
 

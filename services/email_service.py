@@ -3,13 +3,32 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 import logging
 
+from base.models import User, Ferme
 from base.models.email import Email
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+def send_email_to_new_employe(responsable_prenom: str, ferme: Ferme, employe: User, employe_password: str):
+    subject = "Bienvenue sur sebania"
+    template_context = {
+        "employe_prenom": employe.first_name,
+        "responsable_prenom": responsable_prenom,
+        "nom_ferme": ferme.nom,
+        "app_url": "TODO",
+        "password_employe": employe_password,
+    }
+    template_name = "emails/send-employe-password.html"
+    _send_email(subject, employe.email, template_name, template_context)
 
-def send_email(subject: str, receiver:str, template_name: str, template_context):
+
+
+
+
+
+
+
+def _send_email(subject: str, receiver:str, template_name: str, template_context):
     sender = settings.DEFAULT_FROM_EMAIL
     message_html = render_to_string("emails/send-employe-password.html", context=template_context)
     email_db = Email.objects.create(

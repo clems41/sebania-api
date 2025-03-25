@@ -20,6 +20,8 @@ AUTH_USER_MODEL = "base.User"
 
 APPEND_SLASH=True
 
+DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
