@@ -2,8 +2,6 @@ from .base import *
 
 SECRET_KEY = 'my_secret_test_key'
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
-
 DEBUG = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'

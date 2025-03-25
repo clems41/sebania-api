@@ -3,8 +3,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme
-from base.serializers.user import UserSerializer
-from services import cryptography, email_service
+from sebania.services import crypto_service, email_service
 
 
 class MethodeAgricoleSerializer(ModelSerializer):
@@ -42,7 +41,7 @@ class FermeSerializer(ModelSerializer):
         employes = []
         employe_group = Group.objects.get(name='EMPLOYE')
         for emp_data in employes_data:
-            emp_password=cryptography.generate_password()
+            emp_password= crypto_service.generate_password()
             employe = User.objects.create_user(password=emp_password, **emp_data)
             employe_group.user_set.add(employe)
             employes.append(employe)

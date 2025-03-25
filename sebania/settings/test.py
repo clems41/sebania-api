@@ -2,8 +2,6 @@ from .base import *
 
 SECRET_KEY = 'my_secret_test_key'
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
-
 DEBUG = True
 INSTALLED_APPS += [
     'debug_toolbar',

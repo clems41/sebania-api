@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'base',
     'rest_framework',
     'drf_spectacular',
+    'drf_yasg',
     'rest_framework_simplejwt',
 ]
 
@@ -96,14 +97,14 @@ EMAIL_PORT = os.environ.get("SMTP_PORT")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "bonjour@sebania.fr"
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
+FIXTURE_DIRS = [BASE_DIR / 'sebania/fixtures']
 
 ROOT_URLCONF = 'sebania.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'sebania/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

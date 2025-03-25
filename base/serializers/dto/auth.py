@@ -1,9 +1,15 @@
 from django.contrib.auth.models import Group
 from django.db import transaction
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from base.models import User
 from base.serializers.ferme import FermeSerializer
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
 
 class RegisterUserSerializer(ModelSerializer):

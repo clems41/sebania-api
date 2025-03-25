@@ -6,12 +6,55 @@ from django.urls import reverse_lazy
 from rest_framework import status
 
 from base.models import User, Ferme
-from tests.SebaniaTestCase import SebaniaTestCase
-from tests.data.auth import register_user_request_0employes, register_user_request_2employes
+from sebania.services import crypto_service
+from base.tests.SebaniaTestCase import SebaniaTestCase
+from base.tests.data.auth import register_user_request_0employes, register_user_request_2employes
 
 
-# Create your tests here.
-class AuthTestCase(SebaniaTestCase):
+class AuthChangePasswordTestCase(SebaniaTestCase):
+    url = reverse_lazy('auth-change-password')
+
+    def test_update_password_ok(self):
+        old_password = crypto_service.generate_password()
+        new_password = crypto_service.generate_password()
+        email = "example@mail.com"
+
+        # Create user with old_password and check that he can log with old_password
+        user = User.objects.create_user(email=email, password=old_password, first_name="Toto", last_name="Tata")
+        self.assertTrue(self.client.login(email=email, password=old_password))
+
+        # Update password
+        request = {
+            "old_password": old_password,
+            "new_password": new_password
+        }
+        response = self.client.put(self.url, request, headers=self._get_jwt_headers(email=email, password=old_password))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check that user can log with new password and not with old one
+        self.assertTrue(self.client.login(email=email, password=new_password), "User cannot log with new password")
+        self.assertFalse(self.client.login(email=email, password=old_password), "User should not be able to log with old password")
+
+    def test_update_password_wrong_old_password(self):
+        old_password = crypto_service.generate_password()
+        wrong_old_password = crypto_service.generate_password()
+        new_password = crypto_service.generate_password()
+        email = "example@mail.com"
+
+        # Create user with old_password
+        User.objects.create_user(email=email, password=old_password, first_name="Toto", last_name="Tata")
+
+        # Try to update password with wrong old one
+        request = {
+            "old_password": wrong_old_password,
+            "new_password": new_password
+        }
+        response = self.client.put(self.url, request, headers=self._get_jwt_headers(email=email, password=old_password))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+class AuthRegisterTestCase(SebaniaTestCase):
     url = reverse_lazy('auth-register')
 
     def test_register_avec_employes_ok(self):
@@ -72,6 +115,5 @@ class AuthTestCase(SebaniaTestCase):
                 email_employe = email.to[0]
                 start_password = email.body.find('<td> ') + len('<td> ')
                 stop_password = email.body.find(' </td>')
-                password = email.body[start_password : stop_password]
+                password = email.body[start_password: stop_password]
                 self.assertTrue(self.client.login(email=email_employe, password=password))
-
