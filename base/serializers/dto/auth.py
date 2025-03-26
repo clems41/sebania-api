@@ -50,13 +50,11 @@ class RegisterUserSerializer(ModelSerializer):
         ferme_data = validated_data.pop('ferme')
 
         # Création du responsable et ajout du groupe RESPONSABLE
-        responsable = User.objects.create_user(**validated_data)
-        responsable_group = Group.objects.get(name='RESPONSABLE')
-        responsable_group.user_set.add(responsable)
+        responsable = User.objects.create_responsable(email=validated_data['email'], password=validated_data['password'],
+                                                      first_name=validated_data['first_name'], last_name=validated_data['last_name'])
 
         # Création de la ferme et des employés
-        ferme_data['responsable_id'] = responsable.id # requis, car non précisé dans la requête
-        ferme = FermeSerializer(data=ferme_data)
+        ferme = FermeSerializer(data=ferme_data, context={"responsable_id": responsable.id}) # requis, car non précisé dans la requête
         ferme.is_valid(raise_exception=True)
         ferme.save()
 

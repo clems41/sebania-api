@@ -129,13 +129,8 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         self.assertEqual(new_employe.get().last_name, new_employe_last_name)
 
         # verification que le nouvel employé ait reçu un mail avec son mot de passe et qu'ils peuvent se connecter
-        emails = mail.outbox
-        self.assertEqual(len(emails), 1)
-        email = emails[0]
-        start_password = email.body.find('<td> ') + len('<td> ')
-        stop_password = email.body.find(' </td>')
-        password = email.body[start_password: stop_password]
-        self.assertTrue(self.client.login(email=new_employe_email, password=password))
+        new_employe_password = self.get_password_received_from_email(new_employe_email)
+        self.assertTrue(self.client.login(email=new_employe_email, password=new_employe_password))
 
 
     def test_add_employe_nok_bad_permission(self):

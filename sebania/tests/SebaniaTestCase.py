@@ -1,3 +1,4 @@
+from django.core import mail
 from django.urls import reverse_lazy
 from rest_framework import status
 from rest_framework.test import APITransactionTestCase
@@ -26,18 +27,28 @@ class SebaniaTestCase(APITransactionTestCase):
         self.current_user_credentials = (email, password)
         return user
 
-    def get_jwt_headers(self, user: User = None):
-        if user is None:
+    def get_jwt_headers(self, email = None, password= None):
+        if email is None or password is None:
             if self.current_user is None:
                 self.init_current_user()
-        url = reverse_lazy('get_access_token')
-        email, password = self.get_current_user_credentials()
+            email, password = self.get_current_user_credentials()
         request = {
             "email": email,
             "password": password,
         }
+        url = reverse_lazy('get_access_token')
         response = self.client.post(url, request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         access_token = response.json()['access']
         self.assertIsNotNone(access_token)
         return {"Authorization": "Bearer " + access_token}
+
+    def get_password_received_from_email(self, user_email: str) -> str:
+        emails = mail.outbox
+        self.assertTrue(len(emails) > 0)
+        matches = [e for e in emails if e.to[0] == user_email]
+        self.assertEqual(len(matches), 1)
+        email_body = matches[0].body
+        start_password = email_body.find('<td> ') + len('<td> ')
+        stop_password = email_body.find(' </td>')
+        return email_body[start_password: stop_password]

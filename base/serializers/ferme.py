@@ -1,19 +1,10 @@
-from django.contrib.auth.models import Group
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from base.models import MethodeAgricole, User, Ferme
+from base.models import MethodeAgricole, User, Ferme, Culture, CultureFerme, ActiviteFerme, Activite
 from base.serializers.user import UserSerializer
-from sebania.services import crypto_service, email_service
+from sebania.services import email_service
 
-def _create_employe_and_send_password(validated_data, ferme: Ferme) -> User:
-    employe_group = Group.objects.get(name='EMPLOYE')
-    employe_password= crypto_service.generate_password()
-    employe = User.objects.create_user(password=employe_password, **validated_data)
-    employe_group.user_set.add(employe)
-    ferme.employes.add(employe)
-    email_service.send_email_to_new_employe(ferme, employe, employe_password)
-    return employe
 
 class MethodeAgricoleSerializer(ModelSerializer):
     class Meta:
@@ -26,9 +17,24 @@ class EmployeSerializer(ModelSerializer):
         model = User
         fields = ['id', 'email', 'first_name', 'last_name']
 
-    def create(self, validated_data):
+    def create(self, validated_data, **kwargs):
         ferme = self.context.get('ferme')
-        return _create_employe_and_send_password(validated_data, ferme)
+        employe, password = User.objects.create_employe(email=validated_data['email'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
+        ferme.employes.add(employe)
+        email_service.send_email_to_new_employe(ferme, employe, password)
+        return employe
+
+
+def _create_data(ferme: Ferme):
+    """
+    Créer les liste d'activités et de cultures pour la ferme
+    """
+    cultures_default = Culture.objects.filter(default=True).all()
+    for culture_default in cultures_default:
+        CultureFerme.objects.create(culture=culture_default, ferme=ferme, categorie=culture_default.categorie_default)
+    activites_default = Activite.objects.filter(default=True).all()
+    for activite_default in activites_default:
+        ActiviteFerme.objects.create(activite=activite_default, ferme=ferme, categorie=activite_default.categorie_default)
 
 
 class FermeSerializer(ModelSerializer):
@@ -36,28 +42,29 @@ class FermeSerializer(ModelSerializer):
     methodes_agricoles = serializers.ListField(
         child=serializers.IntegerField(),
     )
-    responsable_id = serializers.IntegerField(required=False) # non requis lors de la réception de la requête car renseigné une fois qu'il a été créé en base de données
 
     class Meta:
         model = Ferme
-        fields = ["nom", "adresse", "superficie_cultivee", "employes", "responsable_id", "methodes_agricoles"]
+        fields = ["nom", "adresse", "superficie_cultivee", "employes", "methodes_agricoles"]
 
     def create(self, validated_data, **kwargs):
         # Création de la ferme
-        responsable_id = validated_data.get('responsable_id')
-        responsable = User.objects.get(id=responsable_id)
         employes_data = validated_data.pop('employes', [])
         methodes_agricoles_ids = validated_data.pop('methodes_agricoles', [])
-        ferme = Ferme.objects.create(**validated_data)
+        ferme = Ferme.objects.create(**validated_data, responsable_id=self.context['responsable_id'])
 
         # Création des employés (avec rôle EMPLOYE) et ajout à la ferme
         for emp_data in employes_data:
-            _create_employe_and_send_password(emp_data, ferme)
+            employe = EmployeSerializer(data=emp_data, context={"ferme": ferme})
+            employe.is_valid(raise_exception=True)
+            employe.save()
 
         # Ajout des méthodes agricoles
         methodes_agricoles = MethodeAgricole.objects.filter(id__in=methodes_agricoles_ids)
         ferme.methodes.set(methodes_agricoles)
+        _create_data(ferme)
         return ferme
+
 
 class FermeViewSerializer(ModelSerializer):
     methodes = MethodeAgricoleSerializer(many=True)

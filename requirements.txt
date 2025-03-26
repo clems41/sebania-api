@@ -8,3 +8,4 @@ psycopg2-binary
 pytest~=8.3.5
 drf-spectacular~=0.28.0
 drf_yasg
+django_extensions
