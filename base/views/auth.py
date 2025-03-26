@@ -44,3 +44,8 @@ class AuthViewSet(ViewSet):
         form = self.serializer_class(data=request.data, context={'request': request})
         form.reset_password()
         return Response(status=status.HTTP_200_OK)
+
+    @extend_schema(description="Récupération des informations de l'utilisateur")
+    @action(detail=False, methods=['get'], url_path='me', serializer_class=UserSerializer, url_name="me", basename="auth-me")
+    def reset_password(self, request):
+        return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
