@@ -35,6 +35,6 @@ class FermeViewSet(ViewSet):
         ferme = get_object_or_404(Ferme, responsable=request.user)
         employe = get_object_or_404(User, id=user_id)
         if employe not in ferme.employes.all():
-            return Response({"detail": "Cet employé ne fait pas partie de cette ferme."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Cet employé n'a pas été trouvé pour votre ferme.'"}, status=status.HTTP_404_NOT_FOUND)
         ferme.employes.remove(employe)
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)

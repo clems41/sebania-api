@@ -61,13 +61,24 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
     def test_delete_employe_nok_pas_employe(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
-        ferme = test_fixtures.create_ferme(responsable)
+        test_fixtures.create_ferme(responsable)
         user_pas_employe = test_fixtures.create_user()
 
-        # Suppresion d'un employé, mais en se connectant avec le compte employé
+        # Suppresion d'un utilisateur non employé de la ferme
         url = reverse_lazy('fermes-delete-employe', kwargs={'user_id': user_pas_employe.id})
         response = self.client.delete(url, headers=self.get_jwt_headers())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+    def test_delete_employe_nok_not_existing(self):
+        # Création du responsable et de la ferme et des employés
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable)
+
+        # Suppresion d'un utilisateur qui n'existe pas
+        url = reverse_lazy('fermes-delete-employe', kwargs={'user_id': 999})
+        response = self.client.delete(url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
 class FermeAddEmployeTestCase(SebaniaTestCase):
