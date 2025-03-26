@@ -71,6 +71,8 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
 
+SWAGGER_ENABLE = True
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'sebania API',
     'DESCRIPTION': 'sebania est une application permettant de faciliter le travail des maraîchers en les guidant dans leur travail quotidien',

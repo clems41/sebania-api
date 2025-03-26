@@ -7,3 +7,6 @@ CACHES = {
         'LOCATION': '127.0.0.1:11211',
     }
 }
+
+
+SWAGGER_ENABLE = False

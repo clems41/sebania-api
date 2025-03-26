@@ -47,5 +47,5 @@ class AuthViewSet(ViewSet):
 
     @extend_schema(description="Récupération des informations de l'utilisateur")
     @action(detail=False, methods=['get'], url_path='me', serializer_class=UserSerializer, url_name="me", basename="auth-me")
-    def reset_password(self, request):
+    def me(self, request):
         return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)

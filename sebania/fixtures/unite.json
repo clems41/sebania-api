@@ -14,5 +14,13 @@
       "nom": "Pièce",
       "label": "pc"
     }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 3,
+    "fields": {
+      "nom": "Botte",
+      "label": "bt"
+    }
   }
 ]
