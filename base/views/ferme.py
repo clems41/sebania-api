@@ -61,3 +61,11 @@ class FermeViewSet(ViewSet):
         items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
         serializer = self.serializer_class(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(description="Récupération des informations concernant la ferme associée à l'utilisateur")
+    @action(detail=False, methods=['get'], url_path='details', serializer_class=FermeViewSerializer,
+            url_name="get-ferme-details")
+    def get_ferme_details(self, request):
+        ferme = http_service.get_ferme_for_user(request)
+        serializer = self.serializer_class(ferme)
+        return Response(serializer.data, status=status.HTTP_200_OK)
