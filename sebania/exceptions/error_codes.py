@@ -1,0 +1,18 @@
+"""
+ERREURS GLOBALES
+"""
+ERROR_CODE_GLOBAL_UNKNOWN_ERROR = "unknown_error"
+
+"""
+ERREURS AUTHENTIFICATION
+"""
+ERROR_CODE_AUTH_USER_MUST_BE_AUTHENTICATED = "user_must_be_authenticated"
+
+"""
+ERREURS LIEES AUX USER
+"""
+ERROR_CODE_USER_NOT_FOUND = "user_not_found"
+"""
+ERREURS LIEES A LA FERME
+"""
+ERROR_CODE_FERME_NOT_FOUND_FOR_USER = "ferme_not_found_for_user"
