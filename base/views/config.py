@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -22,26 +23,34 @@ class ConfigViewSet(GenericViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+    @extend_schema(description="Liste l'ensemble des méthodes agricoles disponibles lors de la création d'une ferme")
     @action(detail=False, methods=['get'], url_path='methodes-agricoles',
             serializer_class=MethodeAgricoleSerializer, queryset=MethodeAgricole.objects.all().order_by("nom"))
     def get_methodes_agricoles(self, request):
         return self._return_data()
 
+    @extend_schema(description="Liste l'ensemble des types de parcelle disponibles lors de la création d'une nouvelle parcelle")
     @action(detail=False, methods=['get'], url_path='types-parcelle',
             serializer_class=TypeParcelleSerializer, queryset=TypeParcelle.objects.all().order_by("nom"))
     def get_types_parcelle(self, request):
         return self._return_data()
 
+
+    @extend_schema(description="Liste l'ensemble des unités disponibles associées aux cultures")
     @action(detail=False, methods=['get'], url_path='unites',
             serializer_class=UniteSerializer, queryset=Unite.objects.all().order_by("nom"))
     def get_unites(self, request):
         return self._return_data()
 
+
+    @extend_schema(description="Liste l'ensemble des cultures disponibles dans la base de données pour créer la liste des cultures personnalisées de la ferme")
     @action(detail=False, methods=['get'], url_path='cultures',
             serializer_class=CultureSerializer, queryset=Culture.objects.all().order_by("nom"))
     def get_cultures(self, request):
         return self._return_data()
 
+
+    @extend_schema(description="Liste l'ensemble des activités disponibles dans la base de données pour créer la liste des activités personnalisées de la ferme")
     @action(detail=False, methods=['get'], url_path='activites',
             serializer_class=ActiviteSerializer, queryset=Activite.objects.all().order_by("nom"))
     def get_activites(self, request):
