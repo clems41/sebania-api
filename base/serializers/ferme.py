@@ -3,7 +3,7 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme, Culture, CultureFerme, ActiviteFerme, Activite
 from base.serializers.user import UserSerializer
-from sebania.services import email_service
+from sebania.utils import email_utils
 
 
 class MethodeAgricoleSerializer(ModelSerializer):
@@ -21,7 +21,7 @@ class EmployeSerializer(ModelSerializer):
         ferme = self.context.get('ferme')
         employe, password = User.objects.create_employe(email=validated_data['email'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
         ferme.employes.add(employe)
-        email_service.send_email_to_new_employe(ferme, employe, password)
+        email_utils.send_email_to_new_employe(ferme, employe, password)
         return employe
 
 

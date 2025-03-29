@@ -10,6 +10,9 @@ from base.models.email import Email
 logger = logging.getLogger(__name__)
 
 def send_email_to_new_employe(ferme: Ferme, employe: User, employe_password: str):
+    """
+    Envoi d'un email lors de la création d'un nouvel employé pour une ferme
+    """
     subject = "Bienvenue sur sebania"
     template_context = {
         "employe_prenom": employe.first_name,
@@ -22,6 +25,9 @@ def send_email_to_new_employe(ferme: Ferme, employe: User, employe_password: str
     _send_email(subject, employe.email, template_name, template_context)
 
 def send_reset_password(user: User, new_password: str):
+    """
+    Envoi d'un nouveau mot de passe à un utilisateur l'ayant oublié
+    """
     subject = "[Sebania] Réinitialisation de votre mot de passe"
     template_context = {
         "user_prenom": user.first_name,

@@ -2,6 +2,7 @@
 ERREURS GLOBALES
 """
 ERROR_CODE_GLOBAL_UNKNOWN_ERROR = "unknown_error"
+ERROR_CODE_GLOBAL_WRONG_ARG = "wrong_arg_for_method"
 
 """
 ERREURS AUTHENTIFICATION
@@ -16,3 +17,4 @@ ERROR_CODE_USER_NOT_FOUND = "user_not_found"
 ERREURS LIEES A LA FERME
 """
 ERROR_CODE_FERME_NOT_FOUND_FOR_USER = "ferme_not_found_for_user"
+ERROR_CODE_FERME_NOT_FOUND = "ferme_not_found"

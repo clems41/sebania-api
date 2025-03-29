@@ -6,7 +6,7 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import User
 from base.serializers.ferme import FermeSerializer
-from sebania.services import email_service, crypto_service
+from sebania.utils import email_utils, crypto_utils
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -31,10 +31,10 @@ class ResetPasswordSerializer(serializers.Serializer):
     def reset_password(self):
         self.is_valid(raise_exception=True)
         user = User.objects.get(email=self.data['email'])
-        new_password = crypto_service.generate_password()
+        new_password = crypto_utils.generate_password()
         user.set_password(new_password)
         user.save()
-        email_service.send_reset_password(user, new_password)
+        email_utils.send_reset_password(user, new_password)
 
 
 class RegisterUserSerializer(ModelSerializer):

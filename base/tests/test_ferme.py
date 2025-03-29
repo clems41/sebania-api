@@ -5,12 +5,42 @@ from django.urls import reverse_lazy, reverse
 from rest_framework import status
 
 from base.models import Ferme
-from sebania.services import crypto_service
+from sebania.utils import crypto_utils
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 
 
 class FermeDeleteEmployeTestCase(SebaniaTestCase):
+    def test_delete_employee_then_add_employe_with_same_email_ok(self):
+        # Création du responsable et de la ferme et des employés
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable)
+        nb_init_employe = ferme.employes.count()
+
+        # Suppresion d'un employé
+        employe = ferme.employes.first()
+        url = reverse('fermes-delete-employe', kwargs={'user_id': employe.id})
+        response = self.client.delete(url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Vérification que l'utilisateur a été supprimé
+        ferme = Ferme.objects.get(id=ferme.id)
+        self.assertEqual(ferme.employes.count(), nb_init_employe - 1)
+
+        # Ajout d'un nouvel employé avec le même email
+        request = {
+            "email": employe.email,
+            "first_name": employe.first_name,
+            "last_name": employe.last_name,
+        }
+        url = reverse_lazy('fermes-add-employe')
+        response = self.client.post(url, request, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Vérification que l'utilisateur a bien été ajouté
+        ferme = Ferme.objects.get(id=ferme.id)
+        self.assertEqual(ferme.employes.count(), nb_init_employe)
+
     def test_delete_employe_ok(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
@@ -90,9 +120,9 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         ferme = test_fixtures.create_ferme(responsable)
 
         # Ajout d'un nouvel employé
-        new_employe_email = crypto_service.random_email()
-        new_employe_first_name = crypto_service.random_string()
-        new_employe_last_name = crypto_service.random_string()
+        new_employe_email = crypto_utils.random_email()
+        new_employe_first_name = crypto_utils.random_string()
+        new_employe_last_name = crypto_utils.random_string()
         request = {
             "email": new_employe_email,
             "first_name": new_employe_first_name,
@@ -140,9 +170,9 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         ferme = test_fixtures.create_ferme(responsable, employes)
 
         # Ajout d'un nouvel employé, mais en se connectant avec le compte employé
-        new_employe_email = crypto_service.random_email()
-        new_employe_first_name = crypto_service.random_string()
-        new_employe_last_name = crypto_service.random_string()
+        new_employe_email = crypto_utils.random_email()
+        new_employe_first_name = crypto_utils.random_string()
+        new_employe_last_name = crypto_utils.random_string()
         request = {
             "email": new_employe_email,
             "first_name": new_employe_first_name,

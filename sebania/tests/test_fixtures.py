@@ -3,11 +3,11 @@ from typing import List
 from django.contrib.auth.models import Group
 
 from base.models import User, Ferme, MethodeAgricole
-from sebania.services import crypto_service
+from sebania.utils import crypto_utils
 
 def create_user() -> User:
-    return User.objects.create_user(email=crypto_service.random_email(), password=crypto_service.generate_password(),
-                        first_name=crypto_service.random_string(), last_name=crypto_service.random_string())
+    return User.objects.create_user(email=crypto_utils.random_email(), password=crypto_utils.generate_password(),
+                        first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
 
 def create_ferme(responsable: User = None, employes=None) -> Ferme:
     # Création de la ferme
@@ -17,8 +17,8 @@ def create_ferme(responsable: User = None, employes=None) -> Ferme:
     if employes is None:
         employes = [create_user(), create_user()]
     responsable_group.user_set.add(responsable)
-    nom = crypto_service.random_string()
-    adresse = crypto_service.random_string(20, digit=True)
+    nom = crypto_utils.random_string()
+    adresse = crypto_utils.random_string(20, digit=True)
     superficie_cultivee = 1500.0
     ferme = Ferme.objects.create(responsable=responsable, nom=nom, adresse=adresse, superficie_cultivee=superficie_cultivee)
 

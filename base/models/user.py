@@ -2,7 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
-from sebania.services import crypto_service
+from sebania.utils import crypto_utils
 
 
 # Create your models here.
@@ -10,7 +10,7 @@ from sebania.services import crypto_service
 class UserProfileManager(BaseUserManager):
     """ Manager for user profiles """
     def create_employe(self, email, first_name=None, last_name=None):
-        employe_password = crypto_service.generate_password()
+        employe_password = crypto_utils.generate_password()
         employe = self.create_user(password=employe_password, first_name=first_name, last_name=last_name, email=email)
         employe.add_to_group("EMPLOYE")
 

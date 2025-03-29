@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from rest_framework import status
 
 from base.models import User, Ferme, Culture, Activite
-from sebania.services import crypto_service
+from sebania.utils import crypto_utils
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from base.tests.data.auth import register_user_request_0employes, register_user_request_2employes
 
@@ -35,7 +35,7 @@ class AuthChangePasswordTestCase(SebaniaTestCase):
     url = reverse_lazy('auth-change-password')
 
     def test_change_password_ok(self):
-        new_password = crypto_service.generate_password()
+        new_password = crypto_utils.generate_password()
 
         # Create user
         self.init_current_user()
@@ -54,8 +54,8 @@ class AuthChangePasswordTestCase(SebaniaTestCase):
         self.assertFalse(self.client.login(email=email, password=old_password), "User should not be able to log with old password")
 
     def test_update_password_nok_wrong_old_password(self):
-        wrong_old_password = crypto_service.generate_password()
-        new_password = crypto_service.generate_password()
+        wrong_old_password = crypto_utils.generate_password()
+        new_password = crypto_utils.generate_password()
 
         # Create user with old_password
         self.init_current_user()

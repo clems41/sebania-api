@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 
 from base.models import User
-from sebania.services import crypto_service
+from sebania.utils import crypto_utils
 
 
 class SebaniaTestCase(APITransactionTestCase):
@@ -18,9 +18,9 @@ class SebaniaTestCase(APITransactionTestCase):
     def get_current_user_credentials(self):
         return self.current_user_credentials
 
-    def init_current_user(self, email = crypto_service.random_email(), password = crypto_service.generate_password()):
+    def init_current_user(self, email = crypto_utils.random_email(), password = crypto_utils.generate_password()):
         user = User.objects.create_user(email=email, password=password,
-                                        first_name=crypto_service.random_string(), last_name=crypto_service.random_string())
+                                        first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
         self.assertIsNotNone(user)
         self.assertTrue(self.client.login(email=email, password=password))
         self.current_user = user

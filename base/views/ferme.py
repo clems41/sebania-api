@@ -10,8 +10,11 @@ from base.models import Ferme, User, ActiviteFerme, CultureFerme
 from base.serializers.activite import ActiviteFermeSerializer
 from base.serializers.culture import CultureFermeSerializer
 from base.serializers.ferme import FermeViewSerializer, EmployeSerializer
+from sebania.exceptions.ferme import FermeNotFoundForUserException
+from sebania.exceptions.user import UserNotFoundException
 from sebania.permissions import HasResponsablePermission
-from sebania.services import http_service
+from sebania.utils import db_utils
+from sebania.utils.db_utils import get_one_or_raise_exception
 
 
 class FermeViewSet(ViewSet):
@@ -22,7 +25,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['post'], url_path='employes', serializer_class=EmployeSerializer,
             url_name="add-employe", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def add_employe(self, request):
-        ferme = get_object_or_404(Ferme, responsable=request.user)
+        ferme = get_one_or_raise_exception(Ferme, FermeNotFoundForUserException(request.user.id), responsable=request.user)
         request_data = self.serializer_class(data=request.data, context={"ferme": ferme})
         request_data.is_valid(raise_exception=True)
         request_data.save()
@@ -34,11 +37,12 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['delete'], url_path='employes/(?P<user_id>\w+)', serializer_class=None,
             url_name="delete-employe", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def delete_employe(self, request, user_id = None):
-        ferme = get_object_or_404(Ferme, responsable=request.user)
-        employe = get_object_or_404(User, id=user_id)
+        ferme = get_one_or_raise_exception(Ferme, FermeNotFoundForUserException(request.user.id), responsable=request.user)
+        employe = get_one_or_raise_exception(User, UserNotFoundException(user_id), id=user_id)
         if employe not in ferme.employes.all():
-            return Response({"detail": "Cet employé n'a pas été trouvé pour votre ferme.'"}, status=status.HTTP_404_NOT_FOUND)
+            raise UserNotFoundException(user_id)
         ferme.employes.remove(employe)
+        db_utils.soft_delete_employe(user_id)
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)
 
     @extend_schema(responses=ActiviteFermeSerializer(many=True),
@@ -46,7 +50,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='activites', serializer_class=ActiviteFermeSerializer,
             url_name="get-activites")
     def get_activites(self, request):
-        ferme = http_service.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_for_user(request)
         items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("categorie", "activite__nom")
         serializer = self.serializer_class(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -56,7 +60,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='cultures', serializer_class=CultureFermeSerializer,
             url_name="get-cultures")
     def get_cultures(self, request):
-        ferme = http_service.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_for_user(request)
         items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
         serializer = self.serializer_class(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -65,6 +69,6 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='details', serializer_class=FermeViewSerializer,
             url_name="get-ferme-details")
     def get_ferme_details(self, request):
-        ferme = http_service.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_for_user(request)
         serializer = self.serializer_class(ferme)
         return Response(serializer.data, status=status.HTTP_200_OK)
