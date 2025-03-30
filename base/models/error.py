@@ -1,8 +1,10 @@
 from django.db import models
+from django.utils import timezone
 
 from base.models import User
 
 class Error(models.Model):
+    occurred_at = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
     traceback = models.TextField()
     url = models.URLField()

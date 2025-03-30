@@ -1,6 +1,6 @@
 from django.db import models
 
-from base.models import User, Ferme
+from base.models import Ferme
 
 
 class Activite(models.Model):

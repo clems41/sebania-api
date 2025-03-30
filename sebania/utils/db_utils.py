@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
 from base.models import Ferme, User
 from sebania.exceptions.auth import UserMustBeAuthenticated
@@ -17,6 +18,7 @@ def soft_delete_employe(user_id: int):
     user.email = anonymous_username
     user.username = anonymous_username
     user.is_active = False
+    user.deleted_at = timezone.now()
     user.save()
 
 

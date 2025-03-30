@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
+from django.utils import timezone
 
 from sebania.utils import crypto_utils
 
@@ -46,6 +47,9 @@ class UserProfileManager(BaseUserManager):
         return user
 
 class User(AbstractUser):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["first_name", "last_name"]
