@@ -73,3 +73,12 @@ class FermeViewSerializer(ModelSerializer):
     class Meta:
         model = Ferme
         fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes"]
+
+
+class UpdateFermeSerializer(ModelSerializer):
+    methodes_agricoles = serializers.ListField(
+        child=serializers.IntegerField(),
+    )
+    class Meta:
+        model = Ferme
+        fields = ["nom", "adresse", "superficie_cultivee", "methodes_agricoles"]
