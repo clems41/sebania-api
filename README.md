@@ -61,6 +61,19 @@ Rendez-vous à la section [Authentification & Swagger](#authentification--swagge
 Vous pouvez accès la base de données de l'API en utilisant n'importe quel gestionnaire de base de données (comme DBeaver) en vous connectant à l'url suivante `jdbc:postgresql://localhost:5432/sebania`.
 Les identifiants sont ceux spécifiés dans le fichier `.env`.
 
+### Création de la base de données pour le premier lancement
+
+Lors du lancement de l'application pour la première fois, la base de données doit être créée et les données par défaut (cultures, activités, unités, etc.) doivent également être ajoutées à la base.
+
+Entrez dans le conteneur de l'API et lancez les commandes suivantes :
+```bash
+# création des tables
+python manage.py migrate
+
+# insertion des données par défaut
+python manage.py loaddata activite_default culture_default type_parcelle unite auth_group methode_agricole
+```
+
 ## Authentification & Swagger
 
 ### Authentification
