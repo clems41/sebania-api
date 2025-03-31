@@ -18,3 +18,7 @@ ERREURS LIEES A LA FERME
 """
 ERROR_CODE_FERME_NOT_FOUND_FOR_USER = "ferme_not_found_for_user"
 ERROR_CODE_FERME_NOT_FOUND = "ferme_not_found"
+"""
+ERREURS LIEES AUX PARCELLES
+"""
+ERROR_CODE_PARCELLE_TYPE_NOT_FOUND = "parcelle_type_not_found"

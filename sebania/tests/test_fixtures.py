@@ -2,12 +2,15 @@ from typing import List
 
 from django.contrib.auth.models import Group
 
-from base.models import User, Ferme, MethodeAgricole
+from base.models import User, Ferme, MethodeAgricole, Parcelle
 from sebania.utils import crypto_utils
 
 def create_user() -> User:
     return User.objects.create_user(email=crypto_utils.random_email(), password=crypto_utils.generate_password(),
                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
+
+def create_parcelle(ferme: Ferme) -> Parcelle:
+    return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
 
 def create_ferme(responsable: User = None, employes=None) -> Ferme:
     # Création de la ferme

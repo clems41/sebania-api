@@ -1,7 +1,7 @@
 from django.db import models
-from django.utils import timezone
 
 from base.models import User
+
 
 class Error(models.Model):
     occurred_at = models.DateTimeField(auto_now_add=True)
@@ -10,4 +10,4 @@ class Error(models.Model):
     url = models.URLField()
     query_params = models.JSONField()
     body = models.JSONField()
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)

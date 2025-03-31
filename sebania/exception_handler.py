@@ -39,5 +39,8 @@ def custom_exception_handler(exc, context):
 
 def _save_error(exc, context):
     request = context.get('request')
+    user = None
+    if request.user.is_authenticated:
+        user = request.user
     Error.objects.create(message=repr(exc), traceback=traceback.format_exc(), url=request.get_full_path(),
-                         query_params=request.query_params.dict(), body= request.data, user=request.user)
+                         query_params=request.query_params.dict(), body= request.data, user=user)
