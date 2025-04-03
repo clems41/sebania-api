@@ -36,7 +36,7 @@ class UpdateFermeDetailsTestCase(SebaniaTestCase):
             self.assertEqual(len(response_data.get('methodes')), 1)
             self.assertEqual(response_data.get('methodes')[0].get("id"), request.get("methodes_agricoles")[0])
 
-    def test_update_ferme_details_ok(self):
+    def test_ok_update_ferme_details(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable)
@@ -44,7 +44,7 @@ class UpdateFermeDetailsTestCase(SebaniaTestCase):
         # Modification de la ferme
         self._send_request_and_check_response()
 
-    def test_update_ferme_details_nok_as_employe(self):
+    def test_nok_update_ferme_details_as_employe(self):
         # Création du responsable et de la ferme et des employés
         responsable = test_fixtures.create_user()
         employes = [self.init_current_user(),
@@ -56,7 +56,7 @@ class UpdateFermeDetailsTestCase(SebaniaTestCase):
 
 
 class FermeDeleteEmployeTestCase(SebaniaTestCase):
-    def test_delete_employee_then_add_employe_with_same_email_ok(self):
+    def test_ok_delete_employee_then_add_employe_with_same_email(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable)
@@ -86,7 +86,7 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
         ferme = Ferme.objects.get(id=ferme.id)
         self.assertEqual(ferme.employes.count(), nb_init_employe)
 
-    def test_delete_employe_ok(self):
+    def test_ok_delete_employe(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable)
@@ -119,7 +119,7 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
         self.assertEqual(ferme_db.superficie_cultivee, ferme.superficie_cultivee)
         self.assertFalse(ferme_db.employes.filter(id=employe_id).exists())
 
-    def test_delete_employe_nok_bad_permission(self):
+    def test_nok_delete_employe_bad_permission(self):
         # Création du responsable et de la ferme et des employés
         responsable = test_fixtures.create_user()
         employes = [self.init_current_user(),
@@ -132,7 +132,7 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
         response = self.client.delete(url, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_delete_employe_nok_pas_employe(self):
+    def test_nok_delete_employe_pas_employe(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable)
@@ -143,7 +143,7 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
         response = self.client.delete(url, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_delete_employe_nok_not_existing(self):
+    def test_nok_delete_employe_not_existing(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable)
@@ -157,7 +157,7 @@ class FermeDeleteEmployeTestCase(SebaniaTestCase):
 class FermeAddEmployeTestCase(SebaniaTestCase):
     url = reverse_lazy('fermes-add-employe')
 
-    def test_add_employe_ok(self):
+    def test_ok_add_employe(self):
         # Création du responsable et de la ferme et des employés
         responsable = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable)
@@ -205,7 +205,7 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         new_employe_password = self.get_password_received_from_email(new_employe_email)
         self.assertTrue(self.client.login(email=new_employe_email, password=new_employe_password))
 
-    def test_add_employe_nok_bad_permission(self):
+    def test_nok_add_employe_bad_permission(self):
         # Création du responsable et de la ferme et des employés
         responsable = test_fixtures.create_user()
         employes = [self.init_current_user(),

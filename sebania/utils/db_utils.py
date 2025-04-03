@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 
 from base.models import Ferme, User
-from sebania.exceptions.auth import UserMustBeAuthenticated
+from sebania.exceptions.auth import UserMustBeAuthenticatedException
 from sebania.exceptions.common import WrongArgForMethodException
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.ferme import FermeNotFoundForUserException
@@ -21,16 +21,21 @@ def soft_delete_employe(user_id: int):
     user.deleted_at = timezone.now()
     user.save()
 
+def user_is_responsable(user_id : int):
+    return Group.objects.get(name='RESPONSABLE').user_set.filter(id=user_id).exists()
+
+def user_is_employe(user_id : int):
+    return Group.objects.get(name='EMPLOYE').user_set.filter(id=user_id).exists()
 
 def get_ferme_for_user(request) -> Ferme:
     """
     Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
     """
     if request.user is None or not request.user.is_authenticated:
-        raise UserMustBeAuthenticated()
-    if Group.objects.get(name='RESPONSABLE').user_set.filter(id=request.user.id).exists():
+        raise UserMustBeAuthenticatedException()
+    if user_is_responsable(request.user.id):
         return Ferme.objects.get(responsable=request.user)
-    elif Group.objects.get(name='EMPLOYE').user_set.filter(id=request.user.id).exists():
+    elif user_is_employe(request.user.id):
         return Ferme.objects.get(employes__id=request.user.id)
     else:
         raise FermeNotFoundForUserException(request.user.id)

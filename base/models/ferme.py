@@ -10,8 +10,8 @@ class MethodeAgricole(models.Model):
     label = models.CharField(max_length=15)
 
 class Ferme(BaseModel):
-    nom = models.CharField(max_length=50)
-    adresse = models.CharField(max_length=100)
+    nom = models.CharField(max_length=80)
+    adresse = models.TextField()
     superficie_cultivee = models.FloatField()
     methodes = models.ManyToManyField(MethodeAgricole)
     responsable = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='responsable')

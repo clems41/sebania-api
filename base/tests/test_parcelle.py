@@ -116,73 +116,73 @@ class TestParcelle(SebaniaTestCase):
         response_data = json.loads(response.content)
         self.assertEqual(len(response_data), nb_parcelles)
 
-    def test_create_ok(self):
+    def test_ok_create(self):
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED)
 
-    def test_create_ok_nom_already_exists_different_ferme(self):
+    def test_ok_create_nom_already_exists_different_ferme(self):
         other_ferme = test_fixtures.create_ferme()
         existing_parcelle = test_fixtures.create_parcelle(other_ferme)
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, nom=existing_parcelle.nom)
 
-    def test_create_nok_type_not_exists(self):
+    def test_nok_create_type_not_exists(self):
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_404_NOT_FOUND, type_id=99)
 
-    def test_create_nok_nom_already_exists(self):
+    def test_nok_create_nom_already_exists(self):
         responsable = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=responsable)
         existing_parcelle = test_fixtures.create_parcelle(ferme)
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, nom=existing_parcelle.nom, ferme=ferme, user=responsable)
 
-    def test_create_nok_superficie_zero(self):
+    def test_nok_create_superficie_zero(self):
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, superficie=0)
 
-    def test_update_ok(self):
+    def test_ok_update(self):
         self._update_parcelle(expected_status_code=status.HTTP_200_OK)
 
-    def test_update_ok_nom_already_exists_different_ferme(self):
+    def test_ok_update_nom_already_exists_different_ferme(self):
         other_ferme = test_fixtures.create_ferme()
         existing_parcelle = test_fixtures.create_parcelle(other_ferme)
         self._update_parcelle(expected_status_code=status.HTTP_200_OK, nom=existing_parcelle.nom)
 
-    def test_update_nok_id_not_exists(self):
+    def test_nok_update_id_not_exists(self):
         self._update_parcelle(expected_status_code=status.HTTP_404_NOT_FOUND, parcelle_id=235)
 
-    def test_update_nok_type_not_exists(self):
+    def test_nok_update_type_not_exists(self):
         self._update_parcelle(expected_status_code=status.HTTP_404_NOT_FOUND, type_id=99)
 
-    def test_update_nok_nom_already_exists(self):
+    def test_nok_update_nom_already_exists(self):
         responsable = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=responsable)
         existing_parcelle = test_fixtures.create_parcelle(ferme)
         self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, nom=existing_parcelle.nom, ferme=ferme, user=responsable)
 
-    def test_update_nok_superficie_zero(self):
+    def test_nok_update_superficie_zero(self):
         self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, superficie=0)
 
-    def test_delete_ok(self):
+    def test_ok_delete(self):
         self._delete_parcelle(expected_status_code=status.HTTP_204_NO_CONTENT)
 
-    def test_delete_nok_id_not_exists(self):
+    def test_nok_delete_id_not_exists(self):
         self._delete_parcelle(expected_status_code=status.HTTP_404_NOT_FOUND, parcelle_id=465)
 
-    def test_delete_nok_employe_not_allowed(self):
+    def test_nok_delete_employe_not_allowed(self):
         responsable = test_fixtures.create_user()
         employe = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
         self._delete_parcelle(expected_status_code=status.HTTP_403_FORBIDDEN, user=employe, ferme=ferme)
 
-    def test_get_one_ok(self):
+    def test_ok_get_one(self):
         self._get_one_parcelle(expected_status_code=status.HTTP_200_OK)
 
-    def test_get_one_nok_id_not_exists(self):
+    def test_nok_get_one_id_not_exists(self):
         self._get_one_parcelle(expected_status_code=status.HTTP_404_NOT_FOUND, parcelle_id=896)
 
-    def test_get_all_ok(self):
+    def test_ok_get_all(self):
         parcelles = self._create_parcelles(5)
         response = self.client.get(self.url_list, headers=self.get_jwt_headers())
         self._check_nb_parcelles_in_response(response, len(parcelles))
 
-    def test_get_all_create_delete_ok(self):
+    def test_ok_get_all_create_delete(self):
         # Create 5 parcelles
         parcelles = self._create_parcelles(5)
         response = self.client.get(self.url_list, headers=self.get_jwt_headers())

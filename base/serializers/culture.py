@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from base.models import Unite, Culture, CultureFerme
 
-
 class UniteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unite

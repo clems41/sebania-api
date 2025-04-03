@@ -7,12 +7,14 @@ from base.views.auth import *
 from base.views.config import ConfigViewSet
 from base.views.ferme import FermeViewSet
 from base.views.parcelle import ParcelleModelViewSet
+from base.views.tache import TacheModelViewSet
 
 router = routers.SimpleRouter()
 router.register(r'configurations', ConfigViewSet, basename='configurations')
 router.register(r'auth', AuthViewSet, basename='auth')
 router.register(r'fermes', FermeViewSet, basename='fermes')
 router.register(r'parcelles', ParcelleModelViewSet, basename='parcelles')
+router.register(r'taches', TacheModelViewSet, basename='taches')
 urlpatterns = router.urls
 
 urlpatterns += [

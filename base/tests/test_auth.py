@@ -14,7 +14,7 @@ from base.tests.data.auth import register_user_request_0employes, register_user_
 class AuthResetPasswordTestCase(SebaniaTestCase):
     url = reverse_lazy('auth-reset-password')
 
-    def test_reset_password_ok(self):
+    def test_ok_reset_password(self):
         # Create user
         user = self.init_current_user()
 
@@ -34,7 +34,7 @@ class AuthResetPasswordTestCase(SebaniaTestCase):
 class AuthChangePasswordTestCase(SebaniaTestCase):
     url = reverse_lazy('auth-change-password')
 
-    def test_change_password_ok(self):
+    def test_ok_change_password(self):
         new_password = crypto_utils.generate_password()
 
         # Create user
@@ -53,7 +53,7 @@ class AuthChangePasswordTestCase(SebaniaTestCase):
         self.assertTrue(self.client.login(email=email, password=new_password), "User cannot log with new password")
         self.assertFalse(self.client.login(email=email, password=old_password), "User should not be able to log with old password")
 
-    def test_update_password_nok_wrong_old_password(self):
+    def test_nok_update_password_wrong_old_password(self):
         wrong_old_password = crypto_utils.generate_password()
         new_password = crypto_utils.generate_password()
 
@@ -116,10 +116,10 @@ class AuthRegisterTestCase(SebaniaTestCase):
             self.assertIn((elem.id, elem.nom, elem.categorie_default), response_list_set)
 
 
-    def test_register_avec_employes_ok(self):
+    def test_ok_register_avec_employes(self):
         self._test_register(register_user_request_2employes)
 
-    def test_register_sans_employes_ok(self):
+    def test_ok_register_sans_employes(self):
         self._test_register(register_user_request_0employes)
 
     def _test_register(self, request):

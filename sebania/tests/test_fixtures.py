@@ -12,7 +12,7 @@ def create_user() -> User:
 def create_parcelle(ferme: Ferme) -> Parcelle:
     return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
 
-def create_ferme(responsable: User = None, employes=None) -> Ferme:
+def create_ferme(responsable: User = None, employes=None, nb_parcelles: int = 0) -> Ferme:
     # Création de la ferme
     responsable_group = Group.objects.get(name='RESPONSABLE')
     if responsable is None:
@@ -34,6 +34,8 @@ def create_ferme(responsable: User = None, employes=None) -> Ferme:
     # Ajout des méthodes
     methode = MethodeAgricole.objects.get(nom__iregex='biologique')
     ferme.methodes.add(methode)
+
+    # Création des parcelles associées
+    for _ in range(nb_parcelles):
+        create_parcelle(ferme)
     return ferme
-
-

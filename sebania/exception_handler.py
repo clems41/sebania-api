@@ -13,7 +13,7 @@ class ErrorResponse(Response):
     def __init__(self, custom_exception: CustomException, **kwargs):
         data = {
             "message": custom_exception.message,
-            "code": custom_exception.code,
+            "code": custom_exception.code.value,
         }
         if settings.DEBUG:
             data["traceback"] = traceback.format_exc()
