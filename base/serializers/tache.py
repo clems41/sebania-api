@@ -1,7 +1,9 @@
+from typing import List
+
 from django.db import transaction
 from rest_framework import serializers
 
-from base.models import Tache, Parcelle, User, Activite, Culture
+from base.models import Tache, Parcelle, User, Activite, Culture, Ferme
 from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
@@ -59,14 +61,28 @@ class TacheSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Duree minutes devrait être entre 1 et 1440")
         return value
 
-    @transaction.atomic
-    def create(self, validated_data):
-        ferme = serializer_utils.get_ferme_from_context(self.context)
-        parcelle_ids = validated_data.pop("parcelle_ids")
-        tache = Tache.objects.create(ferme=ferme, **validated_data)
-        # Ajout des parcelles à la tâche
+    def _add_parcelles(self, parcelle_ids: List[int], instance: Tache, ferme: Ferme):
         if parcelle_ids is not None:
             for parcelle_id in parcelle_ids:
-                parcelle = db_utils.get_one_or_raise_exception(Parcelle, ParcelleNotFoundException(parcelle_id, ferme.id), id=parcelle_id)
-                tache.parcelles.add(parcelle)
-        return tache
+                # Check that parcelle exists in database
+                db_utils.get_one_or_raise_exception(Parcelle, ParcelleNotFoundException(parcelle_id, ferme.id), id=parcelle_id)
+            instance.parcelles.set(parcelle_ids)
+
+    @transaction.atomic
+    def _create_or_update(self, instance, validated_data):
+        ferme = serializer_utils.get_ferme_from_context(self.context)
+        parcelle_ids = validated_data.pop("parcelle_ids")
+        validated_data["ferme_id"] = ferme.id
+        if instance is None:
+            instance = super(TacheSerializer, self).create(validated_data)
+        else:
+            instance = super(TacheSerializer, self).update(instance, validated_data)
+        self._add_parcelles(parcelle_ids, instance, ferme)
+        return instance
+
+
+    def create(self, validated_data):
+        return self._create_or_update(None, validated_data)
+
+    def update(self, instance, validated_data):
+        return self._create_or_update(instance, validated_data)
