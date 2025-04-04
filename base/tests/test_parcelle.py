@@ -57,7 +57,6 @@ class TestParcelle(SebaniaTestCase):
         }
         # UPDATE
         if parcelle_id is not None:
-            request["id"] = parcelle_id
             response = self.client.put(_get_url_detail(parcelle_id), request, headers=self.get_jwt_headers(), format='json')
         # CREATE
         else:

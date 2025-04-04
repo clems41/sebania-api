@@ -63,17 +63,16 @@ class TestTache(SebaniaTestCase):
         if ferme is None:
             ferme = test_fixtures.create_ferme(responsable=user)
         request = {
-            'date': date,
-            'activite_id': activite_id,
-            'user_id': user.id,
-            'duree_minutes': duree_minutes,
-            'culture_id': culture_id,
-            'parcelle_ids': parcelle_ids,
-            'quantite_recoltee': quantite_recoltee,
-            'commentaire': commentaire,
+            "date": date,
+            "activite_id": activite_id,
+            "user_id": user.id,
+            "duree_minutes": duree_minutes,
+            "culture_id": culture_id,
+            "parcelle_ids": parcelle_ids,
+            "quantite_recoltee": quantite_recoltee,
+            "commentaire": commentaire,
         }
         if tache_id is not None:
-            # request["id"] = tache_id
             response = self.client.put(_get_url_detail(tache_id), request, format='json', headers=self.get_jwt_headers())
         else:
             response = self.client.post(self.url, request, format='json', headers=self.get_jwt_headers())
