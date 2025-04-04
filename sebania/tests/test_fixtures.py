@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from django.contrib.auth.models import Group
@@ -13,8 +14,8 @@ def create_user() -> User:
 def create_parcelle(ferme: Ferme) -> Parcelle:
     return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
 
-def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2) -> Tache:
-    tache = Tache.objects.create(ferme=ferme, date=timezone.now(), user_id=user_id, activite_id=3, duree_minutes=90,
+def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now()) -> Tache:
+    tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=3, duree_minutes=90,
                                  culture_id=3, quantite_recoltee=0, commentaire=crypto_utils.random_string(length=150))
     for _ in range(nb_parcelles):
         parcelle = create_parcelle(ferme)

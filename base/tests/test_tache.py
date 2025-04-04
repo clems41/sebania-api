@@ -3,6 +3,7 @@ import json
 from typing import List
 
 from django.urls import reverse_lazy
+from django.utils import timezone
 from rest_framework import status
 
 from base.models import User, Ferme, Tache, Parcelle
@@ -15,7 +16,7 @@ def _get_url_detail(tache_id: int):
     return reverse_lazy('taches-detail', args=[tache_id])
 
 class TestTache(SebaniaTestCase):
-    url = None
+    url = reverse_lazy('taches-list')
     
     def _check_response(self, request, response):
         response_data = json.loads(response.content)
@@ -86,8 +87,6 @@ class TestTache(SebaniaTestCase):
             self.assertTrue(len(taches) == 0)
 
 class TestCreationTache(TestTache):
-    url = reverse_lazy('taches-list')
-    
     def test_ok_creation_sans_cultures(self):
         self._create_or_update()
     
@@ -179,8 +178,6 @@ class TestCreationTache(TestTache):
 
 
 class TestUpdateTache(TestTache):
-    url = reverse_lazy('taches-detail')
-
     def _update(self, tache_id: int = None, date: str = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%d/%m/%Y"), activite_id: int = 5, user: User = None,
                 ferme: Ferme = None, duree_minutes = 230, culture_id: int = None, commentaire: str = None,
                 parcelle_ids: List[int] = None, quantite_recoltee: int = None, expected_status_code=status.HTTP_200_OK):
@@ -288,3 +285,77 @@ class TestUpdateTache(TestTache):
         other_employe = test_fixtures.create_user()
         ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe, other_employe])
         self._update(expected_status_code=status.HTTP_403_FORBIDDEN, user=other_employe, ferme=ferme)
+
+class TestGetTache(SebaniaTestCase):
+    url = reverse_lazy('taches-list')
+
+    def _create_data(self, user: User, ferme: Ferme, date: datetime.datetime = timezone.now()):
+        other_date = timezone.now() - datetime.timedelta(days=1)
+        other_ferme = test_fixtures.create_ferme()
+        other_user = test_fixtures.create_user()
+        # création de tâches qui correspondent aux filtres
+        matching_taches = []
+        for _ in range(6):
+            matching_taches.append(test_fixtures.create_tache(ferme=ferme, user_id=user.id, nb_parcelles=3, date=date))
+        # création de tâches qui ne correspondant pas aux filtres
+        for _ in range(5):
+            test_fixtures.create_tache(ferme=other_ferme, user_id=user.id, nb_parcelles=3, date=date)
+            test_fixtures.create_tache(ferme=ferme, user_id=other_user.id, nb_parcelles=3, date=date)
+            test_fixtures.create_tache(ferme=ferme, user_id=user.id, nb_parcelles=3, date=other_date)
+        return matching_taches
+
+    def _compare_response_with_expected(self, response, expected_taches: List[Tache]):
+        if len(expected_taches) == 1:
+            actual_taches = [json.loads(response.content)]
+        else:
+            actual_taches = json.loads(response.content)
+        self.assertEqual(len(actual_taches), len(expected_taches))
+        for actual_tache in actual_taches:
+            expected_tache = next((x for x in expected_taches if x.id == actual_tache.get("id")), None)
+            self.assertIsNotNone(expected_tache)
+            self.assertEqual(expected_tache.activite_id, actual_tache.get("activite").get("id"))
+            self.assertEqual(expected_tache.user_id, actual_tache.get("user").get("id"))
+            self.assertEqual(expected_tache.date.strftime("%d/%m/%Y"), actual_tache.get("date"))
+            self.assertEqual(expected_tache.duree_minutes, actual_tache.get("duree_minutes"))
+            if expected_tache.culture_id is not None:
+                self.assertEqual(expected_tache.culture_id, actual_tache.get("culture").get("id"))
+            self.assertEqual(expected_tache.quantite_recoltee, actual_tache.get("quantite_recoltee"))
+            self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
+            for expected_parcelle in expected_tache.parcelles.all():
+                actual_parcelle = next((x for x in actual_tache.get("parcelles") if x.get("id") == expected_parcelle.id), None)
+                self.assertIsNotNone(actual_parcelle)
+                self.assertEqual(expected_parcelle.nom, actual_parcelle.get("nom"))
+                self.assertEqual(expected_parcelle.superficie, actual_parcelle.get("superficie"))
+                self.assertEqual(expected_parcelle.type_id, actual_parcelle.get("type").get("id"))
+
+
+    def test_ok_get_one(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_tache = test_fixtures.create_tache(ferme=ferme, user_id=responsable.id, nb_parcelles=3)
+        response = self.client.get(_get_url_detail(existing_tache.id), headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, [existing_tache])
+
+    def test_ok_get_all(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_taches = []
+        for _ in range(6):
+            existing_taches.append(test_fixtures.create_tache(ferme=ferme, user_id=responsable.id, nb_parcelles=3))
+        response = self.client.get(self.url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, existing_taches)
+
+    def test_ok_get_all_filters_date_user(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        date = timezone.now()
+        matching_taches = self._create_data(date=date, user=responsable, ferme=ferme)
+        data = {
+            "user_id": responsable.id,
+            "date": date.strftime("%d/%m/%Y"),
+        }
+        response = self.client.get(self.url, data=data, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, matching_taches)
