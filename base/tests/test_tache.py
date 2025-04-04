@@ -359,3 +359,59 @@ class TestGetTache(SebaniaTestCase):
         response = self.client.get(self.url, data=data, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self._compare_response_with_expected(response, matching_taches)
+
+class TestDeleteTache(SebaniaTestCase):
+    def _delete(self, tache_id: int = None, user_tache: User = None, user_delete: User = None, ferme: Ferme = None, expected_status_code: int = status.HTTP_204_NO_CONTENT):
+        if user_delete is None:
+            user_delete = self.init_current_user()
+        if user_tache is None:
+            user_tache = user_delete
+        if ferme is None:
+            ferme = test_fixtures.create_ferme(responsable=user_delete)
+        # Création de la tâche en base
+        if tache_id is None:
+            tache = test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, nb_parcelles=3)
+            tache_id = tache.id
+        # Suppression
+        response = self.client.delete(_get_url_detail(tache_id), headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, expected_status_code)
+        # Vérification que la tâche n'est plus en base
+        if expected_status_code == status.HTTP_204_NO_CONTENT:
+            self.assertRaises(Tache.DoesNotExist, lambda: Tache.objects.get(id=tache_id))
+
+
+    def test_ok_delete(self):
+        self._delete()
+
+    def test_ok_delete_responsable_pour_employe(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        employe = ferme.employes.first()
+        self._delete(user_tache=employe, user_delete=responsable, ferme=ferme)
+
+    def test_ok_delete_employe_pour_employe(self):
+        employe1 = self.init_current_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1])
+        self._delete(user_tache=employe1, user_delete=employe1, ferme=ferme)
+
+    def test_nok_delete_id_not_exists(self):
+        self._delete(tache_id=99, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_delete_employe_pour_responsable(self):
+        employe1 = self.init_current_user()
+        responsable = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1], responsable=responsable)
+        self._delete(user_tache=responsable, user_delete=employe1, ferme=ferme, expected_status_code=status.HTTP_403_FORBIDDEN)
+
+    def test_nok_delete_employe_pour_autre_employe(self):
+        employe1 = self.init_current_user()
+        employe2 = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1, employe2])
+        self._delete(user_tache=employe2, user_delete=employe1, ferme=ferme, expected_status_code=status.HTTP_403_FORBIDDEN)
+
+    def test_nok_delete_responsable_pour_autre_ferme(self):
+        responsable = self.init_current_user()
+        autre_responsable = test_fixtures.create_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        autre_ferme = test_fixtures.create_ferme(responsable=autre_responsable)
+        self._delete(user_tache=autre_responsable, user_delete=responsable, ferme=autre_ferme, expected_status_code=status.HTTP_404_NOT_FOUND)

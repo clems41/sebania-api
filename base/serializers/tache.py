@@ -9,7 +9,7 @@ from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
 from base.serializers.user import UserSerializer
 from sebania.exceptions.activite import ActiviteNotFoundException
-from sebania.exceptions.auth import EmployeCannotPostForResponsableException
+from sebania.exceptions.auth import EmployeCannotActForResponsableException
 from sebania.exceptions.culture import CultureNotFoundException
 from sebania.exceptions.parcelle import ParcelleNotFoundException
 from sebania.exceptions.user import UserNotFoundException
@@ -53,7 +53,7 @@ class TacheSerializer(serializers.ModelSerializer):
         user_who_sent_request = self.context.get("request").user
         if db_utils.user_is_employe(user_who_sent_request.id):
             if user_who_sent_request.id != user.id:
-                raise EmployeCannotPostForResponsableException()
+                raise EmployeCannotActForResponsableException()
         return value
 
     def validate_duree_minutes(self, value):

@@ -10,8 +10,8 @@ class UserMustBeAuthenticatedException(CustomException):
                          status_code=status.HTTP_403_FORBIDDEN,
                          code=ErrorCode.AUTH_USER_MUST_BE_AUTHENTICATED)
 
-class EmployeCannotPostForResponsableException(CustomException):
+class EmployeCannotActForResponsableException(CustomException):
     def __init__(self):
-        super().__init__(message= "Les employés ne peuvent pas saisir pour les responsables ou les autres employés",
+        super().__init__(message= "Les employés ne peuvent pas agir pour les responsables ou les autres employés",
                          status_code=status.HTTP_403_FORBIDDEN,
                          code=ErrorCode.AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
