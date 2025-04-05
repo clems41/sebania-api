@@ -4,6 +4,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from base.models import Tache, Parcelle, User, Activite, Culture, Ferme
+from base.models.statut import StatutTotal
 from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
@@ -86,3 +87,15 @@ class TacheSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         return self._create_or_update(instance, validated_data)
+
+
+class CalendrierJourSerializer(serializers.Serializer):
+    jour = serializers.DateField(format="%d/%m/%Y", input_formats=['%d/%m/%Y'])
+    total_jour = serializers.IntegerField()
+    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTotal])
+
+
+class CalendrierSerializer(serializers.Serializer):
+    jours = CalendrierJourSerializer(many=True)
+    total = serializers.IntegerField()
+    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTotal])
