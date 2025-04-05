@@ -36,6 +36,24 @@ def send_reset_password(user: User, new_password: str):
     template_name = "emails/reset-password.html"
     _send_email(subject, user.email, template_name, template_context)
 
+def send_feedback_to_super_users(sender: User, sujet: str, message: str):
+    """
+    Envoi d'un email aux super users lors d'un feedback utilisateur
+    """
+    super_users = User.objects.filter(is_superuser=True)
+    subject = "[Sebania] Nouveau retour d'un utilisateur"
+    template_context = {
+        "prenom": sender.first_name,
+        "nom": sender.last_name,
+        "message": message,
+        "sujet": sujet,
+    }
+    template_name = "emails/send-feedback.html"
+    if len(super_users) == 0:
+        logger.error("Aucun super utilisateur a été trouvé en base, le retour utilisateur ne pourra donc pas être envoyé")
+    for user in super_users:
+        _send_email(subject=subject, receiver=user.email, template_name=template_name, template_context=template_context)
+
 
 
 
@@ -45,7 +63,7 @@ def send_reset_password(user: User, new_password: str):
 
 def _send_email(subject: str, receiver:str, template_name: str, template_context):
     sender = settings.DEFAULT_FROM_EMAIL
-    message_html = render_to_string("emails/send-employe-password.html", context=template_context)
+    message_html = render_to_string(template_name, context=template_context)
     email_db = Email.objects.create(
         subject=subject,
         content=message_html,
