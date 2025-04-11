@@ -32,10 +32,14 @@ class TacheSerializer(serializers.ModelSerializer):
     )
     quantite_recoltee = serializers.IntegerField(required=False, allow_null=True)
     commentaire = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    quantite = serializers.FloatField(required=False, allow_null=True)
+    nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    unite = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     class Meta:
         model = Tache
-        fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "culture", "culture_id", "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire"]
+        fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "culture", "culture_id",
+                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite"]
 
     def validate_activite_id(self, value):
         db_utils.get_one_or_raise_exception(Activite, ActiviteNotFoundException(value), id=value)

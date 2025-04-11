@@ -15,3 +15,6 @@ class Tache(BaseModel):
     parcelles = models.ManyToManyField(Parcelle)
     quantite_recoltee = models.IntegerField(null=True, blank=True)
     commentaire = models.TextField(null=True, blank=True)
+    quantite = models.FloatField(null=True, blank=True)
+    unite = models.TextField(null=True, blank=True)
+    nature = models.TextField(null=True, blank=True)
