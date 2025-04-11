@@ -438,5 +438,25 @@
       "categorie_default": "feuille",
       "unite_id": 1
     }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 45,
+    "fields": {
+      "nom": "Engrais verts",
+      "default": true,
+      "categorie_default": "autres",
+      "unite_id": 1
+    }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 46,
+    "fields": {
+      "nom": "Fleurs",
+      "default": true,
+      "categorie_default": "autres",
+      "unite_id": 2
+    }
   }
 ]
