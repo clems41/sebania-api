@@ -24,7 +24,7 @@ DATABASES = {
         'NAME': 'sebania',
         'USER': 'sebania',
         'PASSWORD': 'sebania',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
         'TEST': {
             'NAME': 'test_database',

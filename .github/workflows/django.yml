@@ -30,8 +30,6 @@ jobs:
         echo "DATABASE_NAME=sebania" > .env
         echo "DATABASE_USERNAME=sebania" >> .env
         echo "DATABASE_PASSWORD=sebania" >> .env
-        echo "DATABASE_HOST=db" >> .env
-        echo "DATABASE_PORT=5432" >> .env
     - name: Create testing database using Docker Compose
       run: docker compose up -d db
     - name: Run Tests
