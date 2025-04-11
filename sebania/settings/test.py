@@ -9,6 +9,11 @@ INSTALLED_APPS += [
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_HOST = ""
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_PORT = ""
+EMAIL_USE_TLS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
