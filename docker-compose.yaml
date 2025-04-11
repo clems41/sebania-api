@@ -26,6 +26,7 @@ services:
         condition: service_healthy
     environment:
       DJANGO_SETTINGS_MODULE: sebania.settings.local
+      DATABASE_HOST: db
     env_file:
       - .env
 
