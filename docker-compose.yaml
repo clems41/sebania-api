@@ -1,24 +1,26 @@
 services:
- db:
-   container_name: sebania-db
-   image: postgres:17
-   ports:
-     - "5432:5432"
-   volumes:
-     - sebania_data:/var/lib/postgresql/data
-   env_file:
-     - .env
+  db:
+    container_name: sebania-db
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    volumes:
+      - sebania_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: sebania
+      POSTGRES_USER: sebania
+      POSTGRES_DB: sebania
 
- api:
-   build: .
-   container_name: sebania-api
-   ports:
-     - "8000:8000"
-   depends_on:
-     - db
-   environment:
-     DJANGO_SETTINGS_MODULE: sebania.settings.development
-   env_file:
-     - .env
+  api:
+    build: .
+    container_name: sebania-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: sebania.settings.local
+    env_file:
+      - .env
 volumes:
-   sebania_data:
+  sebania_data:
