@@ -17,21 +17,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
     - name: Create empty .env file for Docker Compose
       run: touch .env
-    - name: Create testing database using Docker Compose
-      run: docker compose up -d db
-    - name: Wait until database is ready
-      run: sleep 30
-    - name: Run Tests
-      run: python manage.py test --settings=sebania.settings.test --no-input
+    - name: Create testing database and run testcases using Docker Compose
+      run: docker compose up -d db,testcases
     - name: Destroy testing database
       run: docker compose down -v
