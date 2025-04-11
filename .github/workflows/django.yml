@@ -34,4 +34,4 @@ jobs:
     - name: Run Tests
       run: python manage.py test --settings=sebania.settings.test --no-input
     - name: Destroy testing database
-      run: docker-compose down -v
+      run: docker compose down -v
