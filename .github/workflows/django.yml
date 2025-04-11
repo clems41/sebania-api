@@ -29,6 +29,8 @@ jobs:
       run: touch .env
     - name: Create testing database using Docker Compose
       run: docker compose up -d db
+    - name: Wait until database is ready
+      run: sleep 30
     - name: Run Tests
       run: python manage.py test --settings=sebania.settings.test --no-input
     - name: Destroy testing database
