@@ -10,16 +10,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.12]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Create empty .env file for Docker Compose
-      run: touch .env
-    - name: Create testing database and run testcases using Docker Compose
-      run: docker compose up -d db,testcases
-    - name: Destroy testing database
-      run: docker compose down -v
+      - uses: actions/checkout@v4
+      - name: Create empty .env file for Docker Compose
+        run: touch .env
+      - name: Create testing database and run testcases using Docker Compose
+        run: docker compose up --build db testcases --abort-on-container-exit --exit-code-from testcases
+      - name: Destroy testing database
+        run: docker compose down -v

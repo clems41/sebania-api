@@ -30,10 +30,11 @@ services:
       - .env
 
   testcases:
-    build: .
+    build:
+      dockerfile: ./Dockerfile.test
     container_name: sebania-testcases
-    command:
-      - "python manage.py test --settings=sebania.settings.test --no-input"
+    environment:
+      DATABASE_HOST: db
     depends_on:
       db:
         condition: service_healthy
