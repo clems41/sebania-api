@@ -3,6 +3,7 @@ from django.db import models
 from base.models import Activite, User, Ferme, Parcelle
 from base.models.base import BaseModel
 from base.models.culture import Culture
+from base.models.statut import StatutTache
 
 
 class Tache(BaseModel):
@@ -18,3 +19,18 @@ class Tache(BaseModel):
     quantite = models.FloatField(null=True, blank=True)
     unite = models.TextField(null=True, blank=True)
     nature = models.TextField(null=True, blank=True)
+
+    def get_statut(self) -> StatutTache:
+        if not self.activite.need_culture:
+            return StatutTache.OK
+        nb_point = 0
+        if self.culture:
+            nb_point += 1
+        if self.parcelles and len(self.parcelles.all()) > 0:
+            nb_point += 1
+        statut = StatutTache.DANGER
+        if nb_point == 1:
+            statut = StatutTache.WARNING
+        if nb_point == 2:
+            statut = StatutTache.OK
+        return statut

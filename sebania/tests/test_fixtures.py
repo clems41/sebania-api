@@ -14,9 +14,10 @@ def create_user() -> User:
 def create_parcelle(ferme: Ferme) -> Parcelle:
     return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
 
-def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90) -> Tache:
-    tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=3, duree_minutes=duree_minutes,
-                                 culture_id=3, quantite_recoltee=0, commentaire=crypto_utils.random_string(length=150),
+def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,
+                 culture_id = 3, activite_id = 3) -> Tache:
+    tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=activite_id, duree_minutes=duree_minutes,
+                                 culture_id=culture_id, quantite_recoltee=0, commentaire=crypto_utils.random_string(length=150),
                                  quantite=425.2, unite=crypto_utils.random_string(length=10), nature=crypto_utils.random_string(length=20))
     for _ in range(nb_parcelles):
         parcelle = create_parcelle(ferme)

@@ -9,8 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from base.filters.tache import TacheFilter, TacheCalendrierFilter
 from base.models import Tache
-from base.models.statut import StatutTotal
-from base.serializers.ferme import FermeViewSerializer
+from base.models.statut import StatutTache
 from base.serializers.tache import TacheSerializer, CalendrierSerializer
 from sebania.exceptions.auth import EmployeCannotActForResponsableException
 from sebania.utils import db_utils
@@ -68,14 +67,14 @@ class TacheModelViewSet(ModelViewSet):
             jours.append({
                 'jour': jour['jour'],
                 'total_jour': jour['total_jour'],
-                'statut': StatutTotal.OK  # TODO
+                'statut': StatutTache.OK  # TODO
             })
 
         # Créer l'objet CalendrierSerializer
         calendrier_data = {
             'jours': jours,
             'total': total_global,
-            'statut': StatutTotal.OK  # TODO
+            'statut': StatutTache.OK  # TODO
         }
 
         # Sérialiser et retourner la réponse

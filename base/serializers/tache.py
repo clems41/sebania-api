@@ -4,7 +4,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from base.models import Tache, Parcelle, User, Activite, Culture, Ferme
-from base.models.statut import StatutTotal
+from base.models.statut import StatutTache
 from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
@@ -35,11 +35,18 @@ class TacheSerializer(serializers.ModelSerializer):
     quantite = serializers.FloatField(required=False, allow_null=True)
     nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     unite = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    statut = serializers.CharField(read_only=True)
 
     class Meta:
         model = Tache
         fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "culture", "culture_id",
-                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite"]
+                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite",
+                  "statut"]
+
+    def to_representation(self, instance: Tache):
+        representation = super().to_representation(instance)
+        representation["statut"] = instance.get_statut().name
+        return representation
 
     def validate_activite_id(self, value):
         db_utils.get_one_or_raise_exception(Activite, ActiviteNotFoundException(value), id=value)
@@ -96,10 +103,10 @@ class TacheSerializer(serializers.ModelSerializer):
 class CalendrierJourSerializer(serializers.Serializer):
     jour = serializers.DateField(format="%d/%m/%Y", input_formats=['%d/%m/%Y'])
     total_jour = serializers.IntegerField()
-    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTotal])
+    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTache])
 
 
 class CalendrierSerializer(serializers.Serializer):
     jours = CalendrierJourSerializer(many=True)
     total = serializers.IntegerField()
-    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTotal])
+    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTache])

@@ -9,6 +9,7 @@ from django.utils import timezone
 from rest_framework import status
 
 from base.models import User, Ferme, Tache, Parcelle, user
+from base.models.statut import StatutTache
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
@@ -35,15 +36,22 @@ class TestTache(SebaniaTestCase):
         self.assertEqual(response_data.get("nature"), request.get("nature"))
         self.assertEqual(response_data.get("quantite"), request.get("quantite"))
         self.assertEqual(response_data.get("unite"), request.get("unite"))
+        expected_statut = StatutTache.DANGER
         if request.get("culture_id") is not None:
             culture = response_data.get("culture")
             self.assertEqual(culture.get("id"), request.get("culture_id"))
             self.assertIsNotNone(culture.get("nom"))
+            expected_statut = StatutTache.WARNING
         if request.get("parcelle_ids") is not None:
             self.assertEqual(len(response_data.get("parcelles")), len(request.get("parcelle_ids")))
             for parcelle in response_data.get("parcelles"):
                 self.assertTrue(parcelle.get("id") in request.get("parcelle_ids"))
                 self.assertIsNotNone(parcelle.get("nom"))
+            expected_statut = StatutTache.WARNING
+        # check statut
+        if request.get("culture_id") is not None and request.get("parcelle_ids") is not None:
+            expected_statut = StatutTache.OK
+        self.assertEqual(response_data.get("statut"), expected_statut.name)
 
     def _check_database(self, request, response, ferme):
         response_data = json.loads(response.content)
@@ -217,7 +225,7 @@ class TestUpdateTache(TestTache):
         if ferme is None:
             ferme = test_fixtures.create_ferme(responsable=user)
         if tache_id is None:
-            tache = test_fixtures.create_tache(user_id=user.id, ferme=ferme)
+            tache = test_fixtures.create_tache(user_id=user.id, ferme=ferme, nb_parcelles=0)
             tache_id = tache.id
         return self._create_or_update(tache_id=tache_id, date=date, activite_id=activite_id,
                                       user=user, ferme=ferme, duree_minutes=duree_minutes, culture_id=culture_id,
@@ -358,8 +366,10 @@ class TestGetTache(SebaniaTestCase):
             self.assertEqual(expected_tache.user_id, actual_tache.get("user").get("id"))
             self.assertEqual(expected_tache.date.strftime("%d/%m/%Y"), actual_tache.get("date"))
             self.assertEqual(expected_tache.duree_minutes, actual_tache.get("duree_minutes"))
+            expected_statut = StatutTache.DANGER
             if expected_tache.culture_id is not None:
                 self.assertEqual(expected_tache.culture_id, actual_tache.get("culture").get("id"))
+                expected_statut = StatutTache.WARNING
             self.assertEqual(expected_tache.quantite_recoltee, actual_tache.get("quantite_recoltee"))
             self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
             self.assertEqual(expected_tache.nature, actual_tache.get("nature"))
@@ -372,6 +382,12 @@ class TestGetTache(SebaniaTestCase):
                 self.assertEqual(expected_parcelle.nom, actual_parcelle.get("nom"))
                 self.assertEqual(expected_parcelle.superficie, actual_parcelle.get("superficie"))
                 self.assertEqual(expected_parcelle.type_id, actual_parcelle.get("type").get("id"))
+            if len(expected_tache.parcelles.all()) > 0:
+                if expected_tache.culture_id is not None:
+                    expected_statut = StatutTache.OK
+                else:
+                    expected_statut = StatutTache.WARNING
+            self.assertEqual(expected_statut.name, actual_tache.get("statut"))
 
     def test_ok_get_one(self):
         responsable = self.init_current_user()
