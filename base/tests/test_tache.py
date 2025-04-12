@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from rest_framework import status
 
-from base.models import User, Ferme, Tache, Parcelle, user
+from base.models import User, Ferme, Tache, Parcelle
 from base.models.statut import StatutTache
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
@@ -486,11 +486,25 @@ class TestCalendrier(SebaniaTestCase):
 
     def _create_taches(self, date, ferme, user_tache: User):
         total = 0
-        for _ in range(random.randint(4, 9)):
+        worst_statut = StatutTache.OK
+        for _ in range(random.randint(1, 9)):
+            random_value = random.randint(1, 100)
+            # création de temps à autre (8%) d'une tâche au statut DANGER
+            if random_value < 8:
+                wanted_statut = StatutTache.DANGER
+                worst_statut = StatutTache.DANGER
+            # création de temps à autre (17%) d'une tâche au statut WARNING
+            elif random_value < 25:
+                wanted_statut = StatutTache.WARNING
+                if worst_statut != StatutTache.DANGER:
+                    worst_statut = StatutTache.WARNING
+            # création le reste du temps d'une tâche au statut OK
+            else:
+                wanted_statut = StatutTache.OK
             duree = random.randint(30, 90)
-            test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, nb_parcelles=0, duree_minutes=duree, date=date)
+            test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, duree_minutes=duree, date=date, wanted_statut=wanted_statut)
             total += duree
-        return total
+        return total, worst_statut
 
     def _create_data(self, user_concerned: User, annee: int, numero_semaine: int = None, numero_mois: int = None, ferme: Ferme = None):
         if ferme is None:
@@ -499,24 +513,27 @@ class TestCalendrier(SebaniaTestCase):
         # Création des tâches qui matchent pour la semaine
         total = 0
         total_jour = {}
+        statut_jour = {}
         if numero_semaine is not None:
             for day in range(1, 8):
                 for employe in ferme.employes.all():
                     date = datetime.date.fromisocalendar(annee, numero_semaine, day)
-                    total_for_date = self._create_taches(date=date, ferme=ferme, user_tache=employe)
+                    total_for_date, worst_statut = self._create_taches(date=date, ferme=ferme, user_tache=employe)
                     if user_concerned.id == employe.id:
                         total += total_for_date
                         total_jour[date.strftime("%d/%m/%Y")] = total_for_date
+                        statut_jour[date.strftime("%d/%m/%Y")] = worst_statut
         if numero_mois is not None:
             _, nb_jours = calendar.monthrange(annee, numero_mois)
             for day in range(1, nb_jours + 1):
                 for employe in ferme.employes.all():
                     date = datetime.date(annee, numero_mois, day)
-                    total_for_date = self._create_taches(date=date, ferme=ferme, user_tache=employe)
+                    total_for_date, worst_statut = self._create_taches(date=date, ferme=ferme, user_tache=employe)
                     if user_concerned.id == employe.id:
                         total += total_for_date
                         total_jour[date.strftime("%d/%m/%Y")] = total_for_date
-        return total, total_jour
+                        statut_jour[date.strftime("%d/%m/%Y")] = worst_statut
+        return total, total_jour, statut_jour
 
     def _get_calendrier(self, annee: int, numero_semaine: int = None, numero_mois: int = None, user_id: int = None,
                         expected_status_code=status.HTTP_200_OK):
@@ -536,9 +553,10 @@ class TestCalendrier(SebaniaTestCase):
         self.assertEqual(response.status_code, expected_status_code)
         return response
 
-    def _check_response(self, response, total: int, total_jour: {}, expected_days: List[str]):
+    def _check_response(self, response, total: int, total_jour: {}, statut_jour: {}, expected_days: List[str]):
         response_data = json.loads(response.content)
         self.assertEqual(total, response_data.get("total"))
+        statuts = []
         for expected_day in expected_days:
             expected_total = total_jour.get(expected_day)
             actual_day = next(
@@ -546,25 +564,45 @@ class TestCalendrier(SebaniaTestCase):
                 None)
             self.assertIsNotNone(actual_day)
             self.assertEqual(expected_total, actual_day.get("total_jour"))
+            expected_statut = statut_jour.get(expected_day)
+            statuts.append(expected_statut)
+            self.assertEqual(expected_statut.name, actual_day.get("statut"))
+        self.assertEqual(StatutTache.from_statuts(statuts).name, response_data.get("statut"))
 
     def test_calendrier_semaine(self):
         numero_semaine = 3
-        total, total_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_semaine=numero_semaine)
+        total, total_jour, statut_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_semaine=numero_semaine)
         response = self._get_calendrier(annee=2025, numero_semaine=numero_semaine)
         expected_days = ["13/01/2025", "14/01/2025", "15/01/2025", "16/01/2025", "17/01/2025", "18/01/2025",
                          "19/01/2025"]
-        self._check_response(response, total, total_jour, expected_days)
+        self._check_response(response, total, total_jour, statut_jour, expected_days)
+
+    def test_calendrier_semaine_empty(self):
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        numero_semaine = 3
+        response = self._get_calendrier(annee=2025, numero_semaine=numero_semaine)
+        expected_days = []
+        self._check_response(response, 0, {}, {}, expected_days)
 
     def test_calendrier_mois(self):
         numero_mois = 2
-        total, total_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_mois=numero_mois)
+        total, total_jour, statut_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_mois=numero_mois)
         response = self._get_calendrier(annee=2025, numero_mois=numero_mois)
         expected_days = ['01/02/2025', '02/02/2025', '03/02/2025', '04/02/2025', '05/02/2025', '06/02/2025',
                          '07/02/2025', '08/02/2025', '09/02/2025', '10/02/2025', '11/02/2025', '12/02/2025',
                          '13/02/2025', '14/02/2025', '15/02/2025', '16/02/2025', '17/02/2025', '18/02/2025',
                          '19/02/2025', '20/02/2025', '21/02/2025', '22/02/2025', '23/02/2025', '24/02/2025',
                          '25/02/2025', '26/02/2025', '27/02/2025', '28/02/2025']
-        self._check_response(response, total, total_jour, expected_days)
+        self._check_response(response, total, total_jour, statut_jour, expected_days)
+
+    def test_calendrier_mois_empty(self):
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        numero_mois = 2
+        response = self._get_calendrier(annee=2025, numero_mois=numero_mois)
+        expected_days = []
+        self._check_response(response, 0, {}, {}, expected_days)
 
     def test_calendrier_semaine_specific_user(self):
         responsable = self.init_current_user()
@@ -572,11 +610,11 @@ class TestCalendrier(SebaniaTestCase):
         employes = [employe1, test_fixtures.create_user()]
         ferme = test_fixtures.create_ferme(responsable=responsable, employes=employes)
         numero_semaine = 3
-        total, total_jour = self._create_data(numero_semaine=numero_semaine, annee=2025, ferme=ferme, user_concerned=employe1)
+        total, total_jour, statut_jour = self._create_data(numero_semaine=numero_semaine, annee=2025, ferme=ferme, user_concerned=employe1)
         response = self._get_calendrier(annee=2025, numero_semaine=numero_semaine, user_id=employe1.id)
         expected_days = ["13/01/2025", "14/01/2025", "15/01/2025", "16/01/2025", "17/01/2025", "18/01/2025",
                          "19/01/2025"]
-        self._check_response(response, total, total_jour, expected_days)
+        self._check_response(response, total, total_jour, statut_jour, expected_days)
 
     def test_calendrier_mois_specific_user(self):
         responsable = test_fixtures.create_user()
@@ -585,11 +623,11 @@ class TestCalendrier(SebaniaTestCase):
         employes = [employe1, employe2]
         ferme = test_fixtures.create_ferme(responsable=responsable, employes=employes)
         numero_mois = 2
-        total, total_jour = self._create_data(annee=2025, numero_mois=numero_mois, ferme=ferme, user_concerned=employe2)
+        total, total_jour, statut_jour = self._create_data(annee=2025, numero_mois=numero_mois, ferme=ferme, user_concerned=employe2)
         response = self._get_calendrier(annee=2025, numero_mois=numero_mois, user_id=employe2.id)
         expected_days = ['01/02/2025', '02/02/2025', '03/02/2025', '04/02/2025', '05/02/2025', '06/02/2025',
                          '07/02/2025', '08/02/2025', '09/02/2025', '10/02/2025', '11/02/2025', '12/02/2025',
                          '13/02/2025', '14/02/2025', '15/02/2025', '16/02/2025', '17/02/2025', '18/02/2025',
                          '19/02/2025', '20/02/2025', '21/02/2025', '22/02/2025', '23/02/2025', '24/02/2025',
                          '25/02/2025', '26/02/2025', '27/02/2025', '28/02/2025']
-        self._check_response(response, total, total_jour, expected_days)
+        self._check_response(response, total, total_jour, statut_jour, expected_days)

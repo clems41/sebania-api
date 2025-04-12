@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.db.models import Sum
 from django.db.models.functions import TruncDate
 from django_filters.rest_framework import DjangoFilterBackend
@@ -50,33 +52,34 @@ class TacheModelViewSet(ModelViewSet):
         if not filtre.is_valid():
             return Response(filtre.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # On groupe par jour et somme les durées
-        data = (
-            filtre.qs
-            .annotate(jour=TruncDate('date'))  # Troncature de la date pour grouper par jour
-            .values('jour')  # Grouper par jour
-            .annotate(total_jour=Sum('duree_minutes'))  # Somme des durées par jour
-            .order_by('jour')
-        )
-
-        # Maintenant, préparer les jours et le statut
-        jours = []
+        # Grouper les tâches par jour
+        taches_par_jour = defaultdict(list)
         total_global = 0
-        for jour in data:
-            total_global += jour['total_jour']
-            jours.append({
-                'jour': jour['jour'],
-                'total_jour': jour['total_jour'],
-                'statut': StatutTache.OK  # TODO
-            })
 
-        # Créer l'objet CalendrierSerializer
+        for tache in filtre.qs:
+            jour = tache.date.strftime("%d/%m/%Y")
+            taches_par_jour[jour].append(tache)
+
+        jours = []
+        for jour, taches in sorted(taches_par_jour.items()):
+            total_jour = sum(t.duree_minutes for t in taches)
+            statut_jour = StatutTache.from_statuts(tache.get_statut() for tache in taches).name
+
+            jours.append({
+                'jour': jour,
+                'total_jour': total_jour,
+                'statut': statut_jour
+            })
+            total_global += total_jour
+
+        # Statut global : le pire statut de tous les jours
+        statut_global = StatutTache.from_statut_names(j['statut'] for j in jours).name
+
         calendrier_data = {
             'jours': jours,
             'total': total_global,
-            'statut': StatutTache.OK  # TODO
+            'statut': statut_global
         }
 
-        # Sérialiser et retourner la réponse
         serializer = self.get_serializer(calendrier_data)
         return Response(serializer.data)
