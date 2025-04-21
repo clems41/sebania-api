@@ -6,6 +6,7 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import User
 from base.serializers.ferme import FermeSerializer
+from sebania.exceptions.user import UserOldPasswordIncorrectException
 from sebania.utils import email_utils, crypto_utils
 
 
@@ -17,7 +18,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         self.is_valid(raise_exception=True)
         user = request.user
         if not user.check_password(self.data['old_password']):
-            raise ValidationError("L'ancien mot de passe ne correspond pas")
+            raise UserOldPasswordIncorrectException()
         user.set_password(self.data['new_password'])
         user.save()
 

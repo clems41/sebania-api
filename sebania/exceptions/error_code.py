@@ -18,6 +18,7 @@ class ErrorCode(Enum):
     ERREURS LIEES AUX USER
     """
     USER_NOT_FOUND = "user_not_found"
+    USER_OLD_PASSWORD_INCORRECT = "user_old_password_incorrect"
     """
     ERREURS LIEES A LA FERME
     """
@@ -28,6 +29,8 @@ class ErrorCode(Enum):
     """
     PARCELLE_TYPE_NOT_FOUND = "parcelle_type_not_found"
     PARCELLE_NOT_FOUND = "parcelle_not_found"
+    PARCELLE_SUPERFICIE_NULLE = "parcelle_superficie_nulle"
+    PARCELLE_NOM_DEJA_EXISTANT = "parcelle_nom_deja_existant"
     
     """
     ERREURS LIEES AUX ACTIVITES
@@ -39,3 +42,10 @@ class ErrorCode(Enum):
     ERREURS LIEES AUX CULTURES
     """
     CULTURE_NOT_FOUND = "culture_not_found"
+
+    """
+    ERREURS LIEES AUX TACHES
+    """
+    TACHE_CALENDRIER_FILTRE_INCORRECT = "tache_calendrier_filtre_incorrect"
+    TACHE_CALENDRIER_ANNEE_OBLIGATOIRE = "tache_calendrier_annee_obligatoire"
+    TACHE_CALENDRIER_USERID_OBLIGATOIRE = "tache_calendrier_userid_obligatoire"

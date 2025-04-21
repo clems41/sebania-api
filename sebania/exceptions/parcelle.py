@@ -15,3 +15,15 @@ class ParcelleNotFoundException(CustomException):
         super().__init__(message= "La parcelle id={} n'a pu être trouvée pour la ferme id={}".format(parcelle_id, ferme_id),
                          status_code=status.HTTP_404_NOT_FOUND,
                          code=ErrorCode.PARCELLE_NOT_FOUND)
+
+class ParcelleSuperficieNulleException(CustomException):
+    def __init__(self):
+        super().__init__(message= "La superficie doit être supérieure à 0",
+                         status_code=status.HTTP_400_BAD_REQUEST,
+                         code=ErrorCode.PARCELLE_SUPERFICIE_NULLE)
+
+class ParcelleNomDejaExistantException(CustomException):
+    def __init__(self, nom: str):
+        super().__init__(message= "Le nom={} de parcelle est déjà utilisée".format(nom),
+                         status_code=status.HTTP_400_BAD_REQUEST,
+                         code=ErrorCode.PARCELLE_NOM_DEJA_EXISTANT)

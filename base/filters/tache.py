@@ -2,6 +2,8 @@ import django_filters
 from rest_framework.exceptions import ValidationError
 
 from base.models import Tache, User
+from sebania.exceptions.tache import TacheCalendrierFiltreIncorrectException, \
+    TacheCalendrierFiltreAnneeObligatoireException, TacheCalendrierFiltreUserIdObligatoireException
 from sebania.exceptions.user import UserNotFoundException
 from sebania.utils import db_utils
 
@@ -32,14 +34,12 @@ class TacheCalendrierFilter(django_filters.FilterSet):
         annee = self.data.get('annee')
         user_id = self.data.get('user_id')
         if not user_id:
-            raise ValidationError("Vous devez filtrer sur un utilisateur")
+            raise TacheCalendrierFiltreUserIdObligatoireException()
         db_utils.get_one_or_raise_exception(User, UserNotFoundException(user_id), id=user_id)
-        if semaine and mois:
-            raise ValidationError("Vous devez filtrer soit par semaine soit par mois, pas les deux.")
-        if not semaine and not mois:
-            raise ValidationError("Vous devez fournir soit un numéro de semaine soit un mois.")
+        if (semaine and mois) or (not semaine and not mois):
+            raise TacheCalendrierFiltreIncorrectException(semaine, mois)
         if not annee:
-            raise ValidationError("Vous devez filtrer sur une année")
+            raise TacheCalendrierFiltreAnneeObligatoireException()
 
     def filter_queryset(self, queryset):
         self.clean_query()

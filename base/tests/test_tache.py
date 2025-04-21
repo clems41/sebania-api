@@ -10,6 +10,8 @@ from rest_framework import status
 
 from base.models import User, Ferme, Tache, Parcelle
 from base.models.statut import StatutTache
+from sebania.exceptions.tache import TacheCalendrierFiltreIncorrectException, \
+    TacheCalendrierFiltreAnneeObligatoireException, TacheCalendrierFiltreUserIdObligatoireException
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
@@ -535,14 +537,13 @@ class TestCalendrier(SebaniaTestCase):
                         statut_jour[date.strftime("%d/%m/%Y")] = worst_statut
         return total, total_jour, statut_jour
 
-    def _get_calendrier(self, annee: int, numero_semaine: int = None, numero_mois: int = None, user_id: int = None,
+    def _get_calendrier(self, annee: int = None, numero_semaine: int = None, numero_mois: int = None, user_id: int = None,
                         expected_status_code=status.HTTP_200_OK):
-        if user_id is None:
-            user_id = self.get_current_user().id
-        query_params = {
-            "annee": annee,
-            "user_id": user_id
-        }
+        # if user_id is None:
+        #     user_id = self.get_current_user().id
+        query_params = {}
+        if annee is not None:
+            query_params['annee'] = annee
         if numero_semaine is not None:
             query_params['semaine'] = numero_semaine
         if numero_mois is not None:
@@ -572,7 +573,7 @@ class TestCalendrier(SebaniaTestCase):
     def test_calendrier_semaine(self):
         numero_semaine = 3
         total, total_jour, statut_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_semaine=numero_semaine)
-        response = self._get_calendrier(annee=2025, numero_semaine=numero_semaine)
+        response = self._get_calendrier(user_id= self.get_current_user().id, annee=2025, numero_semaine=numero_semaine)
         expected_days = ["13/01/2025", "14/01/2025", "15/01/2025", "16/01/2025", "17/01/2025", "18/01/2025",
                          "19/01/2025"]
         self._check_response(response, total, total_jour, statut_jour, expected_days)
@@ -581,14 +582,14 @@ class TestCalendrier(SebaniaTestCase):
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable=responsable)
         numero_semaine = 3
-        response = self._get_calendrier(annee=2025, numero_semaine=numero_semaine)
+        response = self._get_calendrier(user_id= self.get_current_user().id, annee=2025, numero_semaine=numero_semaine)
         expected_days = []
         self._check_response(response, 0, {}, {}, expected_days)
 
     def test_calendrier_mois(self):
         numero_mois = 2
         total, total_jour, statut_jour = self._create_data(user_concerned=self.init_current_user(), annee=2025, numero_mois=numero_mois)
-        response = self._get_calendrier(annee=2025, numero_mois=numero_mois)
+        response = self._get_calendrier(user_id= self.get_current_user().id, annee=2025, numero_mois=numero_mois)
         expected_days = ['01/02/2025', '02/02/2025', '03/02/2025', '04/02/2025', '05/02/2025', '06/02/2025',
                          '07/02/2025', '08/02/2025', '09/02/2025', '10/02/2025', '11/02/2025', '12/02/2025',
                          '13/02/2025', '14/02/2025', '15/02/2025', '16/02/2025', '17/02/2025', '18/02/2025',
@@ -600,7 +601,7 @@ class TestCalendrier(SebaniaTestCase):
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable=responsable)
         numero_mois = 2
-        response = self._get_calendrier(annee=2025, numero_mois=numero_mois)
+        response = self._get_calendrier(user_id= self.get_current_user().id, annee=2025, numero_mois=numero_mois)
         expected_days = []
         self._check_response(response, 0, {}, {}, expected_days)
 
@@ -631,3 +632,22 @@ class TestCalendrier(SebaniaTestCase):
                          '19/02/2025', '20/02/2025', '21/02/2025', '22/02/2025', '23/02/2025', '24/02/2025',
                          '25/02/2025', '26/02/2025', '27/02/2025', '28/02/2025']
         self._check_response(response, total, total_jour, statut_jour, expected_days)
+
+    def test_calendrier_nok_semaine_et_mois(self):
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        response = self._get_calendrier(annee=2025, numero_semaine=3, numero_mois=3, expected_status_code=status.HTTP_400_BAD_REQUEST, user_id=responsable.id)
+        self.check_error_response(response, expected_exception=TacheCalendrierFiltreIncorrectException(3,3))
+
+    def test_calendrier_nok_annee(self):
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        response = self._get_calendrier(numero_semaine=3, expected_status_code=status.HTTP_400_BAD_REQUEST, user_id=responsable.id)
+        self.check_error_response(response, expected_exception=TacheCalendrierFiltreAnneeObligatoireException())
+
+    def test_calendrier_nok_userid(self):
+        responsable = self.init_current_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        response = self._get_calendrier(annee=2025, numero_semaine=3, expected_status_code=status.HTTP_400_BAD_REQUEST)
+        self.check_error_response(response, expected_exception=TacheCalendrierFiltreUserIdObligatoireException())
+
