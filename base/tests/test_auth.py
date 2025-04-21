@@ -66,7 +66,7 @@ class AuthChangePasswordTestCase(SebaniaTestCase):
             "new_password": new_password
         }
         response = self.client.put(self.url, request, headers=self.get_jwt_headers())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 

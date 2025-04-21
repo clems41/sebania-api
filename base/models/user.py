@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 from django.utils import timezone
 
+from sebania.exceptions.common import UnknownErrorException
 from sebania.utils import crypto_utils
 
 
@@ -26,7 +27,7 @@ class UserProfileManager(BaseUserManager):
     def create_user(self, email, password=None, first_name=None, last_name=None):
         """ Create a new user profile """
         if not email:
-            raise ValueError('User must have an email address')
+            raise UnknownErrorException(ValueError('User must have an email address'))
 
         email = self.normalize_email(email)
         user = self.model(email=email, username=email, first_name=first_name, last_name=last_name)

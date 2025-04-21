@@ -49,3 +49,4 @@ class ErrorCode(Enum):
     TACHE_CALENDRIER_FILTRE_INCORRECT = "tache_calendrier_filtre_incorrect"
     TACHE_CALENDRIER_ANNEE_OBLIGATOIRE = "tache_calendrier_annee_obligatoire"
     TACHE_CALENDRIER_USERID_OBLIGATOIRE = "tache_calendrier_userid_obligatoire"
+    TACHE_DUREE_INCORRECTE = "tache_duree_incorrecte"

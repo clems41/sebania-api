@@ -13,6 +13,7 @@ from sebania.exceptions.activite import ActiviteNotFoundException
 from sebania.exceptions.auth import EmployeCannotActForResponsableException
 from sebania.exceptions.culture import CultureNotFoundException
 from sebania.exceptions.parcelle import ParcelleNotFoundException
+from sebania.exceptions.tache import TacheDureeIncorrecteException
 from sebania.exceptions.user import UserNotFoundException
 from sebania.utils import db_utils, serializer_utils, ferme_utils
 
@@ -70,7 +71,7 @@ class TacheSerializer(serializers.ModelSerializer):
 
     def validate_duree_minutes(self, value):
         if value < 1 or value >= 60*24:
-            raise serializers.ValidationError("Duree minutes devrait être entre 1 et 1440")
+            raise TacheDureeIncorrecteException()
         return value
 
     def _add_parcelles(self, parcelle_ids: List[int], instance: Tache, ferme: Ferme):

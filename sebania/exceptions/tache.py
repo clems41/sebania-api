@@ -23,3 +23,10 @@ class TacheCalendrierFiltreUserIdObligatoireException(CustomException):
         super().__init__(message= "Le filtre user_id est obligatoire",
                          status_code=status.HTTP_400_BAD_REQUEST,
                          code=ErrorCode.TACHE_CALENDRIER_USERID_OBLIGATOIRE)
+
+
+class TacheDureeIncorrecteException(CustomException):
+    def __init__(self):
+        super().__init__(message= "La durée de tâche devrait être entre 1 et 1440",
+                         status_code=status.HTTP_400_BAD_REQUEST,
+                         code=ErrorCode.TACHE_DUREE_INCORRECTE)
