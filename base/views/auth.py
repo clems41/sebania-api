@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from base.serializers.dto.auth import RegisterUserSerializer, ChangePasswordSerializer, ResetPasswordSerializer
+from base.serializers.auth import RegisterUserSerializer, ChangePasswordSerializer, ResetPasswordSerializer
 from base.serializers.user import UserSerializer
 
 

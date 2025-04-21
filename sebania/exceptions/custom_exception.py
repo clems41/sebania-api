@@ -7,8 +7,8 @@ from sebania.exceptions.error_code import ErrorCode
 
 
 class CustomException(APIException):
-    def __init__(self, message: str, code: ErrorCode, status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR, **kwargs):
+    def __init__(self, error_code: ErrorCode, *args, **kwargs):
         super().__init__()
-        self.code = code
-        self.message = message
-        self.status_code  = status_code
+        self.code = error_code.name
+        self.message = error_code.value[0].format(*args, **kwargs)
+        self.status_code  = error_code.value[1]

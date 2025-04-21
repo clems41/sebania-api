@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 
 from base.models import User
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import crypto_utils
-from sebania.exceptions.custom_exception import CustomException
 
 
 class SebaniaTestCase(APITransactionTestCase):
@@ -56,7 +56,8 @@ class SebaniaTestCase(APITransactionTestCase):
         stop_password = email_body.find(' </td>')
         return email_body[start_password: stop_password]
 
-    def check_error_response(self, response, expected_exception: CustomException):
+    def check_error_response(self, response, expected_error: ErrorCode, *args, **kwargs):
         response_data = json.loads(response.content)
-        self.assertEqual(response_data.get("code"), expected_exception.code.value)
-        self.assertEqual(response_data.get("message"), expected_exception.message)
+        self.assertEqual(response.status_code, expected_error.value[1])
+        self.assertEqual(response_data.get("code"), expected_error.name)
+        self.assertEqual(response_data.get("message"), expected_error.value[0].format(*args, **kwargs))

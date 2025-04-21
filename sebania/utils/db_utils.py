@@ -2,10 +2,8 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 
 from base.models import Ferme, User
-from sebania.exceptions.auth import UserMustBeAuthenticatedException
-from sebania.exceptions.common import WrongArgForMethodException
 from sebania.exceptions.custom_exception import CustomException
-from sebania.exceptions.ferme import FermeNotFoundForUserException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import crypto_utils
 
 
@@ -32,13 +30,13 @@ def get_ferme_for_user(request) -> Ferme:
     Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
     """
     if request.user is None or not request.user.is_authenticated:
-        raise UserMustBeAuthenticatedException()
+        raise CustomException(ErrorCode.AUTH_USER_MUST_BE_AUTHENTICATED)
     if user_is_responsable(request.user.id):
         return Ferme.objects.get(responsable=request.user)
     elif user_is_employe(request.user.id):
         return Ferme.objects.get(employes__id=request.user.id)
     else:
-        raise FermeNotFoundForUserException(request.user.id)
+        raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id)
 
 def get_one_or_raise_exception(queryset, exception: CustomException, *filter_args, **filter_kwargs):
     """
@@ -50,7 +48,7 @@ def get_one_or_raise_exception(queryset, exception: CustomException, *filter_arg
         klass__name = (
             queryset.__name__ if isinstance(queryset, type) else queryset.__class__.__name__
         )
-        raise WrongArgForMethodException(method="get_one_or_raise_exception", actual=klass__name, must_be="Model, Manager or QuerySet")
+        raise CustomException(ErrorCode.GLOBAL_WRONG_ARG, method="get_one_or_raise_exception", actual=klass__name, must_be="Model, Manager or QuerySet")
     try:
         return queryset.get(*filter_args, **filter_kwargs)
     except queryset.model.DoesNotExist:

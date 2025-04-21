@@ -1,7 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -10,8 +9,8 @@ from base.models import Ferme, User, ActiviteFerme, CultureFerme, MethodeAgricol
 from base.serializers.activite import ActiviteFermeSerializer
 from base.serializers.culture import CultureFermeSerializer
 from base.serializers.ferme import FermeViewSerializer, EmployeSerializer, UpdateFermeSerializer
-from sebania.exceptions.ferme import FermeNotFoundForUserException
-from sebania.exceptions.user import UserNotFoundException
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.permissions import HasResponsablePermission
 from sebania.utils import db_utils
 from sebania.utils.db_utils import get_one_or_raise_exception
@@ -25,7 +24,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['post'], url_path='employes', serializer_class=EmployeSerializer,
             url_name="add-employe", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def add_employe(self, request):
-        ferme = get_one_or_raise_exception(Ferme, FermeNotFoundForUserException(request.user.id),
+        ferme = get_one_or_raise_exception(Ferme, CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id),
                                            responsable=request.user)
         request_data = self.serializer_class(data=request.data, context={"ferme": ferme})
         request_data.is_valid(raise_exception=True)
@@ -38,11 +37,11 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['delete'], url_path='employes/(?P<user_id>\w+)', serializer_class=None,
             url_name="delete-employe", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def delete_employe(self, request, user_id=None):
-        ferme = get_one_or_raise_exception(Ferme, FermeNotFoundForUserException(request.user.id),
+        ferme = get_one_or_raise_exception(Ferme, CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id),
                                            responsable=request.user)
-        employe = get_one_or_raise_exception(User, UserNotFoundException(user_id), id=user_id)
+        employe = get_one_or_raise_exception(User, CustomException(ErrorCode.USER_NOT_FOUND, user_id), id=user_id)
         if employe not in ferme.employes.all():
-            raise UserNotFoundException(user_id)
+            raise CustomException(ErrorCode.USER_NOT_FOUND, user_id)
         ferme.employes.remove(employe)
         db_utils.soft_delete_employe(user_id)
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)
@@ -80,7 +79,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['put'], url_path='update', serializer_class=UpdateFermeSerializer,
             url_name="update-ferme-details", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def update_ferme_details(self, request):
-        ferme = get_one_or_raise_exception(Ferme, FermeNotFoundForUserException(request.user.id),
+        ferme = get_one_or_raise_exception(Ferme, CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id),
                                            responsable=request.user)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)

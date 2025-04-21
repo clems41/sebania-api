@@ -1,12 +1,11 @@
-from django.contrib.auth.models import Group
 from django.db import transaction
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
 
 from base.models import User
 from base.serializers.ferme import FermeSerializer
-from sebania.exceptions.user import UserOldPasswordIncorrectException
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils, crypto_utils
 
 
@@ -18,7 +17,7 @@ class ChangePasswordSerializer(serializers.Serializer):
         self.is_valid(raise_exception=True)
         user = request.user
         if not user.check_password(self.data['old_password']):
-            raise UserOldPasswordIncorrectException()
+            raise CustomException(ErrorCode.USER_OLD_PASSWORD_INCORRECT)
         user.set_password(self.data['new_password'])
         user.save()
 

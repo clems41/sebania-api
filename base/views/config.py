@@ -1,8 +1,9 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from base.filters.activite import ActiviteFilter
 from base.models import MethodeAgricole, TypeParcelle, Unite, Culture, Activite
@@ -10,7 +11,6 @@ from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import UniteSerializer, CultureSerializer
 from base.serializers.ferme import MethodeAgricoleSerializer
 from base.serializers.parcelle import TypeParcelleSerializer
-from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ConfigViewSet(GenericViewSet):

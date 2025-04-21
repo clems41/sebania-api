@@ -10,8 +10,7 @@ from rest_framework import status
 
 from base.models import User, Ferme, Tache, Parcelle
 from base.models.statut import StatutTache
-from sebania.exceptions.tache import TacheCalendrierFiltreIncorrectException, \
-    TacheCalendrierFiltreAnneeObligatoireException, TacheCalendrierFiltreUserIdObligatoireException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
@@ -637,17 +636,17 @@ class TestCalendrier(SebaniaTestCase):
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable=responsable)
         response = self._get_calendrier(annee=2025, numero_semaine=3, numero_mois=3, expected_status_code=status.HTTP_400_BAD_REQUEST, user_id=responsable.id)
-        self.check_error_response(response, expected_exception=TacheCalendrierFiltreIncorrectException(3,3))
+        self.check_error_response(response, expected_error=ErrorCode.TACHE_CALENDRIER_FILTRE_INCORRECT, semaine=3, mois=3)
 
     def test_calendrier_nok_annee(self):
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable=responsable)
         response = self._get_calendrier(numero_semaine=3, expected_status_code=status.HTTP_400_BAD_REQUEST, user_id=responsable.id)
-        self.check_error_response(response, expected_exception=TacheCalendrierFiltreAnneeObligatoireException())
+        self.check_error_response(response, expected_error=ErrorCode.TACHE_CALENDRIER_ANNEE_OBLIGATOIRE)
 
     def test_calendrier_nok_userid(self):
         responsable = self.init_current_user()
         test_fixtures.create_ferme(responsable=responsable)
         response = self._get_calendrier(annee=2025, numero_semaine=3, expected_status_code=status.HTTP_400_BAD_REQUEST)
-        self.check_error_response(response, expected_exception=TacheCalendrierFiltreUserIdObligatoireException())
+        self.check_error_response(response, expected_error=ErrorCode.TACHE_CALENDRIER_USERID_OBLIGATOIRE)
 

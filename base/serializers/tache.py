@@ -9,12 +9,8 @@ from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
 from base.serializers.user import UserSerializer
-from sebania.exceptions.activite import ActiviteNotFoundException
-from sebania.exceptions.auth import EmployeCannotActForResponsableException
-from sebania.exceptions.culture import CultureNotFoundException
-from sebania.exceptions.parcelle import ParcelleNotFoundException
-from sebania.exceptions.tache import TacheDureeIncorrecteException
-from sebania.exceptions.user import UserNotFoundException
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils, serializer_utils, ferme_utils
 
 
@@ -50,35 +46,35 @@ class TacheSerializer(serializers.ModelSerializer):
         return representation
 
     def validate_activite_id(self, value):
-        db_utils.get_one_or_raise_exception(Activite, ActiviteNotFoundException(value), id=value)
+        db_utils.get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOT_FOUND, value), id=value)
         return value
 
     def validate_culture_id(self, value):
         if value is not None:
-            db_utils.get_one_or_raise_exception(Culture, CultureNotFoundException(value), id=value)
+            db_utils.get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOT_FOUND, value), id=value)
         return value
 
     def validate_user_id(self, value):
         ferme = serializer_utils.get_ferme_from_context(self.context)
-        user = db_utils.get_one_or_raise_exception(User, UserNotFoundException(value), id=value)
+        user = db_utils.get_one_or_raise_exception(User, CustomException(ErrorCode.USER_NOT_FOUND, value), id=value)
         if not ferme_utils.user_is_in_ferme(user, ferme):
-            raise UserNotFoundException(value)
+            raise CustomException(ErrorCode.USER_NOT_FOUND, value)
         user_who_sent_request = self.context.get("request").user
         if db_utils.user_is_employe(user_who_sent_request.id):
             if user_who_sent_request.id != user.id:
-                raise EmployeCannotActForResponsableException()
+                raise CustomException(ErrorCode.AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
         return value
 
     def validate_duree_minutes(self, value):
         if value < 1 or value >= 60*24:
-            raise TacheDureeIncorrecteException()
+            raise CustomException(ErrorCode.TACHE_DUREE_INCORRECTE, value)
         return value
 
     def _add_parcelles(self, parcelle_ids: List[int], instance: Tache, ferme: Ferme):
         if parcelle_ids is not None:
             for parcelle_id in parcelle_ids:
                 # Check that parcelle exists in database
-                db_utils.get_one_or_raise_exception(Parcelle, ParcelleNotFoundException(parcelle_id, ferme.id), id=parcelle_id)
+                db_utils.get_one_or_raise_exception(Parcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, parcelle_id), id=parcelle_id)
             instance.parcelles.set(parcelle_ids)
 
     @transaction.atomic

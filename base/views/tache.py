@@ -11,7 +11,8 @@ from base.filters.tache import TacheFilter, TacheCalendrierFilter
 from base.models import Tache
 from base.models.statut import StatutTache
 from base.serializers.tache import TacheSerializer, CalendrierSerializer
-from sebania.exceptions.auth import EmployeCannotActForResponsableException
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils
 from sebania.utils.db_utils import get_ferme_for_user
 
@@ -31,7 +32,7 @@ class TacheModelViewSet(ModelViewSet):
         if db_utils.user_is_employe(user.id):
             tache = self.get_object()
             if tache.user_id != user.id:
-                raise EmployeCannotActForResponsableException()
+                raise CustomException(ErrorCode.AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
         return super(TacheModelViewSet, self).destroy(request, *args, **kwargs)
 
     @extend_schema(description="Récupération du total d'heures saisies par jour pour une semaine ou un mois donné",

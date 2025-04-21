@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from base.models import Parcelle, TypeParcelle
-from sebania.exceptions.parcelle import ParcelleTypeNotFoundException, ParcelleSuperficieNulleException, \
-    ParcelleNomDejaExistantException
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils
 from sebania.utils.db_utils import get_ferme_for_user
 
@@ -22,7 +22,7 @@ class ParcelleSerializer(serializers.ModelSerializer):
 
     def validate_superficie(self, value):
         if value <= 0:
-            raise ParcelleSuperficieNulleException()
+            raise CustomException(ErrorCode.PARCELLE_SUPERFICIE_NULLE)
         return value
 
     def validate_nom(self, value):
@@ -30,11 +30,11 @@ class ParcelleSerializer(serializers.ModelSerializer):
         ferme = get_ferme_for_user(request)
         parcelles = Parcelle.objects.filter(nom=value, ferme=ferme).all()
         if len(parcelles) > 0:
-            raise ParcelleNomDejaExistantException(value)
+            raise CustomException(ErrorCode.PARCELLE_NOM_DEJA_EXISTANT, value)
         return value
 
     def validate_type_id(self, value):
-        db_utils.get_one_or_raise_exception(TypeParcelle, ParcelleTypeNotFoundException(value), id=value)
+        db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, value), id=value)
         return value
 
     def create(self, validated_data):

@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from rest_framework import status
 
 from base.models import User
+from sebania.exceptions.error_code import ErrorCode
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
 
@@ -31,3 +32,12 @@ class TestContact(SebaniaTestCase):
         self.assertEqual(email.to[0], super_user.email)
         self.assertIn(message, email.body)
         self.assertIn(sujet, email.body)
+
+    def test_contact_nok_message_empty(self):
+        self.init_current_user()
+        request = {
+            "sujet": crypto_utils.random_string(),
+        }
+        response = self.client.post(self.url, request, format="json", headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.check_error_response(response, ErrorCode.CONTACT_MESSAGE_EMPTY)
