@@ -8,6 +8,7 @@ class Activite(models.Model):
     default = models.BooleanField(default=False)
     categorie_default = models.CharField(max_length=30, null=True)
     need_culture = models.BooleanField(default=False)
+    mots_cles = models.TextField()
 
 class ActiviteFerme(models.Model):
     class Meta:
