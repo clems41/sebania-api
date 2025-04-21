@@ -1,7 +1,5 @@
 from collections import defaultdict
 
-from django.db.models import Sum
-from django.db.models.functions import TruncDate
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
@@ -20,6 +18,7 @@ from sebania.utils.db_utils import get_ferme_for_user
 
 class TacheModelViewSet(ModelViewSet):
     serializer_class = TacheSerializer
+    queryset = Tache.objects.none()
     filter_backends = [DjangoFilterBackend]
     filterset_class = TacheFilter
 

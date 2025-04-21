@@ -9,6 +9,7 @@ from sebania.utils.db_utils import get_ferme_for_user
 
 class ParcelleModelViewSet(ModelViewSet):
     serializer_class = ParcelleSerializer
+    queryset = Parcelle.objects.none()
 
     def get_queryset(self):
         ferme = get_ferme_for_user(self.request)

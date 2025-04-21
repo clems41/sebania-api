@@ -33,6 +33,7 @@ class ErrorCode(Enum):
     ERREURS LIEES AUX ACTIVITES
     """
     ACTIVITE_NOT_FOUND = "activite_not_found"
+    ACTIVITE_QUERY_TOO_SHORT = "activite_query_too_short"
     
     """
     ERREURS LIEES AUX CULTURES
