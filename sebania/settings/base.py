@@ -107,6 +107,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sebania.middleware.custom_middleware'
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

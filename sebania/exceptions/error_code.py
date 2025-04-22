@@ -13,6 +13,7 @@ class ErrorCode(Enum):
     ERREURS GLOBALES
     """
     GLOBAL_UNKNOWN_ERROR = "Une erreur inattendu s'est produite : {}", status.HTTP_500_INTERNAL_SERVER_ERROR
+    GLOBAL_VALIDATION_ERROR = "{}", status.HTTP_400_BAD_REQUEST
     GLOBAL_WRONG_ARG = "La méthode {method} ne peut pas être appelée avec un argument de type {actual}, uniquement avec les types suivantes : {must_be}", status.HTTP_500_INTERNAL_SERVER_ERROR
     
     """
