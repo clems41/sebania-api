@@ -7,7 +7,6 @@ from base.models.base import BaseModel
 # Create your models here.
 class MethodeAgricole(models.Model):
     nom = models.CharField(max_length=50)
-    label = models.CharField(max_length=15)
 
 class Ferme(BaseModel):
     nom = models.CharField(max_length=80)

@@ -7,7 +7,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "semis,plants,pépinière"
+      "mots_cles": "semis, pépinière, jeunes plants, rempotage, bouturage"
     }
   },
   {
@@ -18,7 +18,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "labour,préparation,motoculteur"
+      "mots_cles": "préparation sol, labour, motoculteur, rotavateur, grelinette, Actisol, Canadien, tracteur, outil, engin"
     }
   },
   {
@@ -29,7 +29,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "compost,fumier,amendement,apport,mo,matière,organique"
+      "mots_cles": "compost,fumier,amendement,apport,mo,matière,organique,broyat,épandeur,tracteur,brouette,rateau"
     }
   },
   {
@@ -40,7 +40,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "engrais,nutriments,sol"
+      "mots_cles": "engrais,nutriments,sol,apport,granulé,NPK,azote,oligo,oligoéléments,lisier"
     }
   },
   {
@@ -51,7 +51,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "paille,plastique,mulch"
+      "mots_cles": "paille,mulch,BRF,Broyat,couvrir"
     }
   },
   {
@@ -62,7 +62,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "bâche,occultation,désherbage,plastique,tissée"
+      "mots_cles": "bâche,occultation,désherbage,plastique,tissée,enterrer"
     }
   },
   {
@@ -73,7 +73,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "graines,ligne,plantation,volée"
+      "mots_cles": "graines,ligne,plantation,volée,semoir, en place,monorang,multirang"
     }
   },
   {
@@ -84,7 +84,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "plants,repiquage,cultures,implantation"
+      "mots_cles": "plants,repiquage,cultures,implantation,motte,jeune plant,godets"
     }
   },
   {
@@ -95,7 +95,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "serre,température,ventilation,voilage,voile,thermique"
+      "mots_cles": "serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes"
     }
   },
   {
@@ -106,7 +106,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "insectes,maladies,traitements"
+      "mots_cles": "insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose"
     }
   },
   {
@@ -117,7 +117,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "arrosage,goutte,eau,tuyau,aspersion"
+      "mots_cles": "arrosage,goutte,eau,tuyau,aspersion,planifier"
     }
   },
   {
@@ -128,7 +128,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "mauvaises,herbes,sarclage,binage"
+      "mots_cles": "mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser"
     }
   },
   {
@@ -139,7 +139,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "élagage,coupe,entretien"
+      "mots_cles": "élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage"
     }
   },
   {
@@ -150,7 +150,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "ficelle,tuteur,support"
+      "mots_cles": "ficelle,tuteur,support,dérouler"
     }
   },
   {
@@ -161,7 +161,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "arrachage,broyage,rouage"
+      "mots_cles": "arrachage,broyage,rouage,nettoyage"
     }
   },
   {
@@ -172,7 +172,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "observation,croissance,planning,plannification"
+      "mots_cles": "observation,croissance,planning,plannification,tour du champ, tour, regarder,checker"
     }
   },
   {
@@ -183,7 +183,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "cueillette,maturité,rendement"
+      "mots_cles": "cueillette,maturité,rendement,poids,caisse,retirer,bottes"
     }
   },
   {
@@ -194,7 +194,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "outils,matériel,hygiène,propreté"
+      "mots_cles": "outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau, enlever,terre"
     }
   },
   {
@@ -205,7 +205,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "transport,distribution,clients,camion,fourgon,livraison"
+      "mots_cles": "transport,distribution,clients,camion,fourgon,livraison,apporter,donner"
     }
   },
   {
@@ -216,7 +216,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "chambre,froide,entrepôt,conservation,logistique"
+      "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse, emballage"
     }
   },
   {
@@ -227,7 +227,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "logistique,palettes,livraison"
+      "mots_cles": "logistique,palettes,livraison,chercher"
     }
   },
   {
@@ -238,7 +238,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio"
+      "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling, list, whatsapp,message"
     }
   },
   {
@@ -249,7 +249,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "stand,vente"
+      "mots_cles": "stand,vente,dépot,préparer"
     }
   },
   {
@@ -260,7 +260,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "client,ferme,circuit,court"
+      "mots_cles": "client,ferme,circuit,court,ferme,place,sur"
     }
   },
   {
@@ -271,7 +271,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "abonnement,distribution,consommateurs"
+      "mots_cles": "abonnement,distribution,consommateurs,commandes"
     }
   },
   {
@@ -293,7 +293,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "tri,pesée,conditionnement,cagettes,paniers"
+      "mots_cles": "tri,pesée,conditionnement,cagettes,paniers,liste"
     }
   },
   {
@@ -326,7 +326,7 @@
       "default": true,
       "categorie_default": "administratif",
       "need_culture": false,
-      "mots_cles": "agenda,planning,tâches,plannification"
+      "mots_cles": "agenda,planning,tâches,plannification,calendrier,rotation,assolement"
     }
   },
   {
@@ -359,7 +359,7 @@
       "default": true,
       "categorie_default": "général",
       "need_culture": false,
-      "mots_cles": "outils,local,organisation"
+      "mots_cles": "outils,local,organisation,ordre,classer"
     }
   },
   {
@@ -414,7 +414,7 @@
       "default": true,
       "categorie_default": "général",
       "need_culture": false,
-      "mots_cles": "propreté,maintenance,suivi"
+      "mots_cles": "propreté,maintenance,suivi,tailler,élaguer"
     }
   },
   {
@@ -436,7 +436,7 @@
       "default": true,
       "categorie_default": "général",
       "need_culture": false,
-      "mots_cles": "pédagogie,conseil,suivi"
+      "mots_cles": "pédagogie,conseil,suivi,aide"
     }
   },
   {
@@ -458,7 +458,7 @@
       "default": true,
       "categorie_default": "général",
       "need_culture": false,
-      "mots_cles": "engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil"
+      "mots_cles": "engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles"
     }
   },
   {
@@ -491,7 +491,7 @@
       "default": true,
       "categorie_default": "secondaire",
       "need_culture": false,
-      "mots_cles": "fleurs,décoration,culture"
+      "mots_cles": "fleurs,décoration,culture,bouquet"
     }
   },
   {
@@ -619,11 +619,11 @@
     "model": "base.Activite",
     "pk": 57,
     "fields": {
-      "nom": "Confédération paysanne",
+      "nom": "Activités syndicales",
       "default": true,
       "categorie_default": "secondaire",
       "need_culture": false,
-      "mots_cles": "syndicat,agriculture,droits"
+      "mots_cles": "syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs"
     }
   }
 ]
