@@ -14,15 +14,15 @@ class TypeParcelleSerializer(serializers.ModelSerializer):
 
 class ParcelleSerializer(serializers.ModelSerializer):
     type = TypeParcelleSerializer(read_only=True)
-    type_id = serializers.IntegerField(write_only=True)
+    type_id = serializers.IntegerField(write_only=True, allow_null=True)
 
     class Meta:
         model = Parcelle
         fields = ["id", "nom", "superficie", "type", "type_id"]
 
     def validate_superficie(self, value):
-        if value <= 0:
-            raise CustomException(ErrorCode.PARCELLE_SUPERFICIE_NULLE)
+        if value is not None and value <= 0:
+            raise CustomException(ErrorCode.PARCELLE_SUPERFICIE_INCORRECT)
         return value
 
     def validate_nom(self, value):
@@ -34,7 +34,8 @@ class ParcelleSerializer(serializers.ModelSerializer):
         return value
 
     def validate_type_id(self, value):
-        db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, value), id=value)
+        if value is not None:
+            db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, value), id=value)
         return value
 
     def create(self, validated_data):

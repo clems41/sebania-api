@@ -21,8 +21,9 @@ class TestParcelle(SebaniaTestCase):
         self.assertIsNotNone(response_data.get("id"))
         self.assertEqual(response_data.get("nom"), request.get("nom"))
         self.assertEqual(response_data.get("superficie"), request.get("superficie"))
-        self.assertEqual(response_data.get("type").get("id"), request.get("type_id"))
-        self.assertIsNotNone(response_data.get("type").get("nom"))
+        if request.get("type_id") is not None:
+            self.assertEqual(response_data.get("type").get("id"), request.get("type_id"))
+            self.assertIsNotNone(response_data.get("type").get("nom"))
         parcelle_id = response_data.get("id")
         self._check_in_database(request, parcelle_id, ferme)
 
@@ -32,14 +33,16 @@ class TestParcelle(SebaniaTestCase):
         self.assertEqual(response_data.get("id"), instance.id)
         self.assertEqual(response_data.get("nom"), instance.nom)
         self.assertEqual(response_data.get("superficie"), instance.superficie)
-        self.assertEqual(response_data.get("type").get("id"), instance.type.id)
-        self.assertEqual(response_data.get("type").get("nom"), instance.type.nom)
+        if instance.type is not None:
+            self.assertEqual(response_data.get("type").get("id"), instance.type.id)
+            self.assertEqual(response_data.get("type").get("nom"), instance.type.nom)
 
     def _check_in_database(self, request, parcelle_id, ferme: Ferme):
         parcelle = Parcelle.objects.get(id=parcelle_id)
-        type_parcelle = TypeParcelle.objects.get(id=request.get("type_id"))
+        if request.get("type_id") is not None:
+            type_parcelle = TypeParcelle.objects.get(id=request.get("type_id"))
+            self.assertEqual(parcelle.type, type_parcelle)
         self.assertEqual(parcelle.nom, request.get("nom"))
-        self.assertEqual(parcelle.type, type_parcelle)
         self.assertEqual(parcelle.superficie, request.get("superficie"))
         self.assertEqual(parcelle.ferme, ferme)
 
@@ -117,6 +120,10 @@ class TestParcelle(SebaniaTestCase):
 
     def test_ok_create(self):
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED)
+
+    def test_ok_create_sans_type_superficie(self):
+        # On doit pouvoir créer une parcelle en donnant juste un nom
+        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, superficie=None, type_id=None)
 
     def test_ok_create_nom_already_exists_different_ferme(self):
         other_ferme = test_fixtures.create_ferme()
