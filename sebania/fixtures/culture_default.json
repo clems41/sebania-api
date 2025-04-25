@@ -458,5 +458,25 @@
       "categorie_default": "autres",
       "unite_id": 2
     }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 47,
+    "fields": {
+      "nom": "Radis noir",
+      "default": true,
+      "categorie_default": "racine",
+      "unite_id": 2
+    }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 48,
+    "fields": {
+      "nom": "Chou-rave",
+      "default": true,
+      "categorie_default": "feuille",
+      "unite_id": 2
+    }
   }
 ]

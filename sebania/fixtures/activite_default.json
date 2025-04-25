@@ -7,7 +7,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "semis, pépinière, jeunes plants, rempotage, bouturage"
+      "mots_cles": "semis,pépinière,jeunes plants,rempotage,bouturage"
     }
   },
   {
@@ -18,7 +18,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "préparation sol, labour, motoculteur, rotavateur, grelinette, Actisol, Canadien, tracteur, outil, engin"
+      "mots_cles": "préparation sol,labour,motoculteur,rotavateur,grelinette,Actisol,Canadien,tracteur,outil,engin"
     }
   },
   {
@@ -73,7 +73,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "graines,ligne,plantation,volée,semoir, en place,monorang,multirang"
+      "mots_cles": "graines,ligne,plantation,volée,semoir,en place,monorang,multirang"
     }
   },
   {
@@ -172,7 +172,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "observation,croissance,planning,plannification,tour du champ, tour, regarder,checker"
+      "mots_cles": "observation,croissance,planning,plannification,tour du champ,tour,regarder,checker"
     }
   },
   {
@@ -194,7 +194,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau, enlever,terre"
+      "mots_cles": "outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre"
     }
   },
   {
@@ -216,7 +216,7 @@
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse, emballage"
+      "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage"
     }
   },
   {
@@ -234,11 +234,11 @@
     "model": "base.Activite",
     "pk": 22,
     "fields": {
-      "nom": "Communiquer",
+      "nom": "Communication / Marketing",
       "default": true,
       "categorie_default": "commercialisation",
       "need_culture": false,
-      "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling, list, whatsapp,message"
+      "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message"
     }
   },
   {
