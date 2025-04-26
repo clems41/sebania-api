@@ -10,7 +10,8 @@ from rest_framework.viewsets import ModelViewSet
 from base.filters.tache import TacheFilter, TacheCalendrierFilter
 from base.models import Tache
 from base.models.statut import StatutTache
-from base.serializers.tache import TacheSerializer, CalendrierSerializer
+from base.serializers.calendrier import CalendrierSerializer
+from base.serializers.tache import TacheSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils
@@ -45,41 +46,5 @@ class TacheModelViewSet(ModelViewSet):
                    )
     @action(detail=False, methods=['get'], url_path='calendrier', serializer_class=CalendrierSerializer)
     def calendrier(self, request):
-        ferme = get_ferme_for_user(request)
-        queryset = Tache.objects.filter(ferme=ferme)
-
-        filtre = TacheCalendrierFilter(request.GET, queryset=queryset)
-        if not filtre.is_valid():
-            return Response(filtre.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # Grouper les tâches par jour
-        taches_par_jour = defaultdict(list)
-        total_global = 0
-
-        for tache in filtre.qs:
-            jour = tache.date.strftime("%d/%m/%Y")
-            taches_par_jour[jour].append(tache)
-
-        jours = []
-        for jour, taches in sorted(taches_par_jour.items()):
-            total_jour = sum(t.duree_minutes for t in taches)
-            statut_jour = StatutTache.from_statuts(tache.get_statut() for tache in taches).name
-
-            jours.append({
-                'jour': jour,
-                'total_jour': total_jour,
-                'statut': statut_jour
-            })
-            total_global += total_jour
-
-        # Statut global : le pire statut de tous les jours
-        statut_global = StatutTache.from_statut_names(j['statut'] for j in jours).name
-
-        calendrier_data = {
-            'jours': jours,
-            'total': total_global,
-            'statut': statut_global
-        }
-
-        serializer = self.get_serializer(calendrier_data)
+        serializer = CalendrierSerializer(request)
         return Response(serializer.data)

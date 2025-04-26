@@ -32,7 +32,7 @@ services:
 
   testcases:
     build:
-      dockerfile: ./Dockerfile.test
+      dockerfile: Dockerfile_test
     container_name: sebania-testcases
     environment:
       DATABASE_HOST: db
