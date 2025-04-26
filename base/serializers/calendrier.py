@@ -6,7 +6,7 @@ from rest_framework import serializers
 
 from base.filters.tache import TacheCalendrierFilter
 from base.models import Tache, Ferme
-from base.models.statut import StatutTache
+from base.models.statut import StatutJour
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils.db_utils import get_ferme_for_user
@@ -14,14 +14,14 @@ from sebania.utils.db_utils import get_ferme_for_user
 
 class CalendrierJourSerializer(serializers.Serializer):
     jour = serializers.DateField(format="%d/%m/%Y", input_formats=['%d/%m/%Y'])
-    total_jour = serializers.IntegerField()
-    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTache])
+    total_jour_minutes = serializers.IntegerField()
+    nb_taches_with_missing_fields = serializers.IntegerField()
+    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutJour])
 
 
 class CalendrierSerializer(serializers.Serializer):
     jours = CalendrierJourSerializer(many=True)
-    total = serializers.IntegerField()
-    statut = serializers.ChoiceField(choices=[tag.name for tag in StatutTache])
+    total_minutes = serializers.IntegerField()
 
     def __init__(self, request):
         calendrier_data = self._get_calendrier_data(request)
@@ -46,23 +46,21 @@ class CalendrierSerializer(serializers.Serializer):
 
         jours = []
         for jour, taches in sorted(taches_par_jour.items()):
-            total_jour = sum(t.duree_minutes for t in taches)
-            statut_jour = StatutTache.from_statuts(tache.get_statut() for tache in taches).name
+            total_jour_minutes = sum(t.duree_minutes for t in taches)
+            statut_jour = StatutJour.from_total_jour(total_jour_minutes).name
+            nb_taches_with_missing_fields = sum(1 for t in taches if t.get_fields_are_missing())
 
             jours.append({
                 'jour': jour,
-                'total_jour': total_jour,
-                'statut': statut_jour
+                'total_jour_minutes': total_jour_minutes,
+                'statut': statut_jour,
+                'nb_taches_with_missing_fields': nb_taches_with_missing_fields
             })
-            total_global += total_jour
-
-        # Statut global : le pire statut de tous les jours
-        statut_global = StatutTache.from_statut_names(j['statut'] for j in jours).name
+            total_global += total_jour_minutes
 
         return {
             'jours': jours,
-            'total': total_global,
-            'statut': statut_global
+            'total_minutes': total_global,
         }
 
     def _init_taches_par_jour(self, filtres: TacheCalendrierFilter):
@@ -70,8 +68,7 @@ class CalendrierSerializer(serializers.Serializer):
         semaine = filtres.form.cleaned_data.get('semaine')
         mois = filtres.form.cleaned_data.get('mois')
         annee = int(filtres.form.cleaned_data.get('annee'))
-        # Même s'il n'y a pas de tâche pour un jour donné, il doit tout de même être présent dans la liste
-        day_range = []
+        # Même s'il n'y a pas de tâche pour un jour donné, il doit tout de même être présent dans la liste.
         if semaine is not None:
             semaine = int(semaine)
             day_range = range(1, 8)

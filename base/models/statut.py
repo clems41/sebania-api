@@ -1,21 +1,13 @@
 from enum import Enum
 
 
-class StatutTache(Enum):
-    OK = "Informations complètes"
-    WARNING = "Quelques informations manquantes"
-    DANGER = "Beaucoup d'informations manquantes"
+class StatutJour(Enum):
+    OK = "Nombre d'heures inférieures ou égales à 9"
+    WARNING = "Nombre d'heures inférieures ou égales à 10"
+    DANGER = "Nombre d'heures supérieures à 10"
 
     @classmethod
-    def from_statuts(cls, statuts: []):
-        return cls.from_statut_names(statut.name for statut in statuts)
-
-    @classmethod
-    def from_statut_names(cls, names: []):
-        worst_statut = StatutTache.OK
-        for name in names:
-            if name == StatutTache.DANGER.name:
-                worst_statut = StatutTache.DANGER
-            elif name == StatutTache.WARNING.name and worst_statut != StatutTache.DANGER:
-                worst_statut = StatutTache.WARNING
-        return worst_statut
+    def from_total_jour(cls, total_jour_minutes: int):
+        if total_jour_minutes / 60 <= 9: return cls.OK
+        elif total_jour_minutes / 60 <= 10: return cls.WARNING
+        else: return cls.DANGER

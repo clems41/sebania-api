@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from base.filters.tache import TacheFilter, TacheCalendrierFilter
 from base.models import Tache
-from base.models.statut import StatutTache
+from base.models.statut import StatutJour
 from base.serializers.calendrier import CalendrierSerializer
 from base.serializers.tache import TacheSerializer
 from sebania.exceptions.custom_exception import CustomException

@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 
 from base.models import User, Ferme, MethodeAgricole, Parcelle, Tache
-from base.models.statut import StatutTache
+from base.models.statut import StatutJour
 from sebania.utils import crypto_utils
 
 def create_user() -> User:
@@ -16,15 +16,10 @@ def create_parcelle(ferme: Ferme) -> Parcelle:
     return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
 
 def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,
-                 culture_id = 3, activite_id = 3, wanted_statut: StatutTache = StatutTache.OK) -> Tache:
-    if wanted_statut == StatutTache.WARNING:
-        culture_id = None
-    elif wanted_statut == StatutTache.DANGER:
-        culture_id = None
-        nb_parcelles = 0
+                 culture_id = 3, activite_id = 3, quantite=425.2, unite_id=4) -> Tache:
     tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=activite_id, duree_minutes=duree_minutes,
                                  culture_id=culture_id, commentaire=crypto_utils.random_string(length=150),
-                                 quantite=425.2, unite_id=4, nature=crypto_utils.random_string(length=20))
+                                 quantite=quantite, unite_id=unite_id, nature=crypto_utils.random_string(length=20))
     for _ in range(nb_parcelles):
         parcelle = create_parcelle(ferme)
         tache.parcelles.add(parcelle)

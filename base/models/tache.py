@@ -2,7 +2,6 @@ from django.db import models
 
 from base.models import Activite, User, Ferme, Parcelle, Culture
 from base.models.base import BaseModel
-from base.models.statut import StatutTache
 from base.models.unite import Unite
 
 
@@ -19,17 +18,10 @@ class Tache(BaseModel):
     unite = models.ForeignKey(Unite, on_delete=models.DO_NOTHING, null=True)
     nature = models.TextField(null=True, blank=True)
 
-    def get_statut(self) -> StatutTache:
+    def get_fields_are_missing(self) -> bool:
         if not self.activite.need_culture:
-            return StatutTache.OK
-        nb_point = 0
-        if self.culture:
-            nb_point += 1
-        if self.parcelles and len(self.parcelles.all()) > 0:
-            nb_point += 1
-        statut = StatutTache.DANGER
-        if nb_point == 1:
-            statut = StatutTache.WARNING
-        if nb_point == 2:
-            statut = StatutTache.OK
-        return statut
+            return self.duree_minutes >= 0
+        else:
+            if self.activite_id == 17 and (self.quantite == 0 or self.unite is None) : # cas d'une récolte sans quantité ou sans unité
+                return True
+            return self.culture is None or len(self.parcelles.all()) == 0
