@@ -23,8 +23,8 @@ def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datet
         culture_id = None
         nb_parcelles = 0
     tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=activite_id, duree_minutes=duree_minutes,
-                                 culture_id=culture_id, quantite_recoltee=0, commentaire=crypto_utils.random_string(length=150),
-                                 quantite=425.2, unite=crypto_utils.random_string(length=10), nature=crypto_utils.random_string(length=20))
+                                 culture_id=culture_id, commentaire=crypto_utils.random_string(length=150),
+                                 quantite=425.2, unite_id=4, nature=crypto_utils.random_string(length=20))
     for _ in range(nb_parcelles):
         parcelle = create_parcelle(ferme)
         tache.parcelles.add(parcelle)

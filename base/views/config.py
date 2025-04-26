@@ -6,12 +6,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from base.filters.activite import ActiviteFilter
-from base.models import MethodeAgricole, TypeParcelle, Unite, Culture, Activite, Error
+from base.models import MethodeAgricole, TypeParcelle, Culture, Activite, Error
+from base.models.unite import Unite
 from base.serializers.activite import ActiviteSerializer
-from base.serializers.culture import UniteSerializer, CultureSerializer
+from base.serializers.culture import CultureSerializer
 from base.serializers.error import ErrorSerializer
 from base.serializers.ferme import MethodeAgricoleSerializer
 from base.serializers.parcelle import TypeParcelleSerializer
+from base.serializers.unite import UniteSerializer
 from sebania.exceptions.error_code import ErrorCode
 
 

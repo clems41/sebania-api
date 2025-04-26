@@ -32,11 +32,13 @@ class TestTache(SebaniaTestCase):
         self.assertEqual(response_data.get("user").get("id"), request.get("user_id"))
         self.assertIsNotNone(response_data.get("user").get("email"))
         self.assertEqual(response_data.get("duree_minutes"), request.get("duree_minutes"))
-        self.assertEqual(response_data.get("quantite_recoltee"), request.get("quantite_recoltee"))
         self.assertEqual(response_data.get("commentaire"), request.get("commentaire"))
         self.assertEqual(response_data.get("nature"), request.get("nature"))
         self.assertEqual(response_data.get("quantite"), request.get("quantite"))
-        self.assertEqual(response_data.get("unite"), request.get("unite"))
+        if request.get("unite_id") is not None:
+            unite = response_data.get("unite")
+            self.assertEqual(unite.get("id"), request.get("unite_id"))
+            self.assertIsNotNone(unite.get("nom"))
         expected_statut = StatutTache.DANGER
         if request.get("culture_id") is not None:
             culture = response_data.get("culture")
@@ -62,10 +64,9 @@ class TestTache(SebaniaTestCase):
         self.assertEqual(tache.activite_id, request.get("activite_id"))
         self.assertEqual(tache.user_id, request.get("user_id"))
         self.assertEqual(tache.duree_minutes, request.get("duree_minutes"))
-        self.assertEqual(tache.quantite_recoltee, request.get("quantite_recoltee"))
         self.assertEqual(tache.commentaire, request.get("commentaire"))
         self.assertEqual(tache.culture_id, request.get("culture_id"))
-        self.assertEqual(tache.unite, request.get("unite"))
+        self.assertEqual(tache.unite_id, request.get("unite_id"))
         self.assertEqual(tache.nature, request.get("nature"))
         self.assertEqual(tache.quantite, request.get("quantite"))
         if request.get("parcelle_ids") is not None:
@@ -77,7 +78,7 @@ class TestTache(SebaniaTestCase):
     def _create_or_update(self, tache_id: int = None, date: str = datetime.date.today().strftime("%d/%m/%Y"),
                           activite_id: int = 1, user: User = None,
                           ferme: Ferme = None, duree_minutes=90, culture_id: int = None, commentaire: str = None,
-                          parcelle_ids: List[int] = None, quantite_recoltee: int = None, quantite: float = None, unite: str = None, nature: str = None,
+                          parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = None, nature: str = None,
                           expected_status_code=status.HTTP_201_CREATED):
         if user is None:
             user = self.init_current_user()
@@ -90,10 +91,9 @@ class TestTache(SebaniaTestCase):
             "duree_minutes": duree_minutes,
             "culture_id": culture_id,
             "parcelle_ids": parcelle_ids,
-            "quantite_recoltee": quantite_recoltee,
             "commentaire": commentaire,
             "nature": nature,
-            "unite": unite,
+            "unite_id": unite_id,
             "quantite": quantite,
         }
         if tache_id is not None:
@@ -120,7 +120,7 @@ class TestCreationTache(TestTache):
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
         self._create_or_update(culture_id=1, parcelle_ids=[ferme.parcelle_set.all()[0].id], user=user, ferme=ferme,
                                commentaire=crypto_utils.random_string(length=350), quantite=142.3,
-                               unite=crypto_utils.random_string(length=10), nature=crypto_utils.random_string(length=25))
+                               unite_id=9, nature=crypto_utils.random_string(length=25))
 
     def test_ok_creation_avec_culture(self):
         user = self.init_current_user()
@@ -219,7 +219,7 @@ class TestUpdateTache(TestTache):
                 date: str = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%d/%m/%Y"),
                 activite_id: int = 5, user: User = None,
                 ferme: Ferme = None, duree_minutes=230, culture_id: int = None, commentaire: str = None,
-                parcelle_ids: List[int] = None, quantite_recoltee: int = None, quantite: float = None, unite: str = None, nature: str = None,
+                parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = 8, nature: str = None,
                 expected_status_code=status.HTTP_200_OK):
         if user is None:
             user = self.init_current_user()
@@ -231,8 +231,8 @@ class TestUpdateTache(TestTache):
         return self._create_or_update(tache_id=tache_id, date=date, activite_id=activite_id,
                                       user=user, ferme=ferme, duree_minutes=duree_minutes, culture_id=culture_id,
                                       commentaire=commentaire,
-                                      parcelle_ids=parcelle_ids, quantite_recoltee=quantite_recoltee,
-                                      expected_status_code=expected_status_code, quantite=quantite, nature=nature, unite=unite)
+                                      parcelle_ids=parcelle_ids,
+                                      expected_status_code=expected_status_code, quantite=quantite, nature=nature, unite_id=unite_id)
 
     def test_ok_update_sans_cultures(self):
         self._update()
@@ -242,7 +242,7 @@ class TestUpdateTache(TestTache):
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
         self._update(culture_id=8, parcelle_ids=[ferme.parcelle_set.all()[2].id], user=user, ferme=ferme,
                      commentaire=crypto_utils.random_string(length=350), quantite=142.3,
-                               unite=crypto_utils.random_string(length=10), nature=crypto_utils.random_string(length=25))
+                               unite_id=9, nature=crypto_utils.random_string(length=25))
 
     def test_ok_update_avec_culture(self):
         user = self.init_current_user()
@@ -371,10 +371,10 @@ class TestGetTache(SebaniaTestCase):
             if expected_tache.culture_id is not None:
                 self.assertEqual(expected_tache.culture_id, actual_tache.get("culture").get("id"))
                 expected_statut = StatutTache.WARNING
-            self.assertEqual(expected_tache.quantite_recoltee, actual_tache.get("quantite_recoltee"))
             self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
             self.assertEqual(expected_tache.nature, actual_tache.get("nature"))
-            self.assertEqual(expected_tache.unite, actual_tache.get("unite"))
+            if expected_tache.unite_id is not None:
+                self.assertEqual(expected_tache.unite_id, actual_tache.get("unite").get("id"))
             self.assertEqual(expected_tache.quantite, actual_tache.get("quantite"))
             for expected_parcelle in expected_tache.parcelles.all():
                 actual_parcelle = next(

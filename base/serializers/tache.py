@@ -8,6 +8,7 @@ from base.models.statut import StatutTache
 from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.parcelle import ParcelleSerializer
+from base.serializers.unite import UniteSerializer
 from base.serializers.user import UserSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
@@ -31,13 +32,14 @@ class TacheSerializer(serializers.ModelSerializer):
     commentaire = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     quantite = serializers.FloatField(required=False, allow_null=True)
     nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    unite = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    unite_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+    unite = UniteSerializer(read_only=True)
     statut = serializers.CharField(read_only=True)
 
     class Meta:
         model = Tache
         fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "culture", "culture_id",
-                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite",
+                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite", "unite_id",
                   "statut"]
 
     def to_representation(self, instance: Tache):

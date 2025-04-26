@@ -3,24 +3,105 @@
     "model": "base.Unite",
     "pk": 1,
     "fields": {
-      "nom": "Kilogramme",
-      "label": "kg"
+      "nom": "kg"
     }
   },
   {
     "model": "base.Unite",
     "pk": 2,
     "fields": {
-      "nom": "Pièce",
-      "label": "pc"
+      "nom": "pièces"
     }
   },
   {
     "model": "base.Unite",
     "pk": 3,
     "fields": {
-      "nom": "Botte",
-      "label": "bt"
+      "nom": "bottes"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 4,
+    "fields": {
+      "nom": "plants"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 5,
+    "fields": {
+      "nom": "caisses"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 6,
+    "fields": {
+      "nom": "m²"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 7,
+    "fields": {
+      "nom": "mètres"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 8,
+    "fields": {
+      "nom": "hectares"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 9,
+    "fields": {
+      "nom": "pots"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 10,
+    "fields": {
+      "nom": "terrines"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 11,
+    "fields": {
+      "nom": "plaques"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 12,
+    "fields": {
+      "nom": "paniers"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 13,
+    "fields": {
+      "nom": "godets"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 14,
+    "fields": {
+      "nom": "litres"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 15,
+    "fields": {
+      "nom": "lignes"
     }
   }
 ]

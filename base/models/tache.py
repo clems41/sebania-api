@@ -1,9 +1,9 @@
 from django.db import models
 
-from base.models import Activite, User, Ferme, Parcelle
+from base.models import Activite, User, Ferme, Parcelle, Culture
 from base.models.base import BaseModel
-from base.models.culture import Culture
 from base.models.statut import StatutTache
+from base.models.unite import Unite
 
 
 class Tache(BaseModel):
@@ -14,10 +14,9 @@ class Tache(BaseModel):
     duree_minutes = models.IntegerField()
     culture = models.ForeignKey(Culture, on_delete=models.DO_NOTHING, null=True)
     parcelles = models.ManyToManyField(Parcelle)
-    quantite_recoltee = models.IntegerField(null=True, blank=True)
     commentaire = models.TextField(null=True, blank=True)
     quantite = models.FloatField(null=True, blank=True)
-    unite = models.TextField(null=True, blank=True)
+    unite = models.ForeignKey(Unite, on_delete=models.DO_NOTHING, null=True)
     nature = models.TextField(null=True, blank=True)
 
     def get_statut(self) -> StatutTache:
