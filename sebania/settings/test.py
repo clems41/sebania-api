@@ -2,8 +2,6 @@ from .base import *
 
 SECRET_KEY = 'my_secret_test_key'
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
-
 DEBUG = True
 INSTALLED_APPS += [
     'debug_toolbar',
@@ -11,6 +9,11 @@ INSTALLED_APPS += [
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_HOST = ""
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_PORT = ""
+EMAIL_USE_TLS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -21,7 +24,7 @@ DATABASES = {
         'NAME': 'sebania',
         'USER': 'sebania',
         'PASSWORD': 'sebania',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
         'PORT': '5432',
         'TEST': {
             'NAME': 'test_database',

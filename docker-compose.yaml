@@ -1,24 +1,72 @@
 services:
- db:
-   container_name: sebania-db
-   image: postgres:17
-   ports:
-     - "5432:5432"
-   volumes:
-     - sebania_data:/var/lib/postgresql/data
-   env_file:
-     - .env
+  db:
+    container_name: sebania-db
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    volumes:
+      - sebania_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_DB: ${DATABASE_NAME}
 
- api:
-   build: .
-   container_name: sebania-api
-   ports:
-     - "8000:8000"
-   depends_on:
-     - db
-   environment:
-     DJANGO_SETTINGS_MODULE: sebania.settings.development
-   env_file:
-     - .env
+  api:
+    build: .
+    container_name: sebania-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+
+  background-tasks:
+    build: .
+    container_name: sebania-background-tasks
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: "python manage.py process_tasks"
+
+  testcases:
+    build: .
+    container_name: sebania-testcases
+    environment:
+      DJANGO_SETTINGS_MODULE: sebania.settings.test
+      DATABASE_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: "python manage.py test --no-input"
+
 volumes:
-   sebania_data:
+  sebania_data:

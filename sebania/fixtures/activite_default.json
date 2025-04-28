@@ -1,0 +1,629 @@
+[
+  {
+    "model": "base.Activite",
+    "pk": 1,
+    "fields": {
+      "nom": "Production de plant",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "semis,pépinière,jeunes plants,rempotage,bouturage"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 2,
+    "fields": {
+      "nom": "Travail du sol",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "préparation sol,labour,motoculteur,rotavateur,grelinette,Actisol,Canadien,tracteur,outil,engin"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 3,
+    "fields": {
+      "nom": "Apport de MO (Amender)",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "compost,fumier,amendement,apport,mo,matière,organique,broyat,épandeur,tracteur,brouette,rateau"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 4,
+    "fields": {
+      "nom": "Fertilisation",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "engrais,nutriments,sol,apport,granulé,NPK,azote,oligo,oligoéléments,lisier"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 5,
+    "fields": {
+      "nom": "Paillage",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "paille,mulch,BRF,Broyat,couvrir"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 6,
+    "fields": {
+      "nom": "Bâchage",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "bâche,occultation,désherbage,plastique,tissée,enterrer"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 7,
+    "fields": {
+      "nom": "Semis direct",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "graines,ligne,plantation,volée,semoir,en place,monorang,multirang"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 8,
+    "fields": {
+      "nom": "Plantation",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "plants,repiquage,cultures,implantation,motte,jeune plant,godets"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 9,
+    "fields": {
+      "nom": "Gestion climatique",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 10,
+    "fields": {
+      "nom": "Gestion des bioagresseurs",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 11,
+    "fields": {
+      "nom": "Irrigation",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "arrosage,goutte,eau,tuyau,aspersion,planifier"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 12,
+    "fields": {
+      "nom": "Désherbage",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 13,
+    "fields": {
+      "nom": "Taille",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 14,
+    "fields": {
+      "nom": "Palissage",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "ficelle,tuteur,support,dérouler"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 15,
+    "fields": {
+      "nom": "Destruction de culture",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "arrachage,broyage,rouage,nettoyage"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 16,
+    "fields": {
+      "nom": "Suivi de culture",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "observation,croissance,planning,plannification,tour du champ,tour,regarder,checker"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 17,
+    "fields": {
+      "nom": "Récolte",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "cueillette,maturité,rendement,poids,caisse,retirer,bottes"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 18,
+    "fields": {
+      "nom": "Nettoyage",
+      "default": true,
+      "categorie_default": "production",
+      "need_culture": true,
+      "mots_cles": "outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 19,
+    "fields": {
+      "nom": "Livrer",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "transport,distribution,clients,camion,fourgon,livraison,apporter,donner"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 20,
+    "fields": {
+      "nom": "Stockage",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 21,
+    "fields": {
+      "nom": "Charger / Décharger",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "logistique,palettes,livraison,chercher"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 22,
+    "fields": {
+      "nom": "Communication / Marketing",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 23,
+    "fields": {
+      "nom": "Marché",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "stand,vente,dépot,préparer"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 24,
+    "fields": {
+      "nom": "Vente directe",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "client,ferme,circuit,court,ferme,place,sur"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 25,
+    "fields": {
+      "nom": "Panier AMAP",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "abonnement,distribution,consommateurs,commandes"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 26,
+    "fields": {
+      "nom": "Gestion des stocks",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "inventaire,produits,suivi,logistique"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 27,
+    "fields": {
+      "nom": "Préparation de commande",
+      "default": true,
+      "categorie_default": "commercialisation",
+      "need_culture": false,
+      "mots_cles": "tri,pesée,conditionnement,cagettes,paniers,liste"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 28,
+    "fields": {
+      "nom": "Comptabilité",
+      "default": true,
+      "categorie_default": "administratif",
+      "need_culture": false,
+      "mots_cles": "bilan,facturation,gestion,impôts"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 29,
+    "fields": {
+      "nom": "Administratif",
+      "default": true,
+      "categorie_default": "administratif",
+      "need_culture": false,
+      "mots_cles": "papier,déclarations,dossiers,impôts"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 30,
+    "fields": {
+      "nom": "Planifier",
+      "default": true,
+      "categorie_default": "administratif",
+      "need_culture": false,
+      "mots_cles": "agenda,planning,tâches,plannification,calendrier,rotation,assolement"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 31,
+    "fields": {
+      "nom": "Veille",
+      "default": true,
+      "categorie_default": "administratif",
+      "need_culture": false,
+      "mots_cles": "informations,réglementations,tendances"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 32,
+    "fields": {
+      "nom": "Achat / Commande",
+      "default": true,
+      "categorie_default": "administratif",
+      "need_culture": false,
+      "mots_cles": "fournisseurs,approvisionnement,matériel"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 33,
+    "fields": {
+      "nom": "Ranger",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "outils,local,organisation,ordre,classer"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 34,
+    "fields": {
+      "nom": "Accueil du public",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "visite,communication,pédagogie"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 35,
+    "fields": {
+      "nom": "Réparer",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "bricolage,maintenance,outils"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 36,
+    "fields": {
+      "nom": "Construire",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "bâtiment,abri,bricolage,serre,outils,aménagements"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 37,
+    "fields": {
+      "nom": "Aménager",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "organisation,espace,infrastructure"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 38,
+    "fields": {
+      "nom": "Entretenir",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "propreté,maintenance,suivi,tailler,élaguer"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 39,
+    "fields": {
+      "nom": "Formation",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "apprentissage,stage,cours,études"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 40,
+    "fields": {
+      "nom": "Accompagnement",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "pédagogie,conseil,suivi,aide"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 41,
+    "fields": {
+      "nom": "Production de compost",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "déchets,fertilité,mo,matière,organique"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 42,
+    "fields": {
+      "nom": "Gestion des intrants",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 43,
+    "fields": {
+      "nom": "Réunions",
+      "default": true,
+      "categorie_default": "général",
+      "need_culture": false,
+      "mots_cles": "équipe,planning,communication,discussions,rencontres"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 44,
+    "fields": {
+      "nom": "Volailles",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "poules,œufs,élevage,viande,oeufs"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 45,
+    "fields": {
+      "nom": "Floriculture",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "fleurs,décoration,culture,bouquet"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 46,
+    "fields": {
+      "nom": "Brassiculture",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "bière,brassage,fermentation"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 47,
+    "fields": {
+      "nom": "Apiculture",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "abeilles,miel,ruche"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 48,
+    "fields": {
+      "nom": "Champignons",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "myciculture,substrat,cave"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 49,
+    "fields": {
+      "nom": "Boissons",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "jus,sirop,fermentation,alccol"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 50,
+    "fields": {
+      "nom": "Conserves",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "transformation,bocaux,stérilisation"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 51,
+    "fields": {
+      "nom": "Boulangerie",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "pain,four,farine"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 52,
+    "fields": {
+      "nom": "Verger",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "arbres,fruits,taille"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 53,
+    "fields": {
+      "nom": "Semences",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "graines,reproduction,sélection,production"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 54,
+    "fields": {
+      "nom": "Atelier pédagogique",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "scolaire,animation,formation"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 55,
+    "fields": {
+      "nom": "Auxiliaires de culture",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "insectes,utiles,lutte,biologique,biodiversité"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 56,
+    "fields": {
+      "nom": "Transformation",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "atelier,produits,agroalimentaire,conserves"
+    }
+  },
+  {
+    "model": "base.Activite",
+    "pk": 57,
+    "fields": {
+      "nom": "Activités syndicales",
+      "default": true,
+      "categorie_default": "secondaire",
+      "need_culture": false,
+      "mots_cles": "syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs"
+    }
+  }
+]

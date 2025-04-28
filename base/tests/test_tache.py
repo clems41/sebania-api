@@ -1,0 +1,479 @@
+import datetime
+import json
+from typing import List
+
+from django.urls import reverse_lazy
+from django.utils import timezone
+from rest_framework import status
+
+from base.models import User, Ferme, Tache, Parcelle
+from sebania.tests import test_fixtures
+from sebania.tests.SebaniaTestCase import SebaniaTestCase
+from sebania.utils import crypto_utils
+
+
+def _get_url_detail(tache_id: int):
+    return reverse_lazy('taches-detail', args=[tache_id])
+
+
+class TestTache(SebaniaTestCase):
+    url = reverse_lazy('taches-list')
+
+    def _check_response(self, request, response):
+        response_data = json.loads(response.content)
+        self.assertIsNotNone(response_data.get("id"))
+        self.assertEqual(response_data.get("date"), request.get("date"))
+        self.assertEqual(response_data.get("activite").get("id"), request.get("activite_id"))
+        self.assertIsNotNone(response_data.get("activite").get("nom"))
+        self.assertEqual(response_data.get("user").get("id"), request.get("user_id"))
+        self.assertIsNotNone(response_data.get("user").get("email"))
+        self.assertEqual(response_data.get("duree_minutes"), request.get("duree_minutes"))
+        self.assertEqual(response_data.get("commentaire"), request.get("commentaire"))
+        self.assertEqual(response_data.get("nature"), request.get("nature"))
+        self.assertEqual(response_data.get("quantite"), request.get("quantite"))
+        expected_fields_are_missing = True
+        if request.get("unite_id") is not None:
+            unite = response_data.get("unite")
+            self.assertEqual(unite.get("id"), request.get("unite_id"))
+            self.assertIsNotNone(unite.get("nom"))
+        if request.get("culture_ids") is not None:
+            self.assertEqual(len(response_data.get("cultures")), len(request.get("culture_ids")))
+            for culture in response_data.get("cultures"):
+                self.assertTrue(culture.get("id") in request.get("culture_ids"))
+                self.assertIsNotNone(culture.get("nom"))
+        if request.get("parcelle_ids") is not None:
+            self.assertEqual(len(response_data.get("parcelles")), len(request.get("parcelle_ids")))
+            for parcelle in response_data.get("parcelles"):
+                self.assertTrue(parcelle.get("id") in request.get("parcelle_ids"))
+                self.assertIsNotNone(parcelle.get("nom"))
+        # check statut
+        if len(response_data.get("cultures")) > 0 and len(response_data.get("parcelles")) > 0:
+            expected_fields_are_missing = False
+        self.assertEqual(response_data.get("fields_are_missing"), expected_fields_are_missing)
+
+    def _check_database(self, request, response, ferme):
+        response_data = json.loads(response.content)
+        tache_id = response_data.get("id")
+        tache = Tache.objects.get(id=tache_id)
+        self.assertEqual(tache.date.strftime("%d/%m/%Y"), request.get("date"))
+        self.assertEqual(tache.activite_id, request.get("activite_id"))
+        self.assertEqual(tache.user_id, request.get("user_id"))
+        self.assertEqual(tache.duree_minutes, request.get("duree_minutes"))
+        self.assertEqual(tache.commentaire, request.get("commentaire"))
+        self.assertEqual(tache.unite_id, request.get("unite_id"))
+        self.assertEqual(tache.nature, request.get("nature"))
+        self.assertEqual(tache.quantite, request.get("quantite"))
+        self.assertEqual(tache.ferme, ferme)
+        if request.get("culture_ids") is not None:
+            self.assertEqual(tache.cultures.count(), len(request.get("culture_ids")))
+            for culture in tache.cultures.all():
+                self.assertTrue(culture.id in request.get("culture_ids"))
+        if request.get("parcelle_ids") is not None:
+            self.assertEqual(tache.parcelles.count(), len(request.get("parcelle_ids")))
+            for parcelle in tache.parcelles.all():
+                self.assertTrue(parcelle.id in request.get("parcelle_ids"))
+
+    def _create_or_update(self, tache_id: int = None, date: str = datetime.date.today().strftime("%d/%m/%Y"),
+                          activite_id: int = 1, user: User = None,
+                          ferme: Ferme = None, duree_minutes=90, culture_ids: List[int] = None, commentaire: str = None,
+                          parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = None, nature: str = None,
+                          expected_status_code=status.HTTP_201_CREATED):
+        if user is None:
+            user = self.init_current_user()
+        if ferme is None:
+            ferme = test_fixtures.create_ferme(responsable=user)
+        request = {
+            "date": date,
+            "activite_id": activite_id,
+            "user_id": user.id,
+            "duree_minutes": duree_minutes,
+            "culture_ids": culture_ids,
+            "parcelle_ids": parcelle_ids,
+            "commentaire": commentaire,
+            "nature": nature,
+            "unite_id": unite_id,
+            "quantite": quantite,
+        }
+        if tache_id is not None:
+            response = self.client.put(_get_url_detail(tache_id), request, format='json',
+                                       headers=self.get_jwt_headers())
+        else:
+            response = self.client.post(self.url, request, format='json', headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, expected_status_code)
+        if expected_status_code <= status.HTTP_201_CREATED:
+            self._check_response(request, response)
+            self._check_database(request, response, ferme)
+        elif tache_id is None:
+            # Il faut vérifier que la tâche n'a pas été créée en base (uniquement lors de la création)
+            taches = Tache.objects.filter(user=user, ferme=ferme).all()
+            self.assertTrue(len(taches) == 0)
+
+
+class TestCreationTache(TestTache):
+    def test_ok_creation_sans_cultures(self):
+        self._create_or_update()
+
+    def test_ok_creation_complet(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._create_or_update(culture_ids=[1, 9], parcelle_ids=[ferme.parcelle_set.all()[0].id], user=user, ferme=ferme,
+                               commentaire=crypto_utils.random_string(length=350), quantite=142.3,
+                               unite_id=9, nature=crypto_utils.random_string(length=25))
+
+    def test_ok_creation_avec_culture(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._create_or_update(culture_ids=[3,12], user=user, ferme=ferme)
+
+    def test_ok_creation_avec_parcelles(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._create_or_update(parcelle_ids=[ferme.parcelle_set.all()[0].id], user=user, ferme=ferme)
+
+    def test_ok_creation_employe(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._create_or_update(user=employe, ferme=ferme)
+
+    def test_ok_creation_responsable_pour_employe(self):
+        responsable = self.init_current_user()
+        employe = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._create_or_update(user=employe, ferme=ferme)
+
+    def test_nok_creation_user_not_exists(self):
+        responsable = self.init_current_user()
+        user_not_existing = User(first_name=crypto_utils.random_string(length=50),
+                                 last_name=crypto_utils.random_string(length=50), email=crypto_utils.random_email(),
+                                 id=99)
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        self._create_or_update(user=user_not_existing, ferme=ferme, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_creation_user_not_in_ferme(self):
+        responsable = self.init_current_user()
+        user_not_in_ferme = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        self._create_or_update(user=user_not_in_ferme, ferme=ferme, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_creation_activite_not_exists(self):
+        self._create_or_update(activite_id=698754, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_creation_culture_not_exists(self):
+        self._create_or_update(culture_ids=[3652], expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_creation_parcelle_not_exists(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        not_existing_parcelle = Parcelle(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme,
+                                         id=23)
+        parcelles = [test_fixtures.create_parcelle(ferme), not_existing_parcelle, test_fixtures.create_parcelle(ferme)]
+        parcelle_ids = [parcelle.id for parcelle in parcelles]
+        self._create_or_update(expected_status_code=status.HTTP_404_NOT_FOUND, user=responsable, ferme=ferme,
+                               parcelle_ids=parcelle_ids)
+
+    def test_nok_creation_date_invalide(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        # mauvais jour
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="35/11/2025", user=responsable,
+                               ferme=ferme)
+        # mauvais mois
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="23/13/2025", user=responsable,
+                               ferme=ferme)
+        # mauavaise année
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="23/11/652", user=responsable,
+                               ferme=ferme)
+
+    def test_nok_creation_duree_invalide(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        # négatif
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=-12, user=responsable,
+                               ferme=ferme)
+        # 0
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=0, user=responsable,
+                               ferme=ferme)
+        # supérieur au nombre de minutes dans une journée
+        self._create_or_update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=60 * 24 + 1,
+                               user=responsable, ferme=ferme)
+
+    def test_nok_creation_employe_pour_responsable(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._create_or_update(expected_status_code=status.HTTP_403_FORBIDDEN, user=responsable, ferme=ferme)
+
+    def test_nok_creation_employe_pour_autre_employe(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        other_employe = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe, other_employe])
+        self._create_or_update(expected_status_code=status.HTTP_403_FORBIDDEN, user=other_employe, ferme=ferme)
+
+
+class TestUpdateTache(TestTache):
+    def _update(self, tache_id: int = None,
+                date: str = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%d/%m/%Y"),
+                activite_id: int = 5, user: User = None,
+                ferme: Ferme = None, duree_minutes=230, culture_ids: List[int] = None, commentaire: str = None,
+                parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = 8, nature: str = None,
+                expected_status_code=status.HTTP_200_OK):
+        if user is None:
+            user = self.init_current_user()
+        if ferme is None:
+            ferme = test_fixtures.create_ferme(responsable=user)
+        if tache_id is None:
+            tache = test_fixtures.create_tache(user_id=user.id, ferme=ferme, nb_parcelles=0)
+            tache_id = tache.id
+        return self._create_or_update(tache_id=tache_id, date=date, activite_id=activite_id,
+                                      user=user, ferme=ferme, duree_minutes=duree_minutes, culture_ids=culture_ids,
+                                      commentaire=commentaire,
+                                      parcelle_ids=parcelle_ids,
+                                      expected_status_code=expected_status_code, quantite=quantite, nature=nature, unite_id=unite_id)
+
+    def test_ok_update_sans_cultures(self):
+        self._update()
+
+    def test_ok_update_complet(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._update(culture_ids=[8, 25], parcelle_ids=[ferme.parcelle_set.all()[2].id], user=user, ferme=ferme,
+                     commentaire=crypto_utils.random_string(length=350), quantite=142.3,
+                               unite_id=9, nature=crypto_utils.random_string(length=25))
+
+    def test_ok_update_avec_culture(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._update(culture_ids=[15], user=user, ferme=ferme)
+
+    def test_ok_update_avec_parcelles(self):
+        user = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
+        self._update(parcelle_ids=[ferme.parcelle_set.all()[1].id], user=user, ferme=ferme)
+
+    def test_ok_update_employe(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._update(user=employe, ferme=ferme)
+
+    def test_ok_update_responsable_pour_employe(self):
+        responsable = self.init_current_user()
+        employe = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._update(user=employe, ferme=ferme)
+
+    def test_nok_update_tache_not_exists(self):
+        self._update(tache_id=99, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_update_user_not_exists(self):
+        responsable = self.init_current_user()
+        user_not_existing = User(first_name=crypto_utils.random_string(length=50),
+                                 last_name=crypto_utils.random_string(length=50), email=crypto_utils.random_email(),
+                                 id=99)
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_tache = test_fixtures.create_tache(user_id=responsable.id, ferme=ferme)
+        self._update(tache_id=existing_tache.id, user=user_not_existing, ferme=ferme,
+                     expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_update_user_not_in_ferme(self):
+        responsable = self.init_current_user()
+        user_not_in_ferme = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        self._update(user=user_not_in_ferme, ferme=ferme, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_update_activite_not_exists(self):
+        self._update(activite_id=698754, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_update_culture_not_exists(self):
+        self._update(culture_ids=[3652, 12], expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_update_parcelle_not_exists(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, nb_parcelles=3)
+        not_existing_parcelle = Parcelle(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme,
+                                         id=153)
+        parcelles = [test_fixtures.create_parcelle(ferme), not_existing_parcelle, test_fixtures.create_parcelle(ferme)]
+        parcelle_ids = [parcelle.id for parcelle in parcelles]
+        self._update(expected_status_code=status.HTTP_404_NOT_FOUND, user=responsable, ferme=ferme,
+                     parcelle_ids=parcelle_ids)
+
+    def test_nok_update_date_invalide(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        # mauvais jour
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="35/11/2025", user=responsable, ferme=ferme)
+        # mauvais mois
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="23/13/2025", user=responsable, ferme=ferme)
+        # mauavaise année
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, date="23/11/652", user=responsable, ferme=ferme)
+
+    def test_nok_update_duree_invalide(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        # négatif
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=-12, user=responsable, ferme=ferme)
+        # 0
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=0, user=responsable, ferme=ferme)
+        # supérieur au nombre de minutes dans une journée
+        self._update(expected_status_code=status.HTTP_400_BAD_REQUEST, duree_minutes=60 * 24 + 1, user=responsable,
+                     ferme=ferme)
+
+    def test_nok_update_employe_pour_responsable(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._update(expected_status_code=status.HTTP_403_FORBIDDEN, user=responsable, ferme=ferme)
+
+    def test_nok_update_employe_pour_autre_employe(self):
+        responsable = test_fixtures.create_user()
+        employe = self.init_current_user()
+        other_employe = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable, employes=[employe, other_employe])
+        self._update(expected_status_code=status.HTTP_403_FORBIDDEN, user=other_employe, ferme=ferme)
+
+
+class TestGetTache(SebaniaTestCase):
+    url = reverse_lazy('taches-list')
+
+    def _create_data(self, user: User, ferme: Ferme, date: datetime.datetime = timezone.now()):
+        other_date = timezone.now() - datetime.timedelta(days=1)
+        other_ferme = test_fixtures.create_ferme()
+        other_user = test_fixtures.create_user()
+        # création de tâches qui correspondent aux filtres
+        matching_taches = []
+        for _ in range(6):
+            matching_taches.append(test_fixtures.create_tache(ferme=ferme, user_id=user.id, nb_parcelles=3, date=date))
+        # création de tâches qui ne correspondant pas aux filtres
+        for _ in range(5):
+            test_fixtures.create_tache(ferme=other_ferme, user_id=user.id, nb_parcelles=3, date=date)
+            test_fixtures.create_tache(ferme=ferme, user_id=other_user.id, nb_parcelles=3, date=date)
+            test_fixtures.create_tache(ferme=ferme, user_id=user.id, nb_parcelles=3, date=other_date)
+        return matching_taches
+
+    def _compare_response_with_expected(self, response, expected_taches: List[Tache]):
+        if len(expected_taches) == 1:
+            actual_taches = [json.loads(response.content)]
+        else:
+            actual_taches = json.loads(response.content)
+        self.assertEqual(len(actual_taches), len(expected_taches))
+        for actual_tache in actual_taches:
+            expected_fields_are_missing = True
+            expected_tache = next((x for x in expected_taches if x.id == actual_tache.get("id")), None)
+            self.assertIsNotNone(expected_tache)
+            self.assertEqual(expected_tache.activite_id, actual_tache.get("activite").get("id"))
+            self.assertEqual(expected_tache.user_id, actual_tache.get("user").get("id"))
+            self.assertEqual(expected_tache.date.strftime("%d/%m/%Y"), actual_tache.get("date"))
+            self.assertEqual(expected_tache.duree_minutes, actual_tache.get("duree_minutes"))
+            for expected_culture in expected_tache.cultures.all():
+                actual_culture = next(
+                    (x for x in actual_tache.get("cultures") if x.get("id") == expected_culture.id), None)
+                self.assertIsNotNone(actual_culture)
+                self.assertEqual(expected_culture.nom, actual_culture.get("nom"))
+            self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
+            self.assertEqual(expected_tache.nature, actual_tache.get("nature"))
+            if expected_tache.unite_id is not None:
+                self.assertEqual(expected_tache.unite_id, actual_tache.get("unite").get("id"))
+            self.assertEqual(expected_tache.quantite, actual_tache.get("quantite"))
+            for expected_parcelle in expected_tache.parcelles.all():
+                actual_parcelle = next(
+                    (x for x in actual_tache.get("parcelles") if x.get("id") == expected_parcelle.id), None)
+                self.assertIsNotNone(actual_parcelle)
+                self.assertEqual(expected_parcelle.nom, actual_parcelle.get("nom"))
+                self.assertEqual(expected_parcelle.superficie, actual_parcelle.get("superficie"))
+                self.assertEqual(expected_parcelle.type_id, actual_parcelle.get("type").get("id"))
+            if len(expected_tache.parcelles.all()) > 0 and len(expected_tache.cultures.all()) > 0:
+                expected_fields_are_missing = False
+            self.assertEqual(expected_fields_are_missing, actual_tache.get("fields_are_missing"))
+
+    def test_ok_get_one(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_tache = test_fixtures.create_tache(ferme=ferme, user_id=responsable.id, nb_parcelles=3)
+        response = self.client.get(_get_url_detail(existing_tache.id), headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, [existing_tache])
+
+    def test_ok_get_all(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_taches = []
+        for _ in range(6):
+            existing_taches.append(test_fixtures.create_tache(ferme=ferme, user_id=responsable.id, nb_parcelles=3))
+        response = self.client.get(self.url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, existing_taches)
+
+    def test_ok_get_all_filters_date_user(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        date = timezone.now()
+        matching_taches = self._create_data(date=date, user=responsable, ferme=ferme)
+        data = {
+            "user_id": responsable.id,
+            "date": date.strftime("%d/%m/%Y"),
+        }
+        response = self.client.get(self.url, data=data, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._compare_response_with_expected(response, matching_taches)
+
+
+class TestDeleteTache(SebaniaTestCase):
+    def _delete(self, tache_id: int = None, user_tache: User = None, user_delete: User = None, ferme: Ferme = None,
+                expected_status_code: int = status.HTTP_204_NO_CONTENT):
+        if user_delete is None:
+            user_delete = self.init_current_user()
+        if user_tache is None:
+            user_tache = user_delete
+        if ferme is None:
+            ferme = test_fixtures.create_ferme(responsable=user_delete)
+        # Création de la tâche en base
+        if tache_id is None:
+            tache = test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, nb_parcelles=3)
+            tache_id = tache.id
+        # Suppression
+        response = self.client.delete(_get_url_detail(tache_id), headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, expected_status_code)
+        # Vérification que la tâche n'est plus en base
+        if expected_status_code == status.HTTP_204_NO_CONTENT:
+            self.assertRaises(Tache.DoesNotExist, lambda: Tache.objects.get(id=tache_id))
+
+    def test_ok_delete(self):
+        self._delete()
+
+    def test_ok_delete_responsable_pour_employe(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        employe = ferme.employes.first()
+        self._delete(user_tache=employe, user_delete=responsable, ferme=ferme)
+
+    def test_ok_delete_employe_pour_employe(self):
+        employe1 = self.init_current_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1])
+        self._delete(user_tache=employe1, user_delete=employe1, ferme=ferme)
+
+    def test_nok_delete_id_not_exists(self):
+        self._delete(tache_id=99, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_nok_delete_employe_pour_responsable(self):
+        employe1 = self.init_current_user()
+        responsable = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1], responsable=responsable)
+        self._delete(user_tache=responsable, user_delete=employe1, ferme=ferme,
+                     expected_status_code=status.HTTP_403_FORBIDDEN)
+
+    def test_nok_delete_employe_pour_autre_employe(self):
+        employe1 = self.init_current_user()
+        employe2 = test_fixtures.create_user()
+        ferme = test_fixtures.create_ferme(employes=[employe1, employe2])
+        self._delete(user_tache=employe2, user_delete=employe1, ferme=ferme,
+                     expected_status_code=status.HTTP_403_FORBIDDEN)
+
+    def test_nok_delete_responsable_pour_autre_ferme(self):
+        responsable = self.init_current_user()
+        autre_responsable = test_fixtures.create_user()
+        test_fixtures.create_ferme(responsable=responsable)
+        autre_ferme = test_fixtures.create_ferme(responsable=autre_responsable)
+        self._delete(user_tache=autre_responsable, user_delete=responsable, ferme=autre_ferme,
+                     expected_status_code=status.HTTP_404_NOT_FOUND)

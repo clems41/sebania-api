@@ -20,6 +20,8 @@ AUTH_USER_MODEL = "base.User"
 
 APPEND_SLASH=True
 
+DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -34,6 +36,18 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").sp
 
 DEBUG = os.environ.get("DJANGO_DEBUG", True)
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("DATABASE_NAME"),
+        'USER': os.environ.get("DATABASE_USERNAME"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+        'HOST': os.environ.get("DATABASE_HOST"),
+        'PORT': os.environ.get("DATABASE_PORT"),
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,7 +60,9 @@ INSTALLED_APPS = [
     'base',
     'rest_framework',
     'drf_spectacular',
+    'drf_yasg',
     'rest_framework_simplejwt',
+    'django_extensions'
 ]
 
 REST_FRAMEWORK = {
@@ -57,6 +73,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'sebania.exception_handler.custom_exception_handler',
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
 }
 
 SIMPLE_JWT = {
@@ -65,7 +85,11 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+    'UPDATE_LAST_LOGIN': True,
 }
+
+SWAGGER_ENABLE = True
+ADMIN_ENABLE = True
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'sebania API',
@@ -84,6 +108,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sebania.middleware.custom_middleware'
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -94,14 +119,14 @@ EMAIL_PORT = os.environ.get("SMTP_PORT")
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "bonjour@sebania.fr"
 
-FIXTURE_DIRS = [BASE_DIR / 'fixtures']
+FIXTURE_DIRS = [BASE_DIR / 'sebania/fixtures']
 
 ROOT_URLCONF = 'sebania.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'sebania/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

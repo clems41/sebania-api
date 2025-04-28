@@ -1,0 +1,114 @@
+[
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 1,
+    "fields": {
+      "nom": "Conventionnelle"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 2,
+    "fields": {
+      "nom": "Agriculture Biologique"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 3,
+    "fields": {
+      "nom": "Maraîchage Sol Vivant"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 4,
+    "fields": {
+      "nom": "Agriculture Bio-Dynamique"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 5,
+    "fields": {
+      "nom": "Bio-intensif"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 6,
+    "fields": {
+      "nom": "No-Dig"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 7,
+    "fields": {
+      "nom": "Permaculture"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 8,
+    "fields": {
+      "nom": "Agroforesterie"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 9,
+    "fields": {
+      "nom": "Agriculture de conservation des sols"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 10,
+    "fields": {
+      "nom": "Agriculture de précision"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 11,
+    "fields": {
+      "nom": "Agroécologie"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 12,
+    "fields": {
+      "nom": "Hydroponie"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 13,
+    "fields": {
+      "nom": "Aquaponie"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 14,
+    "fields": {
+      "nom": "Agriculture Syntropique"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 15,
+    "fields": {
+      "nom": "Agriculture régénératrice"
+    }
+  },
+  {
+    "model": "base.MethodeAgricole",
+    "pk": 16,
+    "fields": {
+      "nom": "Agriculture urbaine"
+    }
+  }
+]

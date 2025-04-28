@@ -1,0 +1,37 @@
+[
+  {
+    "model": "base.TypeParcelle",
+    "pk": 1,
+    "fields": {
+      "nom": "Plein champ"
+    }
+  },
+  {
+    "model": "base.TypeParcelle",
+    "pk": 2,
+    "fields": {
+      "nom": "Tunnel fraisier"
+    }
+  },
+  {
+    "model": "base.TypeParcelle",
+    "pk": 3,
+    "fields": {
+      "nom": "Tunnel plastique"
+    }
+  },
+  {
+    "model": "base.TypeParcelle",
+    "pk": 4,
+    "fields": {
+      "nom": "Tunnel multi-chapelle"
+    }
+  },
+  {
+    "model": "base.TypeParcelle",
+    "pk": 5,
+    "fields": {
+      "nom": "Serre en verre"
+    }
+  }
+]
