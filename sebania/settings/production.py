@@ -10,3 +10,4 @@ CACHES = {
 
 
 SWAGGER_ENABLE = False
+ADMIN_ENABLE = False

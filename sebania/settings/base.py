@@ -89,6 +89,7 @@ SIMPLE_JWT = {
 }
 
 SWAGGER_ENABLE = True
+ADMIN_ENABLE = True
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'sebania API',
