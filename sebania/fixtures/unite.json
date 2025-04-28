@@ -3,105 +3,120 @@
     "model": "base.Unite",
     "pk": 1,
     "fields": {
-      "nom": "kg"
+      "nom": "kg",
+      "recolte_compatible": true
     }
   },
   {
     "model": "base.Unite",
     "pk": 2,
     "fields": {
-      "nom": "pièces"
+      "nom": "pièces",
+      "recolte_compatible": true
     }
   },
   {
     "model": "base.Unite",
     "pk": 3,
     "fields": {
-      "nom": "bottes"
+      "nom": "bottes",
+      "recolte_compatible": true
     }
   },
   {
     "model": "base.Unite",
     "pk": 4,
     "fields": {
-      "nom": "plants"
+      "nom": "plants",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 5,
     "fields": {
-      "nom": "caisses"
+      "nom": "caisses",
+      "recolte_compatible": true
     }
   },
   {
     "model": "base.Unite",
     "pk": 6,
     "fields": {
-      "nom": "m²"
+      "nom": "m²",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 7,
     "fields": {
-      "nom": "mètres"
+      "nom": "mètres",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 8,
     "fields": {
-      "nom": "hectares"
+      "nom": "hectares",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 9,
     "fields": {
-      "nom": "pots"
+      "nom": "pots",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 10,
     "fields": {
-      "nom": "terrines"
+      "nom": "terrines",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 11,
     "fields": {
-      "nom": "plaques"
+      "nom": "plaques",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 12,
     "fields": {
-      "nom": "paniers"
+      "nom": "paniers",
+      "recolte_compatible": true
     }
   },
   {
     "model": "base.Unite",
     "pk": 13,
     "fields": {
-      "nom": "godets"
+      "nom": "godets",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 14,
     "fields": {
-      "nom": "litres"
+      "nom": "litres",
+      "recolte_compatible": false
     }
   },
   {
     "model": "base.Unite",
     "pk": 15,
     "fields": {
-      "nom": "lignes"
+      "nom": "lignes",
+      "recolte_compatible": false
     }
   }
 ]
