@@ -31,8 +31,7 @@ services:
       - .env
 
   testcases:
-    build:
-      dockerfile: .
+    build: .
     container_name: sebania-testcases
     environment:
       DATABASE_HOST: db
