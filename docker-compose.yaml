@@ -32,13 +32,14 @@ services:
 
   testcases:
     build:
-      dockerfile: Dockerfile_test
+      dockerfile: .
     container_name: sebania-testcases
     environment:
       DATABASE_HOST: db
     depends_on:
       db:
         condition: service_healthy
+    command: "python manage.py test --settings=sebania.settings.test --no-input"
 
 volumes:
   sebania_data:

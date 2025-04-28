@@ -65,13 +65,13 @@ Les identifiants sont ceux spécifiés dans le fichier `.env`.
 
 Lors du lancement de l'application pour la première fois, la base de données doit être créée et les données par défaut (cultures, activités, unités, etc.) doivent également être ajoutées à la base.
 
-Entrez dans le conteneur de l'API et lancez les commandes suivantes :
+Lancez les commandes suivantes :
 ```bash
 # création des tables
-python manage.py migrate
+docker compose run api python manage.py migrate
 
 # insertion des données par défaut
-python manage.py loaddata activite_default culture_default type_parcelle unite auth_group methode_agricole
+docker compose run api python manage.py loaddata activite_default culture_default type_parcelle unite auth_group methode_agricole
 ```
 
 ## Authentification & Swagger
