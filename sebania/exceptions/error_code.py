@@ -72,3 +72,5 @@ class ErrorCode(Enum):
     """
     VOCAL_FILE_UPLOAD = "Erreur lors de la récupération du message vocal depuis la requête : {}", status.HTTP_400_BAD_REQUEST
     VOCAL_DATE_INCORRECTE = "La date fournie ({}) est incorrecte, elle doit être au format ddMMYYYY", status.HTTP_400_BAD_REQUEST
+    VOCAL_DATE_MANQUANTE = "Le filtre date est vide", status.HTTP_400_BAD_REQUEST
+    VOCAL_NOT_FOUND = "Le vocal id={} n'a pas été trouvé", status.HTTP_404_NOT_FOUND

@@ -11,7 +11,9 @@ class VocalStatut(Enum):
     FINISHED = "finished"
 
 def get_upload_path(instance, filename):
-    return "vocaux/{}/{}/{}".format(instance.user.id, instance.date.strftime("%d%m%Y"), get_audio_name(instance))
+    if filename == "file":
+        filename = get_audio_name(instance)
+    return "vocaux/{}/{}/{}".format(instance.user.id, instance.date.strftime("%d%m%Y"), filename)
 
 def get_audio_name(instance):
     existing_vocaux_for_user_and_date = Vocal.objects.filter(user=instance.user, date=instance.date).all()
