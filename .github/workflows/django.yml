@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ "master" ]
 
+
+env:
+  DATABASE_NAME: sebania
+  DATABASE_USERNAME: sebania
+  DATABASE_PASSWORD: sebania
+
 jobs:
   build:
 
