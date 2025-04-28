@@ -21,13 +21,14 @@ class TacheSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     user_id = serializers.IntegerField(write_only=True)
     duree_minutes = serializers.IntegerField()
-    culture = CultureSerializer(read_only=True)
-    culture_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+    cultures = CultureSerializer(read_only=True, many=True)
+    culture_ids = serializers.ListField(write_only=True, required=False, default=[], allow_empty=True, allow_null=True,
+        child=serializers.IntegerField()
+    )
     parcelles = ParcelleSerializer(read_only=True, many=True)
     parcelle_ids = serializers.ListField(write_only=True, required=False, default=[], allow_empty=True, allow_null=True,
         child=serializers.IntegerField()
     )
-    quantite_recoltee = serializers.IntegerField(required=False, allow_null=True)
     commentaire = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     quantite = serializers.FloatField(required=False, allow_null=True)
     nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
@@ -37,9 +38,8 @@ class TacheSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tache
-        fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "culture", "culture_id",
-                  "parcelles", "parcelle_ids", "quantite_recoltee", "commentaire", "quantite", "nature", "unite", "unite_id",
-                  "fields_are_missing"]
+        fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "cultures", "culture_ids",
+                  "parcelles", "parcelle_ids", "commentaire", "quantite", "nature", "unite", "unite_id", "fields_are_missing"]
 
     def to_representation(self, instance: Tache):
         representation = super().to_representation(instance)
@@ -48,11 +48,6 @@ class TacheSerializer(serializers.ModelSerializer):
 
     def validate_activite_id(self, value):
         db_utils.get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOT_FOUND, value), id=value)
-        return value
-
-    def validate_culture_id(self, value):
-        if value is not None:
-            db_utils.get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOT_FOUND, value), id=value)
         return value
 
     def validate_user_id(self, value):
@@ -78,16 +73,25 @@ class TacheSerializer(serializers.ModelSerializer):
                 db_utils.get_one_or_raise_exception(Parcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, parcelle_id), id=parcelle_id)
             instance.parcelles.set(parcelle_ids)
 
+    def _add_cultures(self, culture_ids: List[int], instance: Tache):
+        if culture_ids is not None:
+            for culture_id in culture_ids:
+                # Check that parcelle exists in database
+                db_utils.get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOT_FOUND, culture_id), id=culture_id)
+            instance.cultures.set(culture_ids)
+
     @transaction.atomic
     def _create_or_update(self, instance, validated_data):
         ferme = serializer_utils.get_ferme_from_context(self.context)
         parcelle_ids = validated_data.pop("parcelle_ids")
+        culture_ids = validated_data.pop("culture_ids")
         validated_data["ferme_id"] = ferme.id
         if instance is None:
             instance = super(TacheSerializer, self).create(validated_data)
         else:
             instance = super(TacheSerializer, self).update(instance, validated_data)
         self._add_parcelles(parcelle_ids, instance, ferme)
+        self._add_cultures(culture_ids, instance)
         return instance
 
 

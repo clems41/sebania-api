@@ -11,8 +11,8 @@ class Tache(BaseModel):
     date = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     duree_minutes = models.IntegerField()
-    culture = models.ForeignKey(Culture, on_delete=models.DO_NOTHING, null=True)
     parcelles = models.ManyToManyField(Parcelle)
+    cultures = models.ManyToManyField(Culture)
     commentaire = models.TextField(null=True, blank=True)
     quantite = models.FloatField(null=True, blank=True)
     unite = models.ForeignKey(Unite, on_delete=models.DO_NOTHING, null=True)
@@ -24,4 +24,4 @@ class Tache(BaseModel):
         else:
             if self.activite_id == 17 and (self.quantite == 0 or self.unite is None) : # cas d'une récolte sans quantité ou sans unité
                 return True
-            return self.culture is None or len(self.parcelles.all()) == 0
+            return len(self.cultures.all()) == 0 or len(self.parcelles.all()) == 0

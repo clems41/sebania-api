@@ -25,7 +25,7 @@ class TestCalendrier(SebaniaTestCase):
             random_value = random.randint(1, 100)
             # création de temps à autre (8%) d'une tâche avec des champs manquants
             if random_value < 8:
-                test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, duree_minutes=duree, date=date, quantite=None, unite_id=None, culture_id=None, nb_parcelles=0)
+                test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, duree_minutes=duree, date=date, quantite=None, unite_id=None, culture_ids=[], nb_parcelles=0)
                 nb_taches_with_missing_fields+=1
             else:
                 test_fixtures.create_tache(ferme=ferme, user_id=user_tache.id, duree_minutes=duree, date=date)

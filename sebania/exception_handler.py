@@ -40,7 +40,7 @@ def custom_exception_handler(exc, context):
     # If no response, it means that we are facing error 500 : we should create response based on the exception
     if response is None or response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR:
         _save_error(exc, context)
-        return _get_unknown_error(exc)
+        return ErrorResponse(_get_unknown_error(exc))
 
 
     return response

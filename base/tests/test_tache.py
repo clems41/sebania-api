@@ -7,7 +7,6 @@ from django.utils import timezone
 from rest_framework import status
 
 from base.models import User, Ferme, Tache, Parcelle
-from base.models.statut import StatutJour
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
@@ -37,17 +36,18 @@ class TestTache(SebaniaTestCase):
             unite = response_data.get("unite")
             self.assertEqual(unite.get("id"), request.get("unite_id"))
             self.assertIsNotNone(unite.get("nom"))
-        if request.get("culture_id") is not None:
-            culture = response_data.get("culture")
-            self.assertEqual(culture.get("id"), request.get("culture_id"))
-            self.assertIsNotNone(culture.get("nom"))
+        if request.get("culture_ids") is not None:
+            self.assertEqual(len(response_data.get("cultures")), len(request.get("culture_ids")))
+            for culture in response_data.get("cultures"):
+                self.assertTrue(culture.get("id") in request.get("culture_ids"))
+                self.assertIsNotNone(culture.get("nom"))
         if request.get("parcelle_ids") is not None:
             self.assertEqual(len(response_data.get("parcelles")), len(request.get("parcelle_ids")))
             for parcelle in response_data.get("parcelles"):
                 self.assertTrue(parcelle.get("id") in request.get("parcelle_ids"))
                 self.assertIsNotNone(parcelle.get("nom"))
         # check statut
-        if request.get("culture_id") is not None and request.get("parcelle_ids") is not None:
+        if len(response_data.get("cultures")) > 0 and len(response_data.get("parcelles")) > 0:
             expected_fields_are_missing = False
         self.assertEqual(response_data.get("fields_are_missing"), expected_fields_are_missing)
 
@@ -60,19 +60,22 @@ class TestTache(SebaniaTestCase):
         self.assertEqual(tache.user_id, request.get("user_id"))
         self.assertEqual(tache.duree_minutes, request.get("duree_minutes"))
         self.assertEqual(tache.commentaire, request.get("commentaire"))
-        self.assertEqual(tache.culture_id, request.get("culture_id"))
         self.assertEqual(tache.unite_id, request.get("unite_id"))
         self.assertEqual(tache.nature, request.get("nature"))
         self.assertEqual(tache.quantite, request.get("quantite"))
+        self.assertEqual(tache.ferme, ferme)
+        if request.get("culture_ids") is not None:
+            self.assertEqual(tache.cultures.count(), len(request.get("culture_ids")))
+            for culture in tache.cultures.all():
+                self.assertTrue(culture.id in request.get("culture_ids"))
         if request.get("parcelle_ids") is not None:
             self.assertEqual(tache.parcelles.count(), len(request.get("parcelle_ids")))
             for parcelle in tache.parcelles.all():
                 self.assertTrue(parcelle.id in request.get("parcelle_ids"))
-            self.assertEqual(tache.ferme, ferme)
 
     def _create_or_update(self, tache_id: int = None, date: str = datetime.date.today().strftime("%d/%m/%Y"),
                           activite_id: int = 1, user: User = None,
-                          ferme: Ferme = None, duree_minutes=90, culture_id: int = None, commentaire: str = None,
+                          ferme: Ferme = None, duree_minutes=90, culture_ids: List[int] = None, commentaire: str = None,
                           parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = None, nature: str = None,
                           expected_status_code=status.HTTP_201_CREATED):
         if user is None:
@@ -84,7 +87,7 @@ class TestTache(SebaniaTestCase):
             "activite_id": activite_id,
             "user_id": user.id,
             "duree_minutes": duree_minutes,
-            "culture_id": culture_id,
+            "culture_ids": culture_ids,
             "parcelle_ids": parcelle_ids,
             "commentaire": commentaire,
             "nature": nature,
@@ -113,14 +116,14 @@ class TestCreationTache(TestTache):
     def test_ok_creation_complet(self):
         user = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
-        self._create_or_update(culture_id=1, parcelle_ids=[ferme.parcelle_set.all()[0].id], user=user, ferme=ferme,
+        self._create_or_update(culture_ids=[1, 9], parcelle_ids=[ferme.parcelle_set.all()[0].id], user=user, ferme=ferme,
                                commentaire=crypto_utils.random_string(length=350), quantite=142.3,
                                unite_id=9, nature=crypto_utils.random_string(length=25))
 
     def test_ok_creation_avec_culture(self):
         user = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
-        self._create_or_update(culture_id=1, user=user, ferme=ferme)
+        self._create_or_update(culture_ids=[3,12], user=user, ferme=ferme)
 
     def test_ok_creation_avec_parcelles(self):
         user = self.init_current_user()
@@ -157,7 +160,7 @@ class TestCreationTache(TestTache):
         self._create_or_update(activite_id=698754, expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_nok_creation_culture_not_exists(self):
-        self._create_or_update(culture_id=3652, expected_status_code=status.HTTP_404_NOT_FOUND)
+        self._create_or_update(culture_ids=[3652], expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_nok_creation_parcelle_not_exists(self):
         responsable = self.init_current_user()
@@ -213,7 +216,7 @@ class TestUpdateTache(TestTache):
     def _update(self, tache_id: int = None,
                 date: str = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%d/%m/%Y"),
                 activite_id: int = 5, user: User = None,
-                ferme: Ferme = None, duree_minutes=230, culture_id: int = None, commentaire: str = None,
+                ferme: Ferme = None, duree_minutes=230, culture_ids: List[int] = None, commentaire: str = None,
                 parcelle_ids: List[int] = None, quantite: float = None, unite_id: int = 8, nature: str = None,
                 expected_status_code=status.HTTP_200_OK):
         if user is None:
@@ -224,7 +227,7 @@ class TestUpdateTache(TestTache):
             tache = test_fixtures.create_tache(user_id=user.id, ferme=ferme, nb_parcelles=0)
             tache_id = tache.id
         return self._create_or_update(tache_id=tache_id, date=date, activite_id=activite_id,
-                                      user=user, ferme=ferme, duree_minutes=duree_minutes, culture_id=culture_id,
+                                      user=user, ferme=ferme, duree_minutes=duree_minutes, culture_ids=culture_ids,
                                       commentaire=commentaire,
                                       parcelle_ids=parcelle_ids,
                                       expected_status_code=expected_status_code, quantite=quantite, nature=nature, unite_id=unite_id)
@@ -235,14 +238,14 @@ class TestUpdateTache(TestTache):
     def test_ok_update_complet(self):
         user = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
-        self._update(culture_id=8, parcelle_ids=[ferme.parcelle_set.all()[2].id], user=user, ferme=ferme,
+        self._update(culture_ids=[8, 25], parcelle_ids=[ferme.parcelle_set.all()[2].id], user=user, ferme=ferme,
                      commentaire=crypto_utils.random_string(length=350), quantite=142.3,
                                unite_id=9, nature=crypto_utils.random_string(length=25))
 
     def test_ok_update_avec_culture(self):
         user = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=user, nb_parcelles=3)
-        self._update(culture_id=9, user=user, ferme=ferme)
+        self._update(culture_ids=[15], user=user, ferme=ferme)
 
     def test_ok_update_avec_parcelles(self):
         user = self.init_current_user()
@@ -284,7 +287,7 @@ class TestUpdateTache(TestTache):
         self._update(activite_id=698754, expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_nok_update_culture_not_exists(self):
-        self._update(culture_id=3652, expected_status_code=status.HTTP_404_NOT_FOUND)
+        self._update(culture_ids=[3652, 12], expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_nok_update_parcelle_not_exists(self):
         responsable = self.init_current_user()
@@ -363,8 +366,11 @@ class TestGetTache(SebaniaTestCase):
             self.assertEqual(expected_tache.user_id, actual_tache.get("user").get("id"))
             self.assertEqual(expected_tache.date.strftime("%d/%m/%Y"), actual_tache.get("date"))
             self.assertEqual(expected_tache.duree_minutes, actual_tache.get("duree_minutes"))
-            if expected_tache.culture_id is not None:
-                self.assertEqual(expected_tache.culture_id, actual_tache.get("culture").get("id"))
+            for expected_culture in expected_tache.cultures.all():
+                actual_culture = next(
+                    (x for x in actual_tache.get("cultures") if x.get("id") == expected_culture.id), None)
+                self.assertIsNotNone(actual_culture)
+                self.assertEqual(expected_culture.nom, actual_culture.get("nom"))
             self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
             self.assertEqual(expected_tache.nature, actual_tache.get("nature"))
             if expected_tache.unite_id is not None:
@@ -377,9 +383,8 @@ class TestGetTache(SebaniaTestCase):
                 self.assertEqual(expected_parcelle.nom, actual_parcelle.get("nom"))
                 self.assertEqual(expected_parcelle.superficie, actual_parcelle.get("superficie"))
                 self.assertEqual(expected_parcelle.type_id, actual_parcelle.get("type").get("id"))
-            if len(expected_tache.parcelles.all()) > 0:
-                if expected_tache.culture_id is not None:
-                    expected_fields_are_missing = False
+            if len(expected_tache.parcelles.all()) > 0 and len(expected_tache.cultures.all()) > 0:
+                expected_fields_are_missing = False
             self.assertEqual(expected_fields_are_missing, actual_tache.get("fields_are_missing"))
 
     def test_ok_get_one(self):
