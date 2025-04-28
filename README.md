@@ -36,6 +36,7 @@ SMTP_HOST=sandbox.smtp.mailtrap.io
 SMTP_USERNAME=<MAIL_TRAP_USERNAME>
 SMTP_PASSWORD=<MAIL_TRAP_PASSWORD>
 SMTP_PORT=2525
+DJANGO_SETTINGS_MODULE=sebania.settings.local
 ```
 
 Remplacez les valeurs `<MAIL_TRAP_USERNAME>` et `<MAIL_TRAP_PASSWORD>` par les identifiants récupérés à la section [Mailtrap](#pré-requis)
