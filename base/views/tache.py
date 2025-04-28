@@ -1,15 +1,11 @@
-from collections import defaultdict
-
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from base.filters.tache import TacheFilter, TacheCalendrierFilter
+from base.filters.tache import TacheFilter
 from base.models import Tache
-from base.models.statut import StatutJour
 from base.serializers.calendrier import CalendrierSerializer
 from base.serializers.tache import TacheSerializer
 from sebania.exceptions.custom_exception import CustomException

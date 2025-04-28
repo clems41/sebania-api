@@ -66,3 +66,9 @@ class ErrorCode(Enum):
     TACHE_CALENDRIER_ANNEE_OBLIGATOIRE = "Le filtre année est obligatoire", status.HTTP_400_BAD_REQUEST
     TACHE_CALENDRIER_USERID_OBLIGATOIRE = "Le filtre user_id est obligatoire", status.HTTP_400_BAD_REQUEST
     TACHE_DUREE_INCORRECTE = "La durée de la tâche ({}) doit être comprise entre 1 et 1440", status.HTTP_400_BAD_REQUEST
+
+    """
+    ERREURS LIEES AUX VOCAUX
+    """
+    VOCAL_FILE_UPLOAD = "Erreur lors de la récupération du message vocal depuis la requête : {}", status.HTTP_400_BAD_REQUEST
+    VOCAL_DATE_INCORRECTE = "La date fournie ({}) est incorrecte, elle doit être au format ddMMYYYY", status.HTTP_400_BAD_REQUEST

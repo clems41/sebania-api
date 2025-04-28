@@ -18,10 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 AUTH_USER_MODEL = "base.User"
 
-APPEND_SLASH=True
+APPEND_SLASH = True
 
 DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -35,7 +34,6 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 DEBUG = os.environ.get("DJANGO_DEBUG", True)
-
 
 DATABASES = {
     'default': {
@@ -62,7 +60,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_yasg',
     'rest_framework_simplejwt',
-    'django_extensions'
+    'django_extensions',
+    'storages'
 ]
 
 REST_FRAMEWORK = {
@@ -86,6 +85,18 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
     'UPDATE_LAST_LOGIN': True,
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
+        "OPTIONS": {
+            "oauth2_access_token": os.getenv('DROPBOX_ACCESS_TOKEN')
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
 }
 
 SWAGGER_ENABLE = True
@@ -141,7 +152,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sebania.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -160,7 +170,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -171,7 +180,6 @@ TIME_ZONE = 'Europe/Paris'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

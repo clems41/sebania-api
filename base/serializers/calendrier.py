@@ -23,7 +23,7 @@ class CalendrierSerializer(serializers.Serializer):
     jours = CalendrierJourSerializer(many=True)
     total_minutes = serializers.IntegerField()
 
-    def __init__(self, request):
+    def __init__(self, request, *args, **kwargs):
         calendrier_data = self._get_calendrier_data(request)
         super(CalendrierSerializer, self).__init__(calendrier_data)
 
