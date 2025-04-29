@@ -91,7 +91,9 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.dropbox.DropboxStorage",
         "OPTIONS": {
-            "oauth2_access_token": os.getenv('DROPBOX_ACCESS_TOKEN')
+            "oauth2_refresh_token": os.getenv('DROPBOX_REFRESH_TOKEN'),
+            "app_secret": os.getenv('DROPBOX_SECRET'),
+            "app_key": os.getenv('DROPBOX_KEY')
         },
     },
     "staticfiles": {

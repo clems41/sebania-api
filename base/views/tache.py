@@ -39,8 +39,9 @@ class TacheModelViewSet(ModelViewSet):
                        OpenApiParameter("semaine", int, required=False, description="Numéro de semaine (1-53) ! Incompatible avec mois !"),
                        OpenApiParameter("mois", int, required=False, description="Numéro de mois (1-12) ! Incompatible avec semaine !"),
                    ],
+                   responses=CalendrierSerializer
                    )
-    @action(detail=False, methods=['get'], url_path='calendrier', serializer_class=CalendrierSerializer)
+    @action(detail=False, methods=['get'], url_path='calendrier')
     def calendrier(self, request):
-        serializer = CalendrierSerializer(request)
+        serializer = CalendrierSerializer.from_request(request)
         return Response(serializer.data)

@@ -1,3 +1,4 @@
+import logging
 import re
 import traceback
 
@@ -10,6 +11,10 @@ from rest_framework import status
 from base.models.error import Error
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode, get_error_code_from_str
+
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class ErrorResponse(Response):
     def __init__(self, custom_exception: CustomException, **kwargs):
@@ -50,8 +55,13 @@ def _save_error(exc, context):
     user = None
     if request.user.is_authenticated:
         user = request.user
-    Error.objects.create(message=repr(exc), traceback=traceback.format_exc(), url=request.get_full_path(),
-                         query_params=request.query_params.dict(), body= request.data, user=user)
+    if "file" in request.data:
+        request.data.pop("file") # file cannot be store in database
+    try:
+        Error.objects.create(message=repr(exc), traceback=traceback.format_exc(), url=request.get_full_path(),
+                         query_params=request.query_params.dict(), body=request.data, user=user)
+    except Exception as e:
+        logger.error('Error while saving error : ', e)
 
 
 def _extract_error_code_from_validation_error(exception: ValidationError):

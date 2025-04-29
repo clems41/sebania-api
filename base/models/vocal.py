@@ -23,15 +23,18 @@ class Vocal(BaseModel):
     date = models.DateField()
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     audio = models.FileField(upload_to=get_upload_path)
+    queued_at = models.DateTimeField(null=True)
     transcription = models.TextField(blank=True, null=True)
-    output = models.JSONField(blank=True, null=True)
+    transcribed_at = models.DateTimeField(null=True)
     audio_to_transcription_duration = models.DurationField(blank=True, null=True)
+    output = models.JSONField(blank=True, null=True)
+    finished_at = models.DateTimeField(null=True)
     transcription_to_output_duration = models.DurationField(blank=True, null=True)
 
     def get_statut(self):
         statut = VocalStatut.RECEIVED
-        if self.transcription:
+        if self.transcribed_at:
             statut = VocalStatut.TRANSCRIBED
-        if self.output:
+        if self.finished_at:
             statut = VocalStatut.FINISHED
         return statut

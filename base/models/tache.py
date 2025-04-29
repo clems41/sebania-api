@@ -3,6 +3,7 @@ from django.db import models
 from base.models import Activite, User, Ferme, Parcelle, Culture
 from base.models.base import BaseModel
 from base.models.unite import Unite
+from base.models.vocal import Vocal
 
 
 class Tache(BaseModel):
@@ -17,6 +18,9 @@ class Tache(BaseModel):
     quantite = models.FloatField(null=True, blank=True)
     unite = models.ForeignKey(Unite, on_delete=models.DO_NOTHING, null=True)
     nature = models.TextField(null=True, blank=True)
+    vocal = models.ForeignKey(Vocal, on_delete=models.DO_NOTHING, null=True)
+    parcelles_non_trouvees = models.TextField(null=True, blank=True)
+    cultures_non_trouvees = models.TextField(null=True, blank=True)
 
     def get_fields_are_missing(self) -> bool:
         if not self.activite.need_culture:

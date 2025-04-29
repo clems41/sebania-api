@@ -34,7 +34,7 @@ class FermeViewSet(ViewSet):
 
     @extend_schema(responses=FermeViewSerializer,
                    description="Suppression d'un employé existant de la ferme")
-    @action(detail=False, methods=['delete'], url_path='employes/(?P<user_id>\w+)', serializer_class=None,
+    @action(detail=False, methods=['delete'], url_path=r'employes/(?P<user_id>\w+)', serializer_class=None,
             url_name="delete-employe", permission_classes=[IsAuthenticated, HasResponsablePermission])
     def delete_employe(self, request, user_id=None):
         ferme = get_one_or_raise_exception(Ferme, CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id),

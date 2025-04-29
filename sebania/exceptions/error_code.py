@@ -12,7 +12,9 @@ class ErrorCode(Enum):
     """
     ERREURS GLOBALES
     """
+    GLOBAL_METHOD_NOT_ALLOWED = "Cette requête n'est pas autorisée", status.HTTP_405_METHOD_NOT_ALLOWED
     GLOBAL_UNKNOWN_ERROR = "Une erreur inattendu s'est produite : {}", status.HTTP_500_INTERNAL_SERVER_ERROR
+    GLOBAL_404 = "La page {} n'a pas été trouvée", status.HTTP_404_NOT_FOUND
     GLOBAL_VALIDATION_ERROR = "{}", status.HTTP_400_BAD_REQUEST
     GLOBAL_WRONG_ARG = "La méthode {method} ne peut pas être appelée avec un argument de type {actual}, uniquement avec les types suivantes : {must_be}", status.HTTP_500_INTERNAL_SERVER_ERROR
     

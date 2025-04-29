@@ -34,12 +34,14 @@ class TacheSerializer(serializers.ModelSerializer):
     nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     unite_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
     unite = UniteSerializer(read_only=True)
+    vocal_id = serializers.IntegerField(read_only=True)
     fields_are_missing = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Tache
         fields = ["id", "activite", "activite_id", "date", "user", "user_id", "duree_minutes", "cultures", "culture_ids",
-                  "parcelles", "parcelle_ids", "commentaire", "quantite", "nature", "unite", "unite_id", "fields_are_missing"]
+                  "parcelles", "parcelle_ids", "commentaire", "quantite", "nature", "unite", "unite_id", "fields_are_missing",
+                  "vocal_id"]
 
     def to_representation(self, instance: Tache):
         representation = super().to_representation(instance)
