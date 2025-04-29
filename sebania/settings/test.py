@@ -15,6 +15,16 @@ EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = ""
 EMAIL_USE_TLS = True
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "inmemorystorage.InMemoryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 

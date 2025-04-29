@@ -23,7 +23,6 @@ class Vocal(BaseModel):
     date = models.DateField()
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     audio = models.FileField(upload_to=get_upload_path)
-    queued_at = models.DateTimeField(null=True)
     transcription = models.TextField(blank=True, null=True)
     transcribed_at = models.DateTimeField(null=True)
     audio_to_transcription_duration = models.DurationField(blank=True, null=True)

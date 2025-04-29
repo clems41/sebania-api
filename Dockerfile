@@ -22,6 +22,11 @@ RUN pip install --no-cache-dir -r requirements.txt
  
 # Stage 2: Production stage
 FROM python:3.12-slim
+
+# Install ffmpeg for Whisper
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y ffmpeg
  
 RUN useradd -m -r appuser && \
    mkdir /app && \
@@ -33,6 +38,10 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
  
 # Set the working directory
 WORKDIR /app
+
+# Create directory to store Whisper models
+RUN mkdir /app/whisper/ && \
+   chown -R appuser /app/whisper/
  
 # Copy application code
 COPY --chown=appuser:appuser . .

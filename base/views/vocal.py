@@ -13,6 +13,7 @@ from base.serializers.vocal import VocalSerializer, SendVocalSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils.db_utils import get_one_or_raise_exception
+from thomas_ai.tasks.transcription import transcribe
 
 
 @extend_schema_view(
@@ -43,6 +44,7 @@ class VocalViewSet(ModelViewSet):
             raise CustomException(ErrorCode.VOCAL_FILE_UPLOAD, form.errors)
         file = form.validated_data['file']
         vocal = Vocal.objects.create(audio=file, user=request.user, date=validated_date)
+        transcribe(vocal_id=vocal.id)
         return Response(VocalSerializer(vocal).data, status=status.HTTP_201_CREATED)
 
     @extend_schema(description="Récupération du statut d'un vocal", responses=VocalSerializer)

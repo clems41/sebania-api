@@ -56,12 +56,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base',
+    'thomas_ai',
     'rest_framework',
     'drf_spectacular',
     'drf_yasg',
     'rest_framework_simplejwt',
     'django_extensions',
-    'storages'
+    'storages',
+    'background_task',
 ]
 
 REST_FRAMEWORK = {
@@ -192,3 +194,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# THOMAS
+WHISPER_MODEL = "turbo"
+WHISPER_MODEL_DIRECTORY = os.getenv('WHISPER_MODEL_DIRECTORY', "/tmp/whisper_models/")

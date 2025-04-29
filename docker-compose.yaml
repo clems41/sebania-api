@@ -39,6 +39,9 @@ services:
       DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
       DROPBOX_SECRET: ${DROPBOX_SECRET}
       DROPBOX_KEY: ${DROPBOX_KEY}
+      WHISPER_MODEL_DIRECTORY: /app/whisper/
+    volumes:
+      - whisper_models:/app/whisper/
 
   background-tasks:
     build: .
@@ -58,6 +61,9 @@ services:
       DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
       DROPBOX_SECRET: ${DROPBOX_SECRET}
       DROPBOX_KEY: ${DROPBOX_KEY}
+      WHISPER_MODEL_DIRECTORY: /app/whisper/
+    volumes:
+      - whisper_models:/app/whisper/
     depends_on:
       db:
         condition: service_healthy
@@ -76,3 +82,4 @@ services:
 
 volumes:
   sebania_data:
+  whisper_models:
