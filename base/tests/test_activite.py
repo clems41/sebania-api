@@ -30,6 +30,9 @@ class TestActivite(SebaniaTestCase):
             'logist': [20,21,26],
             'semis': [1,7],
             'compost': [3,41],
+            'semis direct': [1,7,24],
+            'traitement maladie': [10],
+            'destruction insecte': [10, 15, 55],
         }
         for query, expected_activite_ids in expected.items():
             response = self._get_response_for_keyword(query)

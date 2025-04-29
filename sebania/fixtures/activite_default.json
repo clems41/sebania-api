@@ -95,7 +95,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes"
+      "mots_cles": "serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes,ouvrir"
     }
   },
   {
@@ -161,7 +161,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "arrachage,broyage,rouage,nettoyage"
+      "mots_cles": "arrachage,broyage,roulage,nettoyage,engrais,verts"
     }
   },
   {
@@ -172,7 +172,7 @@
       "default": true,
       "categorie_default": "production",
       "need_culture": true,
-      "mots_cles": "observation,croissance,planning,plannification,tour du champ,tour,regarder,checker"
+      "mots_cles": "observation,croissance,planning,planification,tour du champ,tour,regarder,checker"
     }
   },
   {
@@ -326,7 +326,7 @@
       "default": true,
       "categorie_default": "administratif",
       "need_culture": false,
-      "mots_cles": "agenda,planning,tâches,plannification,calendrier,rotation,assolement"
+      "mots_cles": "agenda,planning,tâches,planification,calendrier,rotation,assolement"
     }
   },
   {
