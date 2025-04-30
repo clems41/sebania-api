@@ -20,6 +20,10 @@ C'est un outil qui met à disposition un serveur SMTP sans envoyer les emails. A
 
 Pour faire fonctionner MailTrap, il suffit de se créer un compte sur leur [site](https://mailtrap.io/). Vous pourrez ensuite récupérer un `username` et un `password` pour vous connecter au serveur SMTP.
 
+**Dropbox**
+
+Pour sauvegarder les vocaux, on utilise un Dropbox. Pour que cela fonctionne avec l'API, il faut configurer des variables d'environnements spécifiques.
+
 **Variables d'environnement**
 
 Pour que l'API puisse fonctionner avec Postgres mais également d'autres services externes, il est important de configurer des variables d'environnement.
@@ -37,6 +41,9 @@ SMTP_USERNAME=<MAIL_TRAP_USERNAME>
 SMTP_PASSWORD=<MAIL_TRAP_PASSWORD>
 SMTP_PORT=2525
 DJANGO_SETTINGS_MODULE=sebania.settings.local
+DROPBOX_REFRESH_TOKEN=XXX
+DROPBOX_SECRET=XXX
+DROPBOX_KEY=XXX
 ```
 
 Remplacez les valeurs `<MAIL_TRAP_USERNAME>` et `<MAIL_TRAP_PASSWORD>` par les identifiants récupérés à la section [Mailtrap](#pré-requis)
@@ -47,7 +54,7 @@ Remplacez les valeurs `<MAIL_TRAP_USERNAME>` et `<MAIL_TRAP_PASSWORD>` par les i
 
 Démarrez l'API avec la base de données PostgreSQL :
 ```bash
-docker compose up -d --build
+docker compose up api db -d --build
 ```
 
 Cela peut prendre quelques minutes lors de la première compilation de l'image Docker.

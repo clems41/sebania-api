@@ -44,7 +44,9 @@ services:
       - whisper_models:/app/whisper/
 
   background-tasks:
-    build: .
+    build:
+      dockerfile: Dockerfile_ai
+      context: .
     container_name: sebania-background-tasks
     environment:
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
@@ -67,10 +69,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: "python manage.py process_tasks"
 
   testcases:
-    build: .
+    build:
+      dockerfile: Dockerfile_ai
+      context: .
     container_name: sebania-testcases
     environment:
       DJANGO_SETTINGS_MODULE: sebania.settings.test

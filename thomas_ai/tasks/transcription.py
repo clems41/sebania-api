@@ -13,11 +13,11 @@ from thomas_ai.tasks.analyze import analyze
 
 @background(schedule=0, queue='transcription')
 def transcribe(vocal_id: int):
-    start_time = datetime.now()
     vocal = Vocal.objects.get(id=vocal_id)
     model = whisper.load_model(settings.WHISPER_MODEL, download_root=settings.WHISPER_MODEL_DIRECTORY)
 
     # Créer un fichier temporaire à partir du FieldFile pour la transcription
+    start_time = datetime.now()
     with tempfile.NamedTemporaryFile(suffix=".mp3") as tmp:
         tmp.write(vocal.audio.read())
         tmp.flush()
