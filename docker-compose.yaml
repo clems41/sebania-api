@@ -17,7 +17,10 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
 
   api:
-    build: .
+    build: &build-sebania
+      dockerfile: Dockerfile
+      tags:
+        - sebania-api:0.1.0
     container_name: sebania-api
     ports:
       - "8000:8000"
@@ -43,9 +46,10 @@ services:
       - whisper_models:/app/whisper/
 
   background-tasks:
-    build:
+    build: &build-thomas
       dockerfile: Dockerfile_ai
-      context: .
+      tags:
+        - thomas-ai:0.1.0
     container_name: sebania-background-tasks
     environment:
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
@@ -75,12 +79,15 @@ services:
 
   testcases:
     build:
-      dockerfile: Dockerfile_ai
-      context: .
+      <<: *build-thomas
     container_name: sebania-testcases
     environment:
       DJANGO_SETTINGS_MODULE: sebania.settings.test
       DATABASE_HOST: db
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+      WHISPER_MODEL_DIRECTORY: /app/whisper/
+    volumes:
+      - whisper_models:/app/whisper/
     depends_on:
       db:
         condition: service_healthy

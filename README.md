@@ -46,6 +46,7 @@ Pour que l'API puisse fonctionner avec Postgres mais également d'autres service
 
 Pour ce faire, créer un fichier ``.env`` et copier le contenu suivant dedans :
 ```dotenv
+COMPOSE_BAKE=true
 DJANGO_SECRET_KEY=dev
 DATABASE_NAME=sebania
 DATABASE_USERNAME=sebania
@@ -109,8 +110,8 @@ docker compose run api python manage.py loaddata activite_default culture_defaul
 
 **Rôles**
 
-Pour le moment, il existe 2 rôles dans l'application: 
-- `RESPONSABLE` : rôle de l'utilisateur qui va s'enregister depuis le endpoint dédié en précisant les informations de sa ferme ainsi que celles de ses employés
+Pour le moment, il existe 2 rôles dans l'application :
+- `RESPONSABLE` : rôle de l'utilisateur qui va s'enregister depuis l'endpoint dédié en précisant les informations de sa ferme ainsi que celles de ses employés
 - `EMPLOYE` : rôle attribué aux utilisateurs créés automatiquement lors de l'inscription d'un responsable.
 
 **Inscription**
