@@ -12,6 +12,7 @@ env:
   DATABASE_USERNAME: sebania
   DATABASE_PASSWORD: sebania
   COMPOSE_BAKE: true
+  MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
 
 jobs:
   build:

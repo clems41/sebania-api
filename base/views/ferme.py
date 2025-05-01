@@ -51,7 +51,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='activites', serializer_class=ActiviteFermeSerializer,
             url_name="get-activites")
     def get_activites(self, request):
-        ferme = db_utils.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_from_request(request)
         items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("categorie", "activite__nom")
         serializer = self.serializer_class(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -61,7 +61,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='cultures', serializer_class=CultureFermeSerializer,
             url_name="get-cultures")
     def get_cultures(self, request):
-        ferme = db_utils.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_from_request(request)
         items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
         serializer = self.serializer_class(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -70,7 +70,7 @@ class FermeViewSet(ViewSet):
     @action(detail=False, methods=['get'], url_path='details', serializer_class=FermeViewSerializer,
             url_name="get-ferme-details")
     def get_ferme_details(self, request):
-        ferme = db_utils.get_ferme_for_user(request)
+        ferme = db_utils.get_ferme_from_request(request)
         serializer = self.serializer_class(ferme)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

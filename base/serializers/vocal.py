@@ -7,10 +7,11 @@ class SendVocalSerializer(serializers.Serializer):
 
 class VocalSerializer(serializers.ModelSerializer):
     statut = serializers.ChoiceField(choices=[tag.name for tag in VocalStatut], read_only=True)
+    date = serializers.DateField(format="%d/%m/%Y")
 
     class Meta:
         model = Vocal
-        fields = ["id", "statut", "transcribed_at", "finished_at", "analyzed_at"]
+        fields = ["id", "statut", "created_at", "transcribed_at", "finished_at", "analyzed_at", "date"]
 
 
     def to_representation(self, instance):

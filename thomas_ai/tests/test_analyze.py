@@ -3,18 +3,13 @@ import datetime
 import json
 import os.path
 
-from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
-
 from base.models.vocal import Vocal, VocalStatut
-from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from thomas_ai.tasks.analyze import analyze
-from thomas_ai.tasks.transcription import transcribe
 from thomas_ai.tests.TaskTestcase import TaskTestcase
 
 
 class TestAnalyze(TaskTestcase):
-    def test_transcription_ok(self):
+    def test_analyze_ok(self):
         user = self.init_current_user()
         transcription = ("bonsoir charles et aujourd'hui j'ai passé trois heures à aider au montage d'une serre chez un "
                            "collègue une heure à installer du compost sur une planche de carottes 20 minutes à arroser les "

@@ -11,7 +11,7 @@ from base.serializers.tache import TacheSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils
-from sebania.utils.db_utils import get_ferme_for_user
+from sebania.utils.db_utils import get_ferme_from_request
 
 
 class TacheModelViewSet(ModelViewSet):
@@ -21,7 +21,7 @@ class TacheModelViewSet(ModelViewSet):
     filterset_class = TacheFilter
 
     def get_queryset(self):
-        ferme = get_ferme_for_user(self.request)
+        ferme = get_ferme_from_request(self.request)
         return Tache.objects.filter(ferme=ferme).all()
 
     def destroy(self, request, *args, **kwargs):

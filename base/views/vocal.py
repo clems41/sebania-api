@@ -36,7 +36,7 @@ class VocalViewSet(ModelViewSet):
     @action(detail=False, methods=['post'], url_path=r'date/(?P<date>\w+)', serializer_class=SendVocalSerializer)
     def send_vocal(self, request, date: str = None):
         try:
-            validated_date = datetime.datetime.strptime(date, "%d%m%Y")
+            validated_date = datetime.datetime.strptime(date, "%d%m%Y").date()
         except:
             raise CustomException(ErrorCode.VOCAL_DATE_INCORRECTE, date)
         form = SendVocalSerializer(request.POST, request.FILES)

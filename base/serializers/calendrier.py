@@ -9,7 +9,7 @@ from base.models import Tache, Ferme
 from base.models.statut import StatutJour
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
-from sebania.utils.db_utils import get_ferme_for_user
+from sebania.utils.db_utils import get_ferme_from_request
 
 
 class CalendrierJourSerializer(serializers.Serializer):
@@ -24,7 +24,7 @@ class CalendrierSerializer(serializers.Serializer):
 
     @classmethod
     def from_request(cls, request):
-        ferme = get_ferme_for_user(request)
+        ferme = get_ferme_from_request(request)
         queryset = Tache.objects.filter(ferme=ferme)
 
         filtres = TacheCalendrierFilter(request.GET, queryset=queryset)
