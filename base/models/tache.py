@@ -19,8 +19,6 @@ class Tache(BaseModel):
     unite = models.ForeignKey(Unite, on_delete=models.DO_NOTHING, null=True)
     nature = models.TextField(null=True, blank=True)
     vocal = models.ForeignKey(Vocal, on_delete=models.DO_NOTHING, null=True)
-    parcelles_non_trouvees = models.TextField(null=True, blank=True)
-    cultures_non_trouvees = models.TextField(null=True, blank=True)
 
     def get_fields_are_missing(self) -> bool:
         if not self.activite.need_culture:

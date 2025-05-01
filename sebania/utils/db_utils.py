@@ -38,7 +38,7 @@ def get_ferme_for_user(request) -> Ferme:
     else:
         raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id)
 
-def get_one_or_raise_exception(queryset, exception: CustomException, *filter_args, **filter_kwargs):
+def get_one_or_raise_exception(queryset, exception: CustomException, defer_fields: list = None, *filter_args, **filter_kwargs):
     """
     Retourne l'instance de l'objet demandé si elle existe, sinon lève une exception
     """
@@ -50,6 +50,8 @@ def get_one_or_raise_exception(queryset, exception: CustomException, *filter_arg
         )
         raise CustomException(ErrorCode.GLOBAL_WRONG_ARG, method="get_one_or_raise_exception", actual=klass__name, must_be="Model, Manager or QuerySet")
     try:
+        if defer_fields:
+            queryset = queryset.defer(*defer_fields)
         return queryset.get(*filter_args, **filter_kwargs)
     except queryset.model.DoesNotExist:
         raise exception

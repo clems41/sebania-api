@@ -196,5 +196,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # THOMAS
-WHISPER_MODEL = "turbo"
+WHISPER_MODEL = os.getenv('WHISPER_MODEL', "turbo")
 WHISPER_MODEL_DIRECTORY = os.getenv('WHISPER_MODEL_DIRECTORY', "/tmp/whisper_models/")
+MISTRAL_MODEL = os.getenv('MISTRAL_MODEL', "mistral/mistral-large-latest")
+MISTRAL_MODEL_TEMPERATURE = os.getenv('MISTRAL_MODEL_TEMPERATURE', 0)
+MISTRAL_API_KEY = os.environ['MISTRAL_API_KEY']

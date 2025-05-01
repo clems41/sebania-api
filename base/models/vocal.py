@@ -8,6 +8,7 @@ from django.db import models
 class VocalStatut(Enum):
     RECEIVED = "received"
     TRANSCRIBED = "transcribed"
+    ANALYZED = "analyzed"
     FINISHED = "finished"
 
 def get_upload_path(instance, filename):
@@ -26,14 +27,20 @@ class Vocal(BaseModel):
     transcription = models.TextField(blank=True, null=True)
     transcribed_at = models.DateTimeField(null=True)
     audio_to_transcription_duration = models.DurationField(blank=True, null=True)
+    transcription_improved = models.TextField(blank=True, null=True)
     output = models.JSONField(blank=True, null=True)
-    finished_at = models.DateTimeField(null=True)
     transcription_to_output_duration = models.DurationField(blank=True, null=True)
+    analyzed_at = models.DateTimeField(null=True)
+    finished_at = models.DateTimeField(null=True)
+    parcelles_non_trouvees = models.TextField(null=True, blank=True)
+    cultures_non_trouvees = models.TextField(null=True, blank=True)
 
     def get_statut(self):
         statut = VocalStatut.RECEIVED
         if self.transcribed_at:
             statut = VocalStatut.TRANSCRIBED
+        if self.analyzed_at:
+            statut = VocalStatut.ANALYZED
         if self.finished_at:
             statut = VocalStatut.FINISHED
         return statut

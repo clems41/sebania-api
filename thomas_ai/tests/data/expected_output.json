@@ -1,0 +1,38 @@
+[
+  {
+    "activite": "Construire",
+    "duree_minutes": 180,
+    "parcelles": [],
+    "cultures": [],
+    "quantite": 0,
+    "unite": "",
+    "commentaire": "Montage d'une serre chez un collègue."
+  },
+  {
+    "activite": "Apport de MO (Amender)",
+    "duree_minutes": 60,
+    "parcelles": ["planche"],
+    "cultures": ["Carotte"],
+    "quantite": 0,
+    "unite": "",
+    "commentaire": "Installation de compost sur la planche de carotte."
+  },
+  {
+    "activite": "Irrigation",
+    "duree_minutes": 20,
+    "parcelles": [],
+    "cultures": ["Carotte"],
+    "quantite": 0,
+    "unite": "",
+    "commentaire": ""
+  },
+  {
+    "activite": "Ranger",
+    "duree_minutes": 30,
+    "parcelles": [],
+    "cultures": [],
+    "quantite": 0,
+    "unite": "",
+    "commentaire": "Rangement des plants."
+  }
+]

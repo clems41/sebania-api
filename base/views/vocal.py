@@ -23,7 +23,7 @@ from thomas_ai.tasks.transcription import transcribe
 class VocalViewSet(ModelViewSet):
     serializer_class = VocalSerializer
     parser_classes = [FileUploadParser]
-    queryset = Vocal.objects.all()
+    queryset = Vocal.objects.defer('audio').all()
     http_method_names = ['get', 'post']  # pas de 'put' ni 'delete'
 
     def create(self, request, *args, **kwargs):
@@ -49,7 +49,7 @@ class VocalViewSet(ModelViewSet):
 
     @extend_schema(description="Récupération du statut d'un vocal", responses=VocalSerializer)
     def retrieve(self, request, pk =None):
-        vocal = get_one_or_raise_exception(Vocal, CustomException(ErrorCode.VOCAL_NOT_FOUND, pk), id=pk)
+        vocal = get_one_or_raise_exception(Vocal, CustomException(ErrorCode.VOCAL_NOT_FOUND, pk), defer_fields=["audio"], id=pk)
         if request.user.id != vocal.user.id:
             raise CustomException(ErrorCode.VOCAL_NOT_FOUND, pk)
         return Response(VocalSerializer(vocal).data, status=status.HTTP_200_OK)
@@ -58,7 +58,7 @@ class VocalViewSet(ModelViewSet):
     @extend_schema(description="Récupération des vocaux en cours de traitement pour une date donnée",
                    parameters=[
                        OpenApiParameter("date", str, required=True, description="Date des vocaux au format ddMMYYYY"),
-                   ],)
+                   ])
     def list(self, request):
         query_params = request.query_params.dict()
         if 'date' not in query_params:
@@ -68,5 +68,5 @@ class VocalViewSet(ModelViewSet):
             validated_date = datetime.datetime.strptime(date, "%d%m%Y")
         except:
             raise CustomException(ErrorCode.VOCAL_DATE_INCORRECTE, date)
-        vocaux = Vocal.objects.filter(date=validated_date, user=request.user, finished_at__isnull=True)
+        vocaux = Vocal.objects.defer('audio').filter(date=validated_date, user=request.user, finished_at__isnull=True)
         return Response(VocalSerializer(vocaux, many=True).data, status=status.HTTP_200_OK)

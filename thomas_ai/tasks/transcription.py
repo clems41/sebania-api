@@ -23,10 +23,13 @@ def transcribe(vocal_id: int):
         tmp.flush()
         result = model.transcribe(tmp.name, language="fr", verbose=True, fp16=False)
 
+    # Mise à jour du vocal avec la transcription
     end_time = datetime.now()
     duration = end_time - start_time
     vocal.audio_to_transcription_duration = duration
     vocal.transcribed_at = timezone.now()
     vocal.transcription = result["text"]
     vocal.save()
+
+    # Envoi dans la queue suivante pour l'analyse
     analyze(vocal_id=vocal_id)
