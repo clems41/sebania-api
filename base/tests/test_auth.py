@@ -1,3 +1,4 @@
+import copy
 import json
 
 from django.contrib.auth.models import Group
@@ -122,14 +123,23 @@ class AuthRegisterTestCase(SebaniaTestCase):
     def test_ok_register_sans_employes(self):
         self._test_register(register_user_request_0employes)
 
-    def _test_register(self, request):
+    def test_nok_code_postal_incorrect(self):
+        request = copy.deepcopy(register_user_request_0employes)
+        invalid_code_postaux = ["25", "4152", "123456", "0"]
+        for invalid_code_postal in invalid_code_postaux:
+            request["ferme"]["code_postal"] = invalid_code_postal
+            self._test_register(request, expected_status_code=status.HTTP_400_BAD_REQUEST)
+
+    def _test_register(self, request, expected_status_code: int = status.HTTP_201_CREATED):
         # envoi requête pour enregistrer le responsable, la ferme et les employés
         request_data = json.dumps(request)
         responsable_password = request.get('password')
         responsable_email = request.get('email')
         response = self.client.post(self.url, request_data, content_type="application/json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, expected_status_code)
 
+        if expected_status_code != status.HTTP_201_CREATED:
+            return
         # verification de la création du responsable et de son rôle RESPONSABLE
         response_data = json.loads(response.content)
         responsable_id = response_data.get('id')
@@ -158,7 +168,7 @@ class AuthRegisterTestCase(SebaniaTestCase):
             self.assertTrue(methode.id in methodes_ids)
 
         employes_data = ferme_request_data.get('employes')
-        if len(employes_data) > 0:
+        if employes_data is not None and len(employes_data) > 0:
             # verification de la création des employés, qu'ils ont le rôle EMPLOYE et qu'ils peuvent se connecter avec le mdp reçu par mail
             employe_group = Group.objects.get(name='EMPLOYE')
             for employe_data in employes_data:

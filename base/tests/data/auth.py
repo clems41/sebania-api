@@ -7,7 +7,8 @@ register_user_request_2employes = {
         "methodes_agricoles": [2, 3],
         "nom": "La ferme de Cagnolle",
         "adresse": "ici",
-        "superficie_cultivee": 1500,
+        "code_postal": "98800",
+        "superficie_cultivee": 1500.2,
         "employes": [
             {
                 "email": "toto@gmail.com",
@@ -29,10 +30,7 @@ register_user_request_0employes = {
     "first_name": "Toto",
     "last_name": "Responsable",
     "ferme": {
-        "methodes_agricoles": [2, 3],
         "nom": "La ferme de Cagnolle",
-        "adresse": "ici",
-        "superficie_cultivee": 1500,
-        "employes": []
+        "code_postal": "98800"
     }
 }

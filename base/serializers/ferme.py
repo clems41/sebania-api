@@ -3,6 +3,8 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme, Culture, CultureFerme, ActiviteFerme, Activite
 from base.serializers.user import UserSerializer
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils
 
 
@@ -38,14 +40,22 @@ def _create_data(ferme: Ferme):
 
 
 class FermeSerializer(ModelSerializer):
-    employes = EmployeSerializer(many=True)
+    employes = EmployeSerializer(many=True, required=False)
     methodes_agricoles = serializers.ListField(
         child=serializers.IntegerField(),
+        required=False
     )
 
     class Meta:
         model = Ferme
-        fields = ["nom", "adresse", "superficie_cultivee", "employes", "methodes_agricoles"]
+        fields = ["nom", "adresse", "superficie_cultivee", "employes", "methodes_agricoles", "code_postal"]
+
+    def validate_code_postal(self, value):
+        if value is None:
+            return None
+        if len(value) != 5:
+            raise CustomException(ErrorCode.FERME_CODE_POSTAL_INCORRECT, value)
+        return value
 
     def create(self, validated_data, **kwargs):
         # Création de la ferme
@@ -72,7 +82,7 @@ class FermeViewSerializer(ModelSerializer):
     employes = EmployeSerializer(many=True)
     class Meta:
         model = Ferme
-        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes"]
+        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes", "code_postal"]
 
 
 class UpdateFermeSerializer(ModelSerializer):

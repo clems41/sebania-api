@@ -41,6 +41,7 @@ class ErrorCode(Enum):
     """
     FERME_NOT_FOUND_FOR_USER = "La ferme n'a pu être trouvée pour l'utilisateur id={}", status.HTTP_404_NOT_FOUND
     FERME_NOT_FOUND = "La ferme id={} n'a pu être trouvée", status.HTTP_404_NOT_FOUND
+    FERME_CODE_POSTAL_INCORRECT = "Le code postal ({}) doit contenir exactement 5 caractères", status.HTTP_400_BAD_REQUEST
 
     """
     ERREURS LIEES AUX PARCELLES
