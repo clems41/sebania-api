@@ -1,6 +1,5 @@
 from django.contrib.auth import logout
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from numba.core.types import Boolean
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -64,7 +63,7 @@ class AuthViewSet(ViewSet):
                                         description="Email à valider")
                    ]
                    )
-    @action(detail=False, methods=['get'], url_path='email', serializer_class={"exists": True},
+    @action(detail=False, methods=['get'], url_path='email',
             permission_classes=[], authentication_classes=[])
     def email_exists(self, request):
         email = request.GET.get("email")
