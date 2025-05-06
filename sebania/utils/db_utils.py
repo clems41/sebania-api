@@ -30,7 +30,7 @@ def get_ferme_from_request(request) -> Ferme:
     Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
     """
     if request.user is None or not request.user.is_authenticated:
-        raise CustomException(ErrorCode.AUTH_USER_MUST_BE_AUTHENTICATED)
+        raise CustomException(ErrorCode.USER_MUST_BE_AUTHENTICATED)
     return get_ferme_for_user(request.user)
 
 def get_ferme_for_user(user) -> Ferme:

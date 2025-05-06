@@ -60,7 +60,7 @@ class TacheSerializer(serializers.ModelSerializer):
         user_who_sent_request = self.context.get("request").user
         if db_utils.user_is_employe(user_who_sent_request.id):
             if user_who_sent_request.id != user.id:
-                raise CustomException(ErrorCode.AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
+                raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
         return value
 
     def validate_duree_minutes(self, value):

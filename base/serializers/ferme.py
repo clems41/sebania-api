@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme, Culture, CultureFerme, ActiviteFerme, Activite
 from base.serializers.user import UserSerializer
+from base.validators.user import validate_email
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils
@@ -18,6 +19,11 @@ class EmployeSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name']
+
+    def is_valid(self, raise_exception=False):
+        email = self.initial_data.get('email')
+        validate_email(email)
+        return super().is_valid(raise_exception=raise_exception)
 
     def create(self, validated_data, **kwargs):
         ferme = self.context.get('ferme')

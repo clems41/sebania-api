@@ -29,7 +29,7 @@ class TacheModelViewSet(ModelViewSet):
         if db_utils.user_is_employe(user.id):
             tache = self.get_object()
             if tache.user_id != user.id:
-                raise CustomException(ErrorCode.AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
+                raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
         return super(TacheModelViewSet, self).destroy(request, *args, **kwargs)
 
     @extend_schema(description="Récupération du total d'heures saisies par jour pour une semaine ou un mois donné",

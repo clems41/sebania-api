@@ -17,17 +17,14 @@ class ErrorCode(Enum):
     GLOBAL_404 = "La page {} n'a pas été trouvée", status.HTTP_404_NOT_FOUND
     GLOBAL_VALIDATION_ERROR = "{}", status.HTTP_400_BAD_REQUEST
     GLOBAL_WRONG_ARG = "La méthode {method} ne peut pas être appelée avec un argument de type {actual}, uniquement avec les types suivantes : {must_be}", status.HTTP_500_INTERNAL_SERVER_ERROR
-    
-    """
-    ERREURS AUTHENTIFICATION
-    """
-    AUTH_USER_MUST_BE_AUTHENTICATED = "L'utilisateur doit être authentifié", status.HTTP_403_FORBIDDEN
-    AUTH_USER_EMAIL_MUST_NOT_BE_EMPTY = "Un utilisateur ne peut pas être créé sans adresse email", status.HTTP_400_BAD_REQUEST
-    AUTH_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE = "Les employés ne peuvent pas agir pour les responsables ou les autres employés", status.HTTP_403_FORBIDDEN
-    
+
     """
     ERREURS LIEES AUX USER
     """
+    USER_MUST_BE_AUTHENTICATED = "L'utilisateur doit être authentifié", status.HTTP_403_FORBIDDEN
+    USER_EMAIL_MUST_NOT_BE_EMPTY = "Un utilisateur ne peut pas être créé sans adresse email", status.HTTP_400_BAD_REQUEST
+    USER_EMAIL_ALREADY_EXISTS = "Un utilisateur existe déjà avec l'adresse email {}", status.HTTP_409_CONFLICT
+    USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE = "Les employés ne peuvent pas agir pour les responsables ou les autres employés", status.HTTP_403_FORBIDDEN
     USER_NOT_FOUND = "L'utilisateur id={} n'a pas pu être trouvé", status.HTTP_404_NOT_FOUND
     USER_OLD_PASSWORD_INCORRECT = "L'ancien mot de passe ne correspond pas", status.HTTP_403_FORBIDDEN
 

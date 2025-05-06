@@ -8,8 +8,10 @@ from base.models import User, Ferme, MethodeAgricole, Parcelle, Tache, Culture
 from base.models.statut import StatutJour
 from sebania.utils import crypto_utils
 
-def create_user() -> User:
-    return User.objects.create_user(email=crypto_utils.random_email(), password=crypto_utils.generate_password(),
+def create_user(email: str = None) -> User:
+    if email is None:
+        email = crypto_utils.random_email()
+    return User.objects.create_user(email=email, password=crypto_utils.generate_password(),
                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
 
 def create_parcelle(ferme: Ferme) -> Parcelle:

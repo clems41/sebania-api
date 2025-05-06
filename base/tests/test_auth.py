@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from rest_framework import status
 
 from base.models import User, Ferme, Culture, Activite
+from sebania.tests import test_fixtures
 from sebania.utils import crypto_utils
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from base.tests.data.auth import register_user_request_0employes, register_user_request_2employes
@@ -122,6 +123,16 @@ class AuthRegisterTestCase(SebaniaTestCase):
 
     def test_ok_register_sans_employes(self):
         self._test_register(register_user_request_0employes)
+
+    def test_nok_email_responsable_already_exist(self):
+        email_responsable = register_user_request_0employes.get("email")
+        test_fixtures.create_user(email=email_responsable)
+        self._test_register(register_user_request_0employes, expected_status_code=status.HTTP_409_CONFLICT)
+
+    def test_nok_email_employe_already_exist(self):
+        email_employe = register_user_request_2employes.get("ferme").get("employes")[0].get("email")
+        test_fixtures.create_user(email=email_employe)
+        self._test_register(register_user_request_2employes, expected_status_code=status.HTTP_409_CONFLICT)
 
     def test_nok_code_postal_incorrect(self):
         request = copy.deepcopy(register_user_request_0employes)

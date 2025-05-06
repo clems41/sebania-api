@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
+from sebania.auth_group import AuthGroup
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import crypto_utils
@@ -14,20 +15,20 @@ class UserProfileManager(BaseUserManager):
     def create_employe(self, email, first_name=None, last_name=None):
         employe_password = crypto_utils.generate_password()
         employe = self.create_user(password=employe_password, first_name=first_name, last_name=last_name, email=email)
-        employe.add_to_group("EMPLOYE")
+        employe.add_to_group(AuthGroup.employe.value)
 
         return employe, employe_password
 
     def create_responsable(self, email, password=None, first_name=None, last_name=None):
         responsable = self.create_user(password=password, first_name=first_name, last_name=last_name, email=email)
-        responsable.add_to_group("RESPONSABLE")
+        responsable.add_to_group(AuthGroup.responsable.value)
 
         return responsable
 
     def create_user(self, email, password=None, first_name=None, last_name=None):
         """ Create a new user profile """
         if not email:
-            raise CustomException(ErrorCode.AUTH_USER_EMAIL_MUST_NOT_BE_EMPTY)
+            raise CustomException(ErrorCode.USER_EMAIL_MUST_NOT_BE_EMPTY)
 
         email = self.normalize_email(email)
         user = self.model(email=email, username=email, first_name=first_name, last_name=last_name)
