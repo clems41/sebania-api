@@ -31,7 +31,7 @@ DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,10.0.0.2").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,10.0.2.2").split(",")
 
 DEBUG = os.environ.get("DJANGO_DEBUG", True)
 
