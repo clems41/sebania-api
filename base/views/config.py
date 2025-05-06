@@ -87,5 +87,10 @@ class ConfigViewSet(GenericViewSet):
     def get_errors(self, request):
         codes = []
         for error_code in ErrorCode:
-            codes.append(error_code.name)
+            code = error_code.name
+            message = error_code.value[0]
+            codes.append({
+                'code': code,
+                'message': message,
+            })
         return Response(codes, status=status.HTTP_200_OK)
