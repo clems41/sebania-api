@@ -430,5 +430,41 @@
       "default": true,
       "categorie_default": "feuille"
     }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 49,
+    "fields": {
+      "nom": "Salade",
+      "default": true,
+      "categorie_default": "feuille"
+    }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 50,
+    "fields": {
+      "nom": "Mesclun",
+      "default": true,
+      "categorie_default": "feuille"
+    }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 51,
+    "fields": {
+      "nom": "Herbes aromatiques",
+      "default": true,
+      "categorie_default": "autres"
+    }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 52,
+    "fields": {
+      "nom": "Cébette",
+      "default": true,
+      "categorie_default": "racine"
+    }
   }
 ]
