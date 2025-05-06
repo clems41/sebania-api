@@ -11,6 +11,8 @@ from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from thomas_ai.tasks.extract import extract
 
+mistral_api_key = settings.MISTRAL_API_KEY
+mistral_client = Mistral(api_key=mistral_api_key)
 
 @background(schedule=0, queue='analyze')
 def analyze(vocal_id: int):
@@ -19,11 +21,7 @@ def analyze(vocal_id: int):
 
     # Analyse avec Mistral Agent
     start_time = datetime.now()
-    mistral_api_key = settings.MISTRAL_API_KEY
-
-    client = Mistral(api_key=mistral_api_key)
-
-    chat_response = client.agents.complete(
+    chat_response = mistral_client.agents.complete(
         agent_id="ag:76bf0d16:20250506:untitled-agent:9faabefa",
         messages=[
             {
@@ -35,7 +33,7 @@ def analyze(vocal_id: int):
 
     # Check output
     if len(chat_response.choices) == 0:
-        raise CustomException(ErrorCode.IA_CREWAI_OUTPUT_LEN_INCORRECTE, actual=0, expected=1)
+        raise CustomException(ErrorCode.IA_OUTPUT_LEN_INCORRECTE, actual=0, expected=1)
     output = chat_response.choices[0].message.content
 
     # Mise à jour du vocal avec l'analyse

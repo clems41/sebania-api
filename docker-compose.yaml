@@ -68,9 +68,7 @@ services:
       DROPBOX_KEY: ${DROPBOX_KEY}
       WHISPER_MODEL_DIRECTORY: /app/whisper/
       WHISPER_MODEL: ${WHISPER_MODEL}
-      MISTRAL_MODEL: ${MISTRAL_MODEL}
       MISTRAL_API_KEY: ${MISTRAL_API_KEY}
-      MISTRAL_MODEL_TEMPERATURE: ${MISTRAL_MODEL_TEMPERATURE}
     volumes:
       - whisper_models:/app/whisper/
     depends_on:

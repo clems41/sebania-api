@@ -78,4 +78,4 @@ class ErrorCode(Enum):
     """
     ERREURS LIEES A L'IA
     """
-    IA_CREWAI_OUTPUT_LEN_INCORRECTE = "{actual} sorties attendues pour l'analyse faite par CrewAI, mais seulement {expected} ont été trouvées", status.HTTP_500_INTERNAL_SERVER_ERROR
+    IA_OUTPUT_LEN_INCORRECTE = "{actual} sorties attendues pour l'analyse faite par CrewAI, mais seulement {expected} ont été trouvées", status.HTTP_500_INTERNAL_SERVER_ERROR
