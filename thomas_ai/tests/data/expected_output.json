@@ -11,7 +11,7 @@
   {
     "activite": "Apport de MO (Amender)",
     "duree_minutes": 60,
-    "parcelles": ["planche"],
+    "parcelles": [],
     "cultures": ["Carotte"],
     "quantite": 0,
     "unite": "",

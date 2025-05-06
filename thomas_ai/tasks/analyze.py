@@ -28,7 +28,6 @@ def analyze(vocal_id: int):
     if len(outputs.tasks_output) != crew.get_nb_agents():
         raise CustomException(ErrorCode.IA_CREWAI_OUTPUT_LEN_INCORRECTE, actual=len(outputs.tasks_output), expected=crew.get_nb_agents())
     output = outputs.tasks_output[crew.get_nb_agents() - 1].raw
-    transcription_improved = outputs.tasks_output[0].raw
 
     # Mise à jour du vocal avec l'analyse
     end_time = datetime.now()
@@ -36,7 +35,6 @@ def analyze(vocal_id: int):
     vocal.transcription_to_output_duration = duration
     vocal.analyzed_at = timezone.now()
     vocal.output = _cleanup_output(output)
-    vocal.transcription_improved = transcription_improved
     vocal.save()
 
     # Envoi dans la queue suivante pour l'extraction des tâches à partir du JSON généré

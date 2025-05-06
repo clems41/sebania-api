@@ -7,10 +7,11 @@ from crewai.project import CrewBase, agent, crew, task
 from django.conf import settings
 
 llm = LLM(
-    model= "mistral/" + settings.MISTRAL_MODEL,
+    model="mistral/" + settings.MISTRAL_MODEL,
     temperature=float(settings.MISTRAL_MODEL_TEMPERATURE),
     api_key=settings.MISTRAL_API_KEY,
 )
+
 
 @CrewBase
 class AnalyzerCrew:
@@ -21,31 +22,17 @@ class AnalyzerCrew:
         return len(self.agents)
 
     @agent
-    def transcription_improver(self) -> Agent:
+    def thomas(self) -> Agent:
         return Agent(
-            config=self.agents_config['transcription_improver'],
-            verbose=settings.DEBUG,
-            llm=llm,
-        )
-
-    @agent
-    def task_manager(self) -> Agent:
-        return Agent(
-            config=self.agents_config['task_manager'],
-            verbose=settings.DEBUG,
+            config=self.agents_config['thomas'],
+            verbose=True,
             llm=llm,
         )
 
     @task
-    def transcription_improvement(self) -> Task:
+    def analyse_transcription(self) -> Task:
         return Task(
-            config=self.tasks_config['transcription_improvement']
-        )
-
-    @task
-    def transcription_to_tasks(self) -> Task:
-        return Task(
-            config=self.tasks_config['transcription_to_tasks']
+            config=self.tasks_config['analyse_transcription'],
         )
 
     @crew

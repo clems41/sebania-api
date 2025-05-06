@@ -27,7 +27,6 @@ class Vocal(BaseModel):
     transcription = models.TextField(blank=True, null=True)
     transcribed_at = models.DateTimeField(null=True)
     audio_to_transcription_duration = models.DurationField(blank=True, null=True)
-    transcription_improved = models.TextField(blank=True, null=True)
     output = models.JSONField(blank=True, null=True)
     transcription_to_output_duration = models.DurationField(blank=True, null=True)
     analyzed_at = models.DateTimeField(null=True)

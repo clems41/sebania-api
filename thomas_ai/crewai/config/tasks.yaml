@@ -1,39 +1,12 @@
-transcription_improvement:
+analyse_transcription:
   description: >
-    Analyse une transcription brute issue de Whisper contenant le message vocal d’un maraîcher en respectant les contraintes suivantes :
-    1. Corriger les erreurs éventuelles de grammaire ou d'orthographe pour en faire des phrases simples et claires. Tu ne dois pas changer le sens des phrases ou remplacer des mots si la phrase initiale est correcte.
-    2. Remplacer les mots incorrectement transcrits par des mots ayant une sonorité proche et un sens dans le contexte du maraîchage (outils, tâches, cultures, etc.).
-    3. Découper le texte final en paragraphes, chaque paragraphe correspondant à une tâche réalisée par le maraîcher.
-    4. Garder un style fluide et oral, sans ajouter d’informations inventées.
-    5. Si une seule tâche est décrite, le texte ne contiendra qu’un seul paragraphe.
-    6. Si une tâche est floue, reformule-la pour la clarifier sans changer son sens.
-    7. Enlève les signes de politesse (bonjour, au revoir, etc.) pour ne garder que les informations essentielles.
-    
-    **Début de la transcription brute**
-    {transcription}
-    **Fin de la transcription brute**
-  expected_output: >
-    Un texte propre, structuré par tâches, lisible, fluide, et corrigé grammaticalement, avec les mots mal transcrits remplacés intelligemment selon leur contexte sonore et sémantique.
-    Exemple :
-    **Tâche 1 – Récolte des radis**
-    Ce matin, j’ai récolté les radis dans la planche 3. Ils étaient bien développés, malgré les pluies de ces derniers jours.
-
-    **Tâche 2 – Désherbage manuel**
-    Ensuite, j’ai désherbé à la main autour des carottes. Il y avait pas mal d’herbe, surtout du pourpier et un peu de chiendent.
-
-  agent: transcription_improver
-
-transcription_to_tasks:
-  description: >
-    Prends comme point de départ le résultat de la tâche précédente.
-    
-    Tu dois analyser un texte composé de plusieurs paragraphes, chacun représentant une action réalisée dans une journée par un maraîcher. Ton objectif est de transformer chaque paragraphe en une tâche structurée contenant les champs suivants :
-    1. **activite** (obligatoire si identifiable) : nom de l'activité correspondante à la tâche. Elle doit être choisie uniquement parmi la liste suivante (une seule activité doit être choisie) : {activites}.
+    Tu dois analyser une transcription brute issue de Whisper. Ce texte est composé de plusieurs actions réalisées dans une journée par un maraîcher. Ton objectif est de transformer chaque action en une tâche structurée contenant les champs suivants :
+    1. **activite** (obligatoire si identifiable) : nom de l'activité correspondante à la tâche. Elle doit être choisie uniquement parmi la liste suivante (une seule activité doit être choisie) : Production de plant,Travail du sol,Apport de MO (Amender),Fertilisation,Paillage,Bâchage,Semis direct,Plantation,Gestion climatique,Gestion des bioagresseurs,Irrigation,Désherbage,Taille,Palissage,Destruction de culture,Suivi de culture,Récolte,Nettoyage,Livrer,Stockage,Charger / Décharger,Communication / Marketing,Marché,Vente directe,Panier AMAP,Gestion des stocks,Préparation de commande,Comptabilité,Administratif,Planifier,Veille,Achat / Commande,Ranger,Accueil du public,Réparer,Construire,Aménager,Entretenir,Formation,Accompagnement,Production de compost,Gestion des intrants,Réunions,Volailles,Floriculture,Brassiculture,Apiculture,Champignons,Boissons,Conserves,Boulangerie,Verger,Semences,Atelier pédagogique,Auxiliaires de culture,Transformation,Activités syndicales.
     2. **duree_minutes** (en minutes, exemple : "1h20" = 80 minutes) : extraire la durée mentionnée dans le paragraphe si elle est indiquée (sinon 0). Si plusieurs durées sont mentionnées, choisir celle correspondant à l’action principale décrite.
     3. **parcelles** : indiquer la localisation précise de l’action si elle est mentionnée (sinon []). La parcelle peut être de différents types : serre, planche, parcelle, champ, zone, etc.). L'action peut être effectuée sur plusieurs parcelles. Chaque parcelle doit être indiquée, séparées par une virgule. Les parcelles ne contiennent pas de nom de culture.
-    4. **cultures** : liste de noms de culture si identifiable (sinon []). Chaque nom doit être choisi uniquement parmi la liste suivante : {cultures}.
+    4. **cultures** : liste de noms de culture si identifiable (sinon []). Chaque nom doit être choisi uniquement parmi la liste suivante : Ail,Artichaut,Asperge,Aubergine,Betterave,Blette,Brocoli,Butternut,Carotte,Chou chinois,Chou frisé,Chou kale,Chou rouge,Chou-fleur,Concombre,Courge musquée,Courge spaghetti,Courgette,Céleri branche,Céleri-rave,Endive,Fenouil,Haricot vert,Laitue,Manioc,Melon,Mâche,Navet,Oignon,Panais,Pastèque,Patate douce,Patidou,Piment,Poireau,Poivron,Pomme de terre,Potimarron,Potiron,Pâtisson,Radis,Roquette,Tomate,Épinard,Engrais verts,Fleurs,Radis noir,Chou-rave.
     5. **quantite** : identifie si une quantité est citée (nombre uniquement, 0 si non précisé). Cette quantité doit être en lien avec la tâche réalisée (exemple : 5kg = 5, 12,5 litres = 12.5). 
-    5. **unite** : identifie si une unité est précisée avec le champ 'quantite' (sinon ''). Cette unité doit être choisie uniquement parmi la liste suivante (une seule unité doit être choisie) : {unites}.
+    5. **unite** : identifie si une unité est précisée avec le champ 'quantite' (sinon ''). Cette unité doit être choisie uniquement parmi la liste suivante (une seule unité doit être choisie) : kg,pièces,bottes,plants,caisses,m²,mètres,hectares,pots,terrines,plaques,paniers,godets,litres,lignes.
     5. **commentaire** : ajout des autres informations fournies dans la transcription, mais uniquement si elles ne correspondent pas à aucun autre champ (par exemple, contexte, météo, outils utilisés, impressions, etc.). Ne pas dupliquer d’informations déjà classées dans un champ ci-dessus. Ne pas supposer ou inventer d'informations, se baser uniquement sur la transcription.
     
     **Contraintes importantes :**
@@ -46,38 +19,24 @@ transcription_to_tasks:
     - Si plusieurs activités correspondent à un paragraphe, choisis celle qui te paraît la plus pertinente par rapport à ce qui est dit dans le paragraphe en question. Un paragraphe ne doit donner qu'un seul objet dans la liste finale du fichier JSON.
     - N'ajoute qu'une seule culture par nom donné par le maraîcher dans la transcription. Par exemple, si le maraîcher parle de 'choux', prends un type de chou de la liste et un seul, n'ajoute pas tous les choux que tu trouves dans la liste des cultures.
     - Les parcelles doivent ressembler à des noms donnés par les maraîchers, exemple : "Tunnel 2", "Serre 1", "Parcelle 14", etc. Si tu n'as pas cette information, ne la renseigne pas.
-    - 
-
+    
+    ###
+    Quelques exemples :
+    
+    Transcription: bonsoir charles et aujourd'hui j'ai passé trois heures à aider au montage d'une serre chez un collègue une heure à installer du compost sur une planche de carottes 20 minutes à arroser les carottes et 30 minutes à faire du rangement de plants merci bonne soirée.
+    Résultat: [{"activite":"Construire","duree_minutes":180,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Montage d'une serre chez un collègue."},{"activite":"Apport de MO (Amender)","duree_minutes":60,"parcelles":[],"cultures":["Carotte"],"quantite":0,"unite":"","commentaire":"Installation de compost sur la planche de carotte."},{"activite":"Irrigation","duree_minutes":20,"parcelles":[],"cultures":["Carotte"],"quantite":0,"unite":"","commentaire":""},{"activite":"Ranger","duree_minutes":30,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Rangement des plants."}]
+    
+    Transcription: Aujourd'Hui préparation donc du marché donc récolte une heure et demie désherbage deux heures un peu de repos après préparation du marché lui même c'est à dire changement de la voiture, des caisses Vérification des stocks des produits transformés. Enfin tout le bordel. Deux bonnes heures. Puis comme tous les jours, les poules le matin 20 minutes. Et aujourd'hui exceptionnellement, on a également fait un grand nettoyage et désinfection du poulailler. Une bonne heure et demie, deux heures. On va dire deux heures pour être plus dans les clous. Et après, gestion un petit peu d'administratif, quelques coutilles par rapport à des stagiaires qui doivent venir, stages en immersion et autres. Rien de bien important, mais ça a pris une petite heure quand même. Donc voilà.
+    Résultat: [{"activite":"Récolte","duree_minutes":90,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Récolte pour préparation du marché."},{"activite":"Désherbage","duree_minutes":120,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Aide à la récolte pour assurer une livraison de légumes."},{"activite":"Charger / Décharger","duree_minutes":120,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Préparation du marché avec chargement des caisses dans la voiture et vérification des stocks des produits transformés."},{"activite":"Volaille","duree_minutes":20,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Comme tous les jours, s'occuper des poules le matin."},{"activite":"Volaille","duree_minutes":120,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Exceptionnellement, grand nettoyage et désinfection du poulailler."},{"activite":"Administratif","duree_minutes":60,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":"Quelques coutilles par rapport à des stagiaires qui doivent venir, stages en immersion et autres."}]
+    
+    Transcription: Ce matin, une heure de réunion, puis une demi-heure de plantation de betteraves, une demi-heure de plantation de salades, et j'ai retiré la bâche du mesclin sous la serre qu'on va passer dans le plein champ, qui m'a pris une demi-heure aussi.
+    Résultat: [{"activite":"Réunions","duree_minutes":60,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":""},{"activite":"Plantation","duree_minutes":30,"parcelles":[],"cultures":["Betterave"],"quantite":0,"unite":"","commentaire":""},{"activite":"Plantation","duree_minutes":30,"parcelles":[],"cultures":["Salade"],"quantite":0,"unite":"","commentaire":""},{"activite":"Bâchage","duree_minutes":30,"parcelles":["Serre"],"cultures":["Mesclun"],"quantite":0,"unite":"","commentaire":"Déplacement de la bâche pour la mettre en plein-champ"}]
+    ###
+    
+    <<<
+    Transcription: {transcription}
+    >>>
   expected_output: >
     Une liste de tâches au format JSON ou tableau, avec les champs mentionnés pour chaque paragraphe du texte. Le fichier généré doit être écrit exclusivement en français.
-    Exemple :
-    [
-      {
-        "activite": "Récolte",
-        "duree_minutes": 120,
-        "parcelles": ["serre 2", "tunnel 1"],
-        "quantite": 120,
-        "unite": "kg",
-        "cultures": ["Courge musquée", "Concombre"],
-        "commentaire": "Désherbage pendant la récolte et discussion avec le voisin."
-      },
-      {
-        "activite": "Charger / Décharger",
-        "duree_minutes": 25,
-        "parcelles": [],
-        "cultures": ["Courgette"],
-        "quantite": 3,
-        "unite": "caisses",
-        "commentaire": "Chargement des commandes AMAP."
-      },
-      {
-        "activite": "Accueil du public",
-        "duree_minutes": 60,
-        "parcelles": [],
-        "cultures": [],
-        "quantite": 0,
-        "unite": "",
-        "commentaire": ""
-      }
-    ]
-  agent: task_manager
+    Exemple : [{"activite":"Récolte","duree_minutes":120,"parcelles":["serre 2","tunnel 1"],"quantite":120,"unite":"kg","cultures":["Courge musquée","Concombre"],"commentaire":"Désherbage pendant la récolte et discussion avec le voisin."},{"activite":"Charger / Décharger","duree_minutes":25,"parcelles":[],"cultures":["Courgette"],"quantite":3,"unite":"caisses","commentaire":"Chargement des commandes AMAP."},{"activite":"Accueil du public","duree_minutes":60,"parcelles":[],"cultures":[],"quantite":0,"unite":"","commentaire":""}]
+  agent: thomas
