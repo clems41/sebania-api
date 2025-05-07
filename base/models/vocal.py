@@ -33,6 +33,7 @@ class Vocal(BaseModel):
     finished_at = models.DateTimeField(null=True)
     parcelles_non_trouvees = models.TextField(null=True, blank=True)
     cultures_non_trouvees = models.TextField(null=True, blank=True)
+    errors = models.TextField(blank=True, null=True)
 
     def get_statut(self):
         statut = VocalStatut.RECEIVED

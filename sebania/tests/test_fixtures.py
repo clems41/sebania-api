@@ -14,8 +14,10 @@ def create_user(email: str = None) -> User:
     return User.objects.create_user(email=email, password=crypto_utils.generate_password(),
                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
 
-def create_parcelle(ferme: Ferme) -> Parcelle:
-    return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
+def create_parcelle(ferme: Ferme, nom: str = None) -> Parcelle:
+    if nom is None:
+        nom = crypto_utils.random_string()
+    return Parcelle.objects.create(nom=nom, superficie=120, type_id=1, ferme=ferme)
 
 def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,
                  culture_ids = [3, 8], activite_id = 3, quantite=425.2, unite_id=4) -> Tache:

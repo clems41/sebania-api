@@ -62,5 +62,20 @@ def get_one_or_raise_exception(queryset, exception: CustomException, defer_field
     except queryset.model.DoesNotExist:
         raise exception
 
-
-
+def get_one_or_none(queryset, defer_fields: list = None, *filter_args, **filter_kwargs):
+    """
+    Retourne l'instance de l'objet demandé si elle existe, sinon None
+    """
+    if hasattr(queryset, "_default_manager"):
+        queryset = queryset._default_manager.all()
+    if not hasattr(queryset, "get"):
+        klass__name = (
+            queryset.__name__ if isinstance(queryset, type) else queryset.__class__.__name__
+        )
+        raise CustomException(ErrorCode.GLOBAL_WRONG_ARG, method="get_one_or_none", actual=klass__name, must_be="Model, Manager or QuerySet")
+    try:
+        if defer_fields:
+            queryset = queryset.defer(*defer_fields)
+        return queryset.get(*filter_args, **filter_kwargs)
+    except queryset.model.DoesNotExist:
+        return None

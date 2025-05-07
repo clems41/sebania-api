@@ -1,7 +1,6 @@
 asgiref==3.8.1
 attrs==25.3.0
 certifi==2025.4.26
-crewai==0.118.0
 charset-normalizer==3.4.1
 dj-inmemorystorage==2.1.0
 Django==5.1.8
