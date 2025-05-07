@@ -21,7 +21,7 @@ class TestExtract(TaskTestcase):
         self.assertIsNotNone(vocal.finished_at)
 
         # Check taches
-        taches = Tache.objects.get(vocal_id=vocal.id)
+        taches = Tache.objects.filter(vocal_id=vocal.id)
         self.assertEqual(len(taches), len(output_data))
         for expected_tache in output_data:
             actual_tache = next(tache for tache in taches if tache.activite.nom == expected_tache["activite"])
@@ -49,7 +49,10 @@ class TestExtract(TaskTestcase):
         return vocal
 
     def assert_tache_equal(self, vocal: Vocal, expected_tache: Tache, expected_cultures: list, expected_parcelles: list):
-        actual_tache = Tache.objects.filter(vocal_id=vocal.id).first()
+        if expected_tache is None:
+            self.assertEqual(Tache.objects.filter(vocal_id=vocal.id).count(), 0)
+            return
+        actual_tache = Tache.objects.get(vocal_id=vocal.id)
         self.assertEqual(expected_tache.activite_id, actual_tache.activite_id)
         self.assertEqual(expected_tache.duree_minutes, actual_tache.duree_minutes)
         self.assertEqual(expected_tache.quantite, actual_tache.quantite)
@@ -75,7 +78,7 @@ class TestExtract(TaskTestcase):
         parcelle = test_fixtures.create_parcelle(ferme=ferme, nom=nom_parcelle)
         return parcelle.id
 
-    def test_extract_ok_cultures(self):
+    def test_extract_ok_cultures_parcelles(self):
         output = [
             {
                 "activite": "gestion des bioagresseurs",
@@ -108,6 +111,41 @@ class TestExtract(TaskTestcase):
         expected_tache = Tache(activite_id=10, duree_minutes=20, quantite=9, unite_id=14, commentaire="")
         expected_cultures = [19, 35]
         expected_parcelles = [self.create_parcelle("Serre 1"), self.create_parcelle("Jardin")]
+        vocal = self.create_vocal_and_run_analyze(output)
+        self.assert_tache_equal(vocal, expected_tache, expected_cultures, expected_parcelles)
+
+    def test_extract_nok_activites(self):
+        output = [
+            {
+                "activite": "promenade",
+                "duree_minutes": 90,
+                "parcelles": [],
+                "cultures": [],
+                "quantite": 0,
+                "unite": "",
+                "commentaire": ""
+            },
+        ]
+        expected_tache = None
+        vocal = self.create_vocal_and_run_analyze(output)
+        self.assert_tache_equal(vocal, expected_tache, None, None)
+
+    def test_extract_nok_parcelles(self):
+        output = [
+            {
+                "activite": "gestion des bioagresseurs",
+                "duree_minutes": 20,
+                "parcelles": ["serre 1", "terasse"],
+                "cultures": ["céleri branche", "blette", "poireau"],
+                "quantite": 9,
+                "unite": "litres",
+                "commentaire": ""
+            },
+        ]
+        expected_tache = Tache(activite_id=10, duree_minutes=20, quantite=9, unite_id=14, commentaire="")
+        expected_cultures = [6, 19, 35]
+        self.create_parcelle("Jardin")
+        expected_parcelles = [self.create_parcelle("Serre 1")]
         vocal = self.create_vocal_and_run_analyze(output)
         self.assert_tache_equal(vocal, expected_tache, expected_cultures, expected_parcelles)
 

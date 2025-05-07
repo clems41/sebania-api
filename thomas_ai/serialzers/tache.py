@@ -2,7 +2,9 @@ from rest_framework import serializers
 
 from base.models import Tache, Activite, Culture, Parcelle, Unite
 from base.models.vocal import Vocal
-from sebania.utils.db_utils import get_ferme_for_user, get_one_or_none
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
+from sebania.utils.db_utils import get_ferme_for_user, get_one_or_none, get_one_or_raise_exception
 
 
 class TacheOutputSerializer(serializers.ModelSerializer):
@@ -13,10 +15,14 @@ class TacheOutputSerializer(serializers.ModelSerializer):
         child=serializers.CharField()
     )
     activite = serializers.CharField()
-    unite = serializers.CharField()
+    unite = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     class Meta:
         model = Tache
         fields = ["duree_minutes", "commentaire", "quantite", "unite", "nature", "vocal_id", "activite", "cultures", "parcelles"]
+
+    def validate_activite(self, activite):
+        get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOM_NOT_FOUND, activite), nom__iexact=activite)
+        return activite
 
     def create(self, validated_data, **kwargs):
         vocal_id = self.context.get("vocal_id")
@@ -47,9 +53,7 @@ class TacheOutputSerializer(serializers.ModelSerializer):
 
         # Ajout des parcelles
         for parcelle_nom in parcelle_noms:
-            try:
-                parcelle = Parcelle.objects.get(nom__iexact=parcelle_nom, ferme=ferme)
+            parcelle = get_one_or_none(Parcelle, nom__iexact=parcelle_nom, ferme=ferme)
+            if parcelle is not None:
                 tache.parcelles.add(parcelle)
-            except Parcelle.DoesNotExist:
-                continue
         return tache
