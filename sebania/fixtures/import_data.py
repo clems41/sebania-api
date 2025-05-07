@@ -13,12 +13,12 @@ ID	nom	default	categorie_default	need_culture	mots_cles
 7	Semis direct	true	production	true	graines,ligne,plantation,volée,semoir,en place,monorang,multirang
 8	Plantation	true	production	true	plants,repiquage,cultures,implantation,motte,jeune plant,godets
 9	Gestion climatique	true	production	true	serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes,ouvrir
-10	Gestion des bioagresseurs	true	production	true	insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose,
+10	Gestion des bioagresseurs	true	production	true	insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose
 11	Irrigation	true	production	true	arrosage,goutte,eau,tuyau,aspersion,planifier
-12	Désherbage	true	production	true	mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser,
+12	Désherbage	true	production	true	mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser
 13	Taille	true	production	true	élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage
 14	Palissage	true	production	true	ficelle,tuteur,support,dérouler
-15	Destruction de culture	true	production	true	arrachage,broyage,rouage,roulage,nettoyage,engrais,verts
+15	Destruction de culture	true	production	true	arrachage,broyage,roulage,nettoyage,engrais,verts
 16	Suivi de culture	true	production	true	observation,croissance,planning,planification,tour du champ,tour,regarder,checker
 17	Récolte	true	production	true	cueillette,maturité,rendement,poids,caisse,retirer,bottes
 18	Nettoyage	true	production	true	outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre
@@ -47,7 +47,7 @@ ID	nom	default	categorie_default	need_culture	mots_cles
 41	Production de compost	true	général	false	déchets,fertilité,mo,matière,organique
 42	Gestion des intrants	true	général	false	engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles
 43	Réunions	true	général	false	équipe,planning,communication,discussions,rencontres
-44	Volailles	true	secondaire	false	poules,œufs,élevage,viande
+44	Volailles	true	secondaire	false	poules,œufs,élevage,viande,oeufs
 45	Floriculture	true	secondaire	false	fleurs,décoration,culture,bouquet
 46	Brassiculture	true	secondaire	false	bière,brassage,fermentation
 47	Apiculture	true	secondaire	false	abeilles,miel,ruche
@@ -115,8 +115,9 @@ ID	nom	default	categorie_default
 48	Chou-rave	true	feuille
 49	Salade	true	feuille
 50	Mesclun	true	feuille
-51	Herbes armoatiques	true	autres
+51	Herbes aromatiques	true	autres
 52	Cébette	true	racine
+53	Chou	true	feuille
 """, "base.Culture", "culture_default.json"
 
 methodes_data = """

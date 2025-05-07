@@ -75,6 +75,42 @@ class TestExtract(TaskTestcase):
         parcelle = test_fixtures.create_parcelle(ferme=ferme, nom=nom_parcelle)
         return parcelle.id
 
+    def test_extract_ok_cultures(self):
+        output = [
+            {
+                "activite": "gestion des bioagresseurs",
+                "duree_minutes": 20,
+                "parcelles": ["serre 1", "jardin"],
+                "cultures": ["céleri branche", "blette", "poireau"],
+                "quantite": 9,
+                "unite": "litres",
+                "commentaire": ""
+            },
+        ]
+        expected_tache = Tache(activite_id=10, duree_minutes=20, quantite=9, unite_id=14, commentaire="")
+        expected_cultures = [6, 19, 35]
+        expected_parcelles = [self.create_parcelle("Serre 1"), self.create_parcelle("Jardin")]
+        vocal = self.create_vocal_and_run_analyze(output)
+        self.assert_tache_equal(vocal, expected_tache, expected_cultures, expected_parcelles)
+
+    def test_extract_nok_cultures(self):
+        output = [
+            {
+                "activite": "gestion des bioagresseurs",
+                "duree_minutes": 20,
+                "parcelles": ["serre 1", "jardin"],
+                "cultures": ["céleri branche", "Amandes", "poireau"],
+                "quantite": 9,
+                "unite": "litres",
+                "commentaire": ""
+            },
+        ]
+        expected_tache = Tache(activite_id=10, duree_minutes=20, quantite=9, unite_id=14, commentaire="")
+        expected_cultures = [19, 35]
+        expected_parcelles = [self.create_parcelle("Serre 1"), self.create_parcelle("Jardin")]
+        vocal = self.create_vocal_and_run_analyze(output)
+        self.assert_tache_equal(vocal, expected_tache, expected_cultures, expected_parcelles)
+
     def test_extract_ok_unites(self):
         output = [
             {

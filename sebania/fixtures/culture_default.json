@@ -466,5 +466,14 @@
       "default": true,
       "categorie_default": "racine"
     }
+  },
+  {
+    "model": "base.Culture",
+    "pk": 53,
+    "fields": {
+      "nom": "Chou",
+      "default": true,
+      "categorie_default": "feuille"
+    }
   }
 ]

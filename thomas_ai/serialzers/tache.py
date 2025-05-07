@@ -41,8 +41,9 @@ class TacheOutputSerializer(serializers.ModelSerializer):
 
         # Ajout des cultures
         for culture_nom in culture_noms:
-            culture = Culture.objects.get(nom__iexact=culture_nom)
-            tache.cultures.add(culture)
+            culture = get_one_or_none(Culture, nom__iexact=culture_nom)
+            if culture is not None:
+                tache.cultures.add(culture)
 
         # Ajout des parcelles
         for parcelle_nom in parcelle_noms:
