@@ -9,6 +9,19 @@ from base.models.email import Email
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+def send_error500(url: str, user_id: int, exception_message: str):
+    """
+    Envoi d'un email aux admins lors d'une erreur 500
+    """
+    subject = "Une erreur 500 vient de se produire"
+    template_context = {
+        "url": url,
+        "user_id": user_id,
+        "exception_message": exception_message,
+    }
+    template_name = "emails/error-500.html"
+    _send_email_to_superuers(subject, template_name, template_context)
+
 def send_email_to_new_employe(ferme: Ferme, employe: User, employe_password: str):
     """
     Envoi d'un email lors de la création d'un nouvel employé pour une ferme
@@ -40,7 +53,6 @@ def send_feedback_to_super_users(sender: User, sujet: str, message: str):
     """
     Envoi d'un email aux super users lors d'un feedback utilisateur
     """
-    super_users = User.objects.filter(is_superuser=True)
     subject = "[Sebania] Nouveau retour d'un utilisateur"
     template_context = {
         "prenom": sender.first_name,
@@ -49,6 +61,10 @@ def send_feedback_to_super_users(sender: User, sujet: str, message: str):
         "sujet": sujet,
     }
     template_name = "emails/send-feedback.html"
+    _send_email_to_superuers(subject, template_name, template_context)
+
+def _send_email_to_superuers(subject: str, template_name: str, template_context: dict):
+    super_users = User.objects.filter(is_superuser=True)
     if len(super_users) == 0:
         logger.error("Aucun super utilisateur a été trouvé en base, le retour utilisateur ne pourra donc pas être envoyé")
     for user in super_users:
