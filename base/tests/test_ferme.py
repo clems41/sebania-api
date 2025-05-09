@@ -1,13 +1,12 @@
 import json
 
-from django.core import mail
 from django.urls import reverse_lazy, reverse
 from rest_framework import status
 
 from base.models import Ferme
-from sebania.utils import crypto_utils
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
+from sebania.utils import crypto_utils
 
 
 class UpdateFermeDetailsTestCase(SebaniaTestCase):
@@ -223,3 +222,127 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         }
         response = self.client.post(self.url, request, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class TestConfigurationFerme(SebaniaTestCase):
+    url = reverse_lazy('fermes-activites')
+
+    def test_activites_ok(self):
+        request = self._get_working_request()
+        self._update_activites(request)
+        self._check_activites(request)
+
+    def test_activites_ok_2updates(self):
+        request = self._get_working_request()
+        self._update_activites(request)
+        second_request = self._get_second_request()
+        self._update_activites(second_request)
+        self._check_activites(second_request)
+
+    def test_activites_nok_activite_not_found(self):
+        request = {
+            "activites": [
+                {
+                    "id": 999,
+                    "categorie": crypto_utils.random_string()
+                }
+            ]
+        }
+        self._update_activites(request, expected_status_code=status.HTTP_404_NOT_FOUND)
+
+    def test_activites_nok_categorie_empty(self):
+        request = {
+            "activites": [
+                {
+                    "id": 12,
+                    "categorie": ""
+                }
+            ]
+        }
+        self._update_activites(request, expected_status_code=status.HTTP_400_BAD_REQUEST)
+
+    def test_activites_nok_employe_not_allowed(self):
+        employe = self.init_current_user()
+        responsable = test_fixtures.create_user()
+        test_fixtures.create_ferme(responsable=responsable, employes=[employe])
+        self._update_activites(self._get_working_request(), expected_status_code=status.HTTP_403_FORBIDDEN)
+
+    def _check_activites(self, request):
+        actual_activites = self._get_activites()['activites']
+        self.assertEqual(len(actual_activites), 5)
+        for idx, expected_activite in enumerate(request['activites']):
+            actual_activite = next(actual_activite for actual_activite in actual_activites if actual_activite['id'] == expected_activite['id'])
+            self.assertIsNotNone(actual_activite)
+            self.assertIsNotNone(actual_activite['nom'])
+            self.assertEqual(expected_activite['categorie'], actual_activite['categorie'])
+
+    def _get_working_request(self):
+        categorie1 = crypto_utils.random_string()
+        categorie2 = crypto_utils.random_string()
+        categorie3 = crypto_utils.random_string()
+        return {
+            "activites": [
+                {
+                    "id": 1,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 5,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 8,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 12,
+                    "categorie": categorie2
+                },
+                {
+                    "id": 15,
+                    "categorie": categorie3
+                },
+            ]
+        }
+
+    def _get_second_request(self):
+        categorie1 = crypto_utils.random_string()
+        categorie2 = crypto_utils.random_string()
+        return {
+            "activites": [
+                {
+                    "id": 8,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 9,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 17,
+                    "categorie": categorie1
+                },
+                {
+                    "id": 13,
+                    "categorie": categorie2
+                },
+                {
+                    "id": 2,
+                    "categorie": categorie1
+                },
+            ]
+        }
+
+    def _update_activites(self, request, expected_status_code: int = status.HTTP_200_OK):
+        if self.get_current_user() is None:
+            responsable = self.init_current_user()
+            test_fixtures.create_ferme(responsable)
+        response = self.client.put(self.url, data=json.dumps(request),
+            content_type='application/json', headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, expected_status_code)
+
+    def _get_activites(self):
+        response = self.client.get(self.url, headers=self.get_jwt_headers())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        activites = json.loads(response.content)
+        return activites

@@ -89,11 +89,9 @@ class AuthRegisterTestCase(SebaniaTestCase):
         # vérification que le responsable a bien une liste de cultures et d'activités associées à sa ferme
         responsable_headers = self.get_jwt_headers(email=responsable_email, password=responsable_password)
         activites_default = Activite.objects.filter(default=True).all()
-        activites_url = reverse_lazy('fermes-get-activites')
-        self._get_list_and_compare_with_default_list(activites_url, responsable_headers, activites_default)
+        self._get_list_and_compare_with_activites_list(responsable_headers, activites_default)
         cultures_default = Culture.objects.filter(default=True).all()
-        cultures_url = reverse_lazy('fermes-get-cultures')
-        self._get_list_and_compare_with_default_list(cultures_url, responsable_headers, cultures_default)
+        self._get_list_and_compare_with_cultures_list(responsable_headers, cultures_default)
 
         # récupération des mots de passe des employés pour l'authentification
         password_employe1 = self.get_password_received_from_email(email_employe1)
@@ -102,14 +100,26 @@ class AuthRegisterTestCase(SebaniaTestCase):
         headers_employe2 = self.get_jwt_headers(email_employe2, password=password_employe2)
 
         # vérification que les employés ont bien une liste de cultures et d'activités associées à la ferme
-        self._get_list_and_compare_with_default_list(cultures_url, headers_employe1, cultures_default)
-        self._get_list_and_compare_with_default_list(cultures_url, headers_employe2, cultures_default)
-        self._get_list_and_compare_with_default_list(activites_url, headers_employe1, activites_default)
-        self._get_list_and_compare_with_default_list(activites_url, headers_employe2, activites_default)
+        self._get_list_and_compare_with_cultures_list(headers_employe1, cultures_default)
+        self._get_list_and_compare_with_cultures_list(headers_employe2, cultures_default)
+        self._get_list_and_compare_with_activites_list(headers_employe1, activites_default)
+        self._get_list_and_compare_with_activites_list(headers_employe2, activites_default)
 
 
-    def _get_list_and_compare_with_default_list(self, url, headers, default_list):
-        response = self.client.get(url, headers=headers)
+    def _get_list_and_compare_with_activites_list(self, headers, default_list):
+        activites_url = reverse_lazy('fermes-activites')
+        response = self.client.get(activites_url, headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_list = json.loads(response.content).get('activites')
+        self.assertEqual(len(response_list), len(default_list))
+        response_list_set = set((elem.get('id'), elem.get('nom'), elem.get('categorie')) for elem in response_list)
+        for elem in default_list:
+            self.assertIn((elem.id, elem.nom, elem.categorie_default), response_list_set)
+
+
+    def _get_list_and_compare_with_cultures_list(self, headers, default_list):
+        cultures_url = reverse_lazy('fermes-get-cultures')
+        response = self.client.get(cultures_url, headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_list = json.loads(response.content)
         self.assertEqual(len(response_list), len(default_list))

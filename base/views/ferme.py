@@ -6,14 +6,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from base.models import Ferme, User, ActiviteFerme, CultureFerme, MethodeAgricole
-from base.serializers.activite import ActiviteFermeSerializer
+from base.serializers.activite import ActiviteFermeSerializer, UpdateActiviteFermeSerializer
 from base.serializers.culture import CultureFermeSerializer
 from base.serializers.ferme import FermeViewSerializer, EmployeSerializer, UpdateFermeSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.permissions import HasResponsablePermission
 from sebania.utils import db_utils
-from sebania.utils.db_utils import get_one_or_raise_exception
+from sebania.utils.db_utils import get_one_or_raise_exception, user_is_responsable
 
 
 class FermeViewSet(ViewSet):
@@ -46,14 +46,23 @@ class FermeViewSet(ViewSet):
         db_utils.soft_delete_employe(user_id)
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)
 
-    @extend_schema(responses=ActiviteFermeSerializer(many=True),
-                   description="Récupération de la liste des activités de la ferme par catégorie")
-    @action(detail=False, methods=['get'], url_path='activites', serializer_class=ActiviteFermeSerializer,
-            url_name="get-activites")
-    def get_activites(self, request):
+    @extend_schema(description="Récupération/Modification de la liste des activités de la ferme avec regroupement par catégorie")
+    @action(detail=False, methods=['get', 'put'], url_path='activites', serializer_class=UpdateActiviteFermeSerializer)
+    def activites(self, request):
         ferme = db_utils.get_ferme_from_request(request)
-        items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("categorie", "activite__nom")
-        serializer = self.serializer_class(items, many=True)
+
+        if request.method == 'PUT':
+            if not user_is_responsable(request.user.id):
+                raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
+            serializer = self.serializer_class(data=request.data, context={"ferme": ferme})
+            serializer.is_valid(raise_exception=True)
+            items = serializer.save()
+        elif request.method == 'GET':
+            items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("categorie", "activite__nom")
+        data = {
+            "activites": items
+        }
+        serializer = self.serializer_class(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(responses=CultureFermeSerializer(many=True),
