@@ -7,7 +7,7 @@ from rest_framework.viewsets import ViewSet
 
 from base.models import Ferme, User, ActiviteFerme, CultureFerme, MethodeAgricole
 from base.serializers.activite import ActiviteFermeSerializer, UpdateActiviteFermeSerializer
-from base.serializers.culture import CultureFermeSerializer
+from base.serializers.culture import CultureFermeSerializer, UpdateCultureFermeSerializer
 from base.serializers.ferme import FermeViewSerializer, EmployeSerializer, UpdateFermeSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
@@ -65,14 +65,23 @@ class FermeViewSet(ViewSet):
         serializer = self.serializer_class(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @extend_schema(responses=CultureFermeSerializer(many=True),
-                   description="Récupération de la liste des cultures de la ferme par catégorie")
-    @action(detail=False, methods=['get'], url_path='cultures', serializer_class=CultureFermeSerializer,
-            url_name="get-cultures")
-    def get_cultures(self, request):
+    @extend_schema(description="Récupération/Modification de la liste des cultures de la ferme avec regroupement par catégorie")
+    @action(detail=False, methods=['get', 'put'], url_path='cultures', serializer_class=UpdateCultureFermeSerializer)
+    def cultures(self, request):
         ferme = db_utils.get_ferme_from_request(request)
-        items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
-        serializer = self.serializer_class(items, many=True)
+
+        if request.method == 'PUT':
+            if not user_is_responsable(request.user.id):
+                raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
+            serializer = self.serializer_class(data=request.data, context={"ferme": ferme})
+            serializer.is_valid(raise_exception=True)
+            items = serializer.save()
+        elif request.method == 'GET':
+            items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
+        data = {
+            "cultures": items
+        }
+        serializer = self.serializer_class(data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(description="Récupération des informations concernant la ferme associée à l'utilisateur")

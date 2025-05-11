@@ -118,10 +118,10 @@ class AuthRegisterTestCase(SebaniaTestCase):
 
 
     def _get_list_and_compare_with_cultures_list(self, headers, default_list):
-        cultures_url = reverse_lazy('fermes-get-cultures')
+        cultures_url = reverse_lazy('fermes-cultures')
         response = self.client.get(cultures_url, headers=headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response_list = json.loads(response.content)
+        response_list = json.loads(response.content).get('cultures')
         self.assertEqual(len(response_list), len(default_list))
         response_list_set = set((elem.get('id'), elem.get('nom'), elem.get('categorie')) for elem in response_list)
         for elem in default_list:

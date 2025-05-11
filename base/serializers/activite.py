@@ -37,6 +37,6 @@ class UpdateActiviteFermeSerializer(serializers.Serializer):
         for activite in validated_data.pop('activites'):
             activite_id = activite.pop('activite').pop('id')
             categorie = activite.pop('categorie')
-            activite = ActiviteFerme.objects.create(ferme=ferme, activite_id=activite_id, categorie=categorie)
-            result.append(activite)
+            activite_ferme = ActiviteFerme.objects.create(ferme=ferme, activite_id=activite_id, categorie=categorie)
+            result.append(activite_ferme)
         return result
