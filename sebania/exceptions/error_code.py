@@ -60,6 +60,7 @@ class ErrorCode(Enum):
     ERREURS LIEES AUX CULTURES
     """
     CULTURE_NOT_FOUND = "La culture id={} n'a pas pu être trouvée", status.HTTP_404_NOT_FOUND
+    CULTURE_QUERY_TOO_SHORT = "Le paramètre 'query' doit au moins contenir 3 caractères, or il en contient {}", status.HTTP_400_BAD_REQUEST
 
     """
     ERREURS LIEES AUX TACHES
