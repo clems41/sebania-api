@@ -4,7 +4,7 @@ import datetime
 
 from rest_framework import serializers
 
-from base.filters.tache import TacheCalendrierFilter
+from base.filters.tache import TacheCalendrierFilter, TacheFilter
 from base.models import Tache, Ferme
 from base.models.statut import StatutJour
 from sebania.exceptions.custom_exception import CustomException
@@ -77,3 +77,24 @@ class CalendrierSerializer(serializers.Serializer):
                 date_formatted = date.strftime("%d/%m/%Y")
                 taches_par_jour[date_formatted] = []
         return taches_par_jour
+
+class TotalJourSerializer(serializers.Serializer):
+    total_minutes = serializers.IntegerField()
+
+    @classmethod
+    def from_request(cls, request):
+        ferme = get_ferme_from_request(request)
+        queryset = Tache.objects.filter(ferme=ferme)
+
+        filtres = TacheFilter(request.GET, queryset=queryset)
+        if not filtres.is_valid():
+            raise CustomException(ErrorCode.TACHE_TOTAL_FILTRE_INCORRECTE)
+
+        taches = filtres.qs
+        total_global = 0
+
+        for tache in taches:
+            total_global += tache.duree_minutes
+
+        # On retourne une instance DRF du serializer, dont `.data` sera un dict exploitable
+        return cls({'total_minutes': total_global})

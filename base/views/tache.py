@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from base.filters.tache import TacheFilter
 from base.models import Tache
-from base.serializers.calendrier import CalendrierSerializer
+from base.serializers.calendrier import CalendrierSerializer, TotalJourSerializer
 from base.serializers.tache import TacheSerializer
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
@@ -32,7 +32,19 @@ class TacheModelViewSet(ModelViewSet):
                 raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
         return super(TacheModelViewSet, self).destroy(request, *args, **kwargs)
 
-    @extend_schema(description="Récupération du total d'heures saisies par jour pour une semaine ou un mois donné",
+    @extend_schema(description="Récupération du total d'heures saisies pour un jour donné et un utilisateur donné",
+                   parameters=[
+                       OpenApiParameter("user_id", int, required=True, description="Utilisateur ayant réalisé les tâches"),
+                       OpenApiParameter("date", str, required=True, description="Date souhaitée au format dd/MM/YYYY"),
+                   ],
+                   responses=TotalJourSerializer
+                   )
+    @action(detail=False, methods=['get'], url_path='total')
+    def total(self, request):
+        serializer = TotalJourSerializer.from_request(request)
+        return Response(serializer.data)
+
+    @extend_schema(description="Récupération du total d'heures saisies par jour pour une semaine ou un mois donné, et un utilisateur donné",
                    parameters=[
                        OpenApiParameter("user_id", int, required=True, description="Utilisateur ayant réalisé les tâches"),
                        OpenApiParameter("annee", int, required=True, description="Année"),

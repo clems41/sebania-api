@@ -57,7 +57,7 @@ class VocalViewSet(ModelViewSet):
 
     @extend_schema(description="Récupération des vocaux en cours de traitement pour une date donnée",
                    parameters=[
-                       OpenApiParameter("date", str, required=True, description="Date des vocaux au format ddMMYYYY"),
+                       OpenApiParameter("date", str, required=True, description="Date des vocaux au format dd/MM/YYYY"),
                    ])
     def list(self, request):
         query_params = request.query_params.dict()
@@ -65,7 +65,7 @@ class VocalViewSet(ModelViewSet):
             raise CustomException(ErrorCode.VOCAL_DATE_MANQUANTE)
         date = query_params.get('date')
         try:
-            validated_date = datetime.datetime.strptime(date, "%d%m%Y")
+            validated_date = datetime.datetime.strptime(date, "%d/%m/%Y")
         except:
             raise CustomException(ErrorCode.VOCAL_DATE_INCORRECTE, date)
         vocaux = Vocal.objects.defer('audio').filter(date=validated_date, user=request.user, finished_at__isnull=True)

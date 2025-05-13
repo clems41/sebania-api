@@ -69,6 +69,7 @@ class ErrorCode(Enum):
     TACHE_CALENDRIER_ANNEE_OBLIGATOIRE = "Le filtre année est obligatoire", status.HTTP_400_BAD_REQUEST
     TACHE_CALENDRIER_USERID_OBLIGATOIRE = "Le filtre user_id est obligatoire", status.HTTP_400_BAD_REQUEST
     TACHE_DUREE_INCORRECTE = "La durée de la tâche ({}) doit être comprise entre 1 et 1440", status.HTTP_400_BAD_REQUEST
+    TACHE_TOTAL_FILTRE_INCORRECTE = "Les filtres date (format dd/MM/yyyy et user_id ne semblent pas correctes", status.HTTP_400_BAD_REQUEST
 
     """
     ERREURS LIEES AUX VOCAUX
