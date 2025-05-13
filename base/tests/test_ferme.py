@@ -305,6 +305,8 @@ class ConfigurationFermeTestCase(SebaniaTestCase):
             self.assertIsNotNone(actual_data)
             self.assertIsNotNone(actual_data['nom'])
             self.assertEqual(actual_data['categorie'], expected_data['categorie'])
+            if self.keyword == "activites":
+                self.assertIsNotNone(actual_data['mots_cles'])
 
 
 class TestConfigurationActiviteFerme(ConfigurationFermeTestCase):
