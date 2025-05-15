@@ -204,7 +204,7 @@
       "nom": "Livrer",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "transport,distribution,clients,camion,fourgon,livraison,apporter,donner"
     }
   },
@@ -215,7 +215,7 @@
       "nom": "Stockage",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage"
     }
   },
@@ -226,7 +226,7 @@
       "nom": "Charger / Décharger",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "logistique,palettes,livraison,chercher"
     }
   },
@@ -248,7 +248,7 @@
       "nom": "Marché",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "stand,vente,dépot,préparer"
     }
   },
@@ -259,7 +259,7 @@
       "nom": "Vente directe",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "client,ferme,circuit,court,ferme,place,sur"
     }
   },
@@ -270,7 +270,7 @@
       "nom": "Panier AMAP",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "abonnement,distribution,consommateurs,commandes"
     }
   },
@@ -281,7 +281,7 @@
       "nom": "Gestion des stocks",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "inventaire,produits,suivi,logistique"
     }
   },
@@ -292,7 +292,7 @@
       "nom": "Préparation de commande",
       "default": true,
       "categorie_default": "commercialisation",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "tri,pesée,conditionnement,cagettes,paniers,liste"
     }
   },
@@ -347,7 +347,7 @@
       "nom": "Achat / Commande",
       "default": true,
       "categorie_default": "administratif",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "fournisseurs,approvisionnement,matériel"
     }
   },
@@ -578,7 +578,7 @@
       "nom": "Semences",
       "default": true,
       "categorie_default": "secondaire",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "graines,reproduction,sélection,production"
     }
   },
@@ -600,7 +600,7 @@
       "nom": "Auxiliaires de culture",
       "default": true,
       "categorie_default": "secondaire",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "insectes,utiles,lutte,biologique,biodiversité"
     }
   },
@@ -611,7 +611,7 @@
       "nom": "Transformation",
       "default": true,
       "categorie_default": "secondaire",
-      "need_culture": false,
+      "need_culture": true,
       "mots_cles": "atelier,produits,agroalimentaire,conserves"
     }
   },

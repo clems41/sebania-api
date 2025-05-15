@@ -22,20 +22,20 @@ ID	nom	default	categorie_default	need_culture	mots_cles
 16	Suivi de culture	true	production	true	observation,croissance,planning,planification,tour du champ,tour,regarder,checker
 17	Récolte	true	production	true	cueillette,maturité,rendement,poids,caisse,retirer,bottes
 18	Nettoyage	true	production	true	outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre
-19	Livrer	true	commercialisation	false	transport,distribution,clients,camion,fourgon,livraison,apporter,donner
-20	Stockage	true	commercialisation	false	chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage
-21	Charger / Décharger	true	commercialisation	false	logistique,palettes,livraison,chercher
+19	Livrer	true	commercialisation	true	transport,distribution,clients,camion,fourgon,livraison,apporter,donner
+20	Stockage	true	commercialisation	true	chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage
+21	Charger / Décharger	true	commercialisation	true	logistique,palettes,livraison,chercher
 22	Communication / Marketing	true	commercialisation	false	réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message
-23	Marché	true	commercialisation	false	stand,vente,dépot,préparer
-24	Vente directe	true	commercialisation	false	client,ferme,circuit,court,ferme,place,sur
-25	Panier AMAP	true	commercialisation	false	abonnement,distribution,consommateurs,commandes
-26	Gestion des stocks	true	commercialisation	false	inventaire,produits,suivi,logistique
-27	Préparation de commande	true	commercialisation	false	tri,pesée,conditionnement,cagettes,paniers,liste
+23	Marché	true	commercialisation	true	stand,vente,dépot,préparer
+24	Vente directe	true	commercialisation	true	client,ferme,circuit,court,ferme,place,sur
+25	Panier AMAP	true	commercialisation	true	abonnement,distribution,consommateurs,commandes
+26	Gestion des stocks	true	commercialisation	true	inventaire,produits,suivi,logistique
+27	Préparation de commande	true	commercialisation	true	tri,pesée,conditionnement,cagettes,paniers,liste
 28	Comptabilité	true	administratif	false	bilan,facturation,gestion,impôts
 29	Administratif	true	administratif	false	papier,déclarations,dossiers,impôts
 30	Planifier	true	administratif	false	agenda,planning,tâches,planification,calendrier,rotation,assolement
 31	Veille	true	administratif	false	informations,réglementations,tendances
-32	Achat / Commande	true	administratif	false	fournisseurs,approvisionnement,matériel
+32	Achat / Commande	true	administratif	true	fournisseurs,approvisionnement,matériel
 33	Ranger	true	général	false	outils,local,organisation,ordre,classer
 34	Accueil du public	true	général	false	visite,communication,pédagogie
 35	Réparer	true	général	false	bricolage,maintenance,outils
@@ -56,10 +56,10 @@ ID	nom	default	categorie_default	need_culture	mots_cles
 50	Conserves	true	secondaire	false	transformation,bocaux,stérilisation
 51	Boulangerie	true	secondaire	false	pain,four,farine
 52	Verger	true	secondaire	false	arbres,fruits,taille
-53	Semences	true	secondaire	false	graines,reproduction,sélection,production
+53	Semences	true	secondaire	true	graines,reproduction,sélection,production
 54	Atelier pédagogique	true	secondaire	false	scolaire,animation,formation
-55	Auxiliaires de culture	true	secondaire	false	insectes,utiles,lutte,biologique,biodiversité
-56	Transformation	true	secondaire	false	atelier,produits,agroalimentaire,conserves
+55	Auxiliaires de culture	true	secondaire	true	insectes,utiles,lutte,biologique,biodiversité
+56	Transformation	true	secondaire	true	atelier,produits,agroalimentaire,conserves
 57	Activités syndicales	true	secondaire	false	syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs
 """, "base.Activite", "activite_default.json"
 
