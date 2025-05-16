@@ -166,6 +166,7 @@ ID	nom	recolte_compatible
 13	godets	false
 14	litres	false
 15	lignes	false
+16	brouettes	false
 """, "base.Unite", "unite.json"
 
 datas = [activites_data, cultures_data, methodes_data, types_data, unites_data]

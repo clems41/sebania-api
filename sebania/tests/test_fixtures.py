@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from base.models import User, Ferme, MethodeAgricole, Parcelle, Tache, Culture
 from base.models.statut import StatutJour
+from base.models.tache import CultureTache
 from sebania.utils import crypto_utils
 
 def create_user(email: str = None) -> User:
@@ -26,7 +27,12 @@ def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datet
                                  unite_id=unite_id, nature=crypto_utils.random_string(length=20))
     for culture_id in culture_ids:
         culture = Culture.objects.get(id=culture_id)
-        tache.cultures.add(culture)
+        culture_tache = CultureTache.objects.create(culture=culture, quantite=quantite,
+                                 unite_id=unite_id, nature=crypto_utils.random_string(length=20))
+        for _ in range(nb_parcelles):
+            parcelle = create_parcelle(ferme)
+            culture_tache.parcelles.add(parcelle)
+        tache.cultures.add(culture_tache)
     for _ in range(nb_parcelles):
         parcelle = create_parcelle(ferme)
         tache.parcelles.add(parcelle)

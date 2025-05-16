@@ -58,7 +58,7 @@ class FermeViewSet(ViewSet):
             serializer.is_valid(raise_exception=True)
             items = serializer.save()
         elif request.method == 'GET':
-            items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("categorie", "activite__nom")
+            items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("activite__nom")
         data = {
             "activites": items
         }
@@ -77,7 +77,7 @@ class FermeViewSet(ViewSet):
             serializer.is_valid(raise_exception=True)
             items = serializer.save()
         elif request.method == 'GET':
-            items = CultureFerme.objects.filter(ferme=ferme).all().order_by("categorie", "culture__nom")
+            items = CultureFerme.objects.filter(ferme=ferme).all().order_by("culture__nom")
         data = {
             "cultures": items
         }

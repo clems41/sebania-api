@@ -63,6 +63,11 @@ class ErrorCode(Enum):
     CULTURE_QUERY_TOO_SHORT = "Le paramètre 'query' doit au moins contenir 3 caractères, or il en contient {}", status.HTTP_400_BAD_REQUEST
 
     """
+    ERREURS LIEES AUX UNITES
+    """
+    UNITE_NOT_FOUND = "L'unité id={} n'a pas pu être trouvée", status.HTTP_404_NOT_FOUND
+
+    """
     ERREURS LIEES AUX TACHES
     """
     TACHE_CALENDRIER_FILTRE_INCORRECT = "Vous devez filtrer soit par mois, soit par semaine, pas les 2 ou aucun, or semaine={semaine} et mois={mois}", status.HTTP_400_BAD_REQUEST

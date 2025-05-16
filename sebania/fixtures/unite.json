@@ -118,5 +118,13 @@
       "nom": "lignes",
       "recolte_compatible": false
     }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 16,
+    "fields": {
+      "nom": "brouettes",
+      "recolte_compatible": false
+    }
   }
 ]

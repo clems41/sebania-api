@@ -9,6 +9,7 @@ from mistralai import Mistral
 from base.models.vocal import Vocal
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
+from sebania.utils.db_utils import get_ferme_for_user
 from thomas_ai.tasks.extract import extract
 
 mistral_api_key = settings.MISTRAL_API_KEY
@@ -18,15 +19,23 @@ mistral_client = Mistral(api_key=mistral_api_key)
 def analyze(vocal_id: int):
     # Récupération du vocal sans l'audio qui a déjà été traité
     vocal = Vocal.objects.defer('audio').get(id=vocal_id)
+    start_time = datetime.now()
+
+    # Récupération des parcelles de la ferme
+    ferme = get_ferme_for_user(vocal.user.id)
+    parcelles = ",".join([parcelle.nom for parcelle in ferme.parcelle_set.all()])
 
     # Analyse avec Mistral Agent
-    start_time = datetime.now()
+    query = """
+    Transcription: {transcription}
+    Parcelles: {parcelles}
+    """.format(transcription=vocal.transcription, parcelles=parcelles)
     chat_response = mistral_client.agents.complete(
-        agent_id="ag:76bf0d16:20250506:untitled-agent:9faabefa",
+        agent_id="ag:76bf0d16:20250515:untitled-agent:832efb79",
         messages=[
             {
                 "role": "user",
-                "content": vocal.transcription,
+                "content": query,
             },
         ],
     )

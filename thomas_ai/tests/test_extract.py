@@ -25,21 +25,24 @@ class TestExtract(TaskTestcase):
         self.assertEqual(len(taches), len(output_data))
         for expected_tache in output_data:
             actual_tache = next(tache for tache in taches if tache.activite.nom == expected_tache["activite"])
-            self.assertIsNotNone(actual_tache)
+            self.assertIsNotNone(actual_tache, "L'activite {} n'a pas été trouvé dans la sortie".format(expected_tache["activite"]))
             self.assertEqual(vocal.id, actual_tache.vocal_id)
             self.assertEqual(vocal.user, actual_tache.user)
             self.assertEqual(vocal.date, actual_tache.date)
             self.assertIsNotNone(actual_tache.ferme)
             self.assertEqual(expected_tache["duree_minutes"], actual_tache.duree_minutes)
-            self.assertEqual(expected_tache["quantite"], actual_tache.quantite)
             self.assertEqual(expected_tache["commentaire"], actual_tache.commentaire)
-            self.assertEqual(expected_tache["unite"] if expected_tache["unite"] != '' else None,
-                             actual_tache.unite.nom if actual_tache.unite else None)
             self.assertEqual(len(expected_tache["cultures"]), actual_tache.cultures.count())
             for expected_culture in expected_tache["cultures"]:
                 actual_culture = next(
-                    culture for culture in actual_tache.cultures.all() if culture.nom == expected_culture)
-                self.assertIsNotNone(actual_culture)
+                    culture for culture in actual_tache.cultures.all() if culture.culture.nom == expected_culture["nom"])
+                self.assertIsNotNone(actual_culture, "La culture {} n'a pas été trouvée dans la sortie".format(expected_culture["nom"]))
+                self.assertEqual(expected_culture["quantite"], actual_culture.quantite)
+                self.assertEqual(expected_culture["unite"] if expected_culture["unite"] != '' else None,
+                             actual_culture.unite.nom if actual_culture.unite else None)
+                for expected_parcelle in expected_culture["parcelles"]:
+                    actual_parcelle = next(parcelle for parcelle in actual_culture.parcelles.all() if parcelle.nom == expected_parcelle)
+                    self.assertIsNotNone(actual_parcelle, "La parcelle {} n'a pas été trouvée dans la sortie".format(expected_parcelle))
 
     def create_vocal_and_run_analyze(self, output: {}) -> Vocal:
         self.create_user_and_ferme()
@@ -69,7 +72,7 @@ class TestExtract(TaskTestcase):
         if self.get_current_user() is None:
             ferme = test_fixtures.create_ferme(self.init_current_user())
         else:
-            ferme = get_ferme_for_user(user=self.get_current_user())
+            ferme = get_ferme_for_user(self.get_current_user().id)
         return ferme
 
 
@@ -184,3 +187,13 @@ class TestExtract(TaskTestcase):
         expected_parcelles = [self.create_parcelle("Serre 1")]
         vocal = self.create_vocal_and_run_analyze(output)
         self.assert_tache_equal(vocal, expected_tache, expected_cultures, expected_parcelles)
+
+    def test_extract_nok_output_bad_format(self):
+        output = [
+            {
+                "toto": "récolte",
+            },
+        ]
+        expected_tache = None
+        vocal = self.create_vocal_and_run_analyze(output)
+        self.assert_tache_equal(vocal, expected_tache, None, None)

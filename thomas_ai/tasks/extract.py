@@ -21,8 +21,8 @@ def extract(vocal_id: int):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
         except Exception as e:
-            errors.append(e.message)
-            logger.error("Une erreur est survenue lors de l'extraction de la tâche pour le vocal id={} : {}".format(vocal.id, e.message))
+            errors.append(repr(e))
+            logger.error("Une erreur est survenue lors de l'extraction de la tâche pour le vocal id={} : {}".format(vocal.id, repr(e)))
 
     # Mise à jour du vocal avec l'extract
     vocal.finished_at = timezone.now()

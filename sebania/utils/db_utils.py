@@ -31,18 +31,18 @@ def get_ferme_from_request(request) -> Ferme:
     """
     if request.user is None or not request.user.is_authenticated:
         raise CustomException(ErrorCode.USER_MUST_BE_AUTHENTICATED)
-    return get_ferme_for_user(request.user)
+    return get_ferme_for_user(request.user.id)
 
-def get_ferme_for_user(user) -> Ferme:
+def get_ferme_for_user(user_id: int) -> Ferme:
     """
     Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
     """
-    if user_is_responsable(user.id):
-        return Ferme.objects.get(responsable=user)
-    elif user_is_employe(user.id):
-        return Ferme.objects.get(employes__id=user.id)
+    if user_is_responsable(user_id):
+        return Ferme.objects.get(responsable_id=user_id)
+    elif user_is_employe(user_id):
+        return Ferme.objects.get(employes__id=user_id)
     else:
-        raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, user.id)
+        raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, user_id)
 
 def get_one_or_raise_exception(queryset, exception: CustomException, defer_fields: list = None, *filter_args, **filter_kwargs):
     """
