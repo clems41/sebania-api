@@ -7,13 +7,19 @@ test_ok_champs_manquants = {
         "cultures": []
     },
     "expected_response": {
+        "id": "no_check",
         "date": "04/04/2025",
         "activite": {
             "id": 5,
             "nom": "Paillage",
             "need_culture": True
         },
-        "user": {},  # pas utiliser lors des contrôles
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+        },
         "duree_minutes": 90,
         "cultures": [],
         "commentaire": None,
@@ -22,7 +28,7 @@ test_ok_champs_manquants = {
         "unite": None,
         "nature": None,
         "fields_are_missing": True,
-        "vocal_id": None
+        "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -41,13 +47,19 @@ test_ok_simple = {
         "unite_id": None
     },
     "expected_response": {
+        "id": "no_check",
         "date": "04/04/2025",
         "activite": {
             "id": 5,
             "nom": "Paillage",
             "need_culture": True
         },
-        "user": {},  # pas utiliser lors des contrôles
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+        },
         "duree_minutes": 90,
         "cultures": [],
         "commentaire": "Mon petit commentaire éàô",
@@ -56,7 +68,7 @@ test_ok_simple = {
         "unite": None,
         "nature": None,
         "fields_are_missing": True,
-        "vocal_id": None
+        "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -75,22 +87,34 @@ test_ok_simple_complet = {
         "unite_id": 16
     },
     "expected_response": {
+        "id": "no_check",
         "date": "04/04/2025",
         "activite": {
             "id": 3,
             "nom": "Apport de MO (Amender)",
             "need_culture": True
         },
-        "user": {},  # pas utiliser lors des contrôles
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+        },
         "duree_minutes": 20,
         "cultures": [],
         "commentaire": "Mon petit commentaire éàô",
         "parcelles": [
             {
+                "id": "no_check",
                 "nom": "Tunnel 1",
+                "superficie": "no_check",
+                "type": "no_check",
             },
             {
+                "id": "no_check",
                 "nom": "Tunnel 2",
+                "superficie": "no_check",
+                "type": "no_check",
             }
         ],
         "quantite": 12.0,
@@ -101,7 +125,7 @@ test_ok_simple_complet = {
         },
         "nature": "Montagne",
         "fields_are_missing": True,
-        "vocal_id": None
+        "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -135,13 +159,19 @@ test_ok_avec_cultures = {
         "unite_id": None
     },
     "expected_response": {
+        "id": "no_check",
         "date": "04/04/2025",
         "activite": {
             "id": 3,
             "nom": "Apport de MO (Amender)",
             "need_culture": True
         },
-        "user": {},  # pas utiliser lors des contrôles
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+        },
         "duree_minutes": 20,
         "cultures": [
             {
@@ -151,10 +181,16 @@ test_ok_avec_cultures = {
                 },
                 "parcelles": [
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 1",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     },
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 3",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -172,7 +208,10 @@ test_ok_avec_cultures = {
                 },
                 "parcelles": [
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 2",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -190,7 +229,7 @@ test_ok_avec_cultures = {
         "unite": None,
         "nature": "",
         "fields_are_missing": False,
-        "vocal_id": None
+        "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -224,13 +263,19 @@ test_ok_avec_cultures_complet = {
         "unite_id": 16
     },
     "expected_response": {
+        "id": "no_check",
         "date": "04/04/2025",
         "activite": {
             "id": 3,
             "nom": "Apport de MO (Amender)",
             "need_culture": True
         },
-        "user": {},  # pas utiliser lors des contrôles
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+        },
         "duree_minutes": 20,
         "cultures": [
             {
@@ -240,10 +285,16 @@ test_ok_avec_cultures_complet = {
                 },
                 "parcelles": [
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 1",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     },
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 3",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -261,7 +312,10 @@ test_ok_avec_cultures_complet = {
                 },
                 "parcelles": [
                     {
+                        "id": "no_check",
                         "nom": "Tunnel 2",
+                        "superficie": "no_check",
+                        "type": "no_check",
                     }
                 ],
                 "quantite": 52.3,
@@ -276,10 +330,16 @@ test_ok_avec_cultures_complet = {
         "commentaire": "Mon petit commentaire éàô",
         "parcelles": [
             {
+                "id": "no_check",
                 "nom": "Tunnel 1",
+                "superficie": "no_check",
+                "type": "no_check",
             },
             {
+                "id": "no_check",
                 "nom": "Tunnel 2",
+                "superficie": "no_check",
+                "type": "no_check",
             }
         ],
         "quantite": 12.0,
@@ -290,7 +350,7 @@ test_ok_avec_cultures_complet = {
         },
         "nature": "Montagne",
         "fields_are_missing": False,
-        "vocal_id": None
+        "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }

@@ -61,3 +61,41 @@ class SebaniaTestCase(APITransactionTestCase):
         self.assertEqual(response.status_code, expected_error.value[1])
         self.assertEqual(response_data.get("code"), expected_error.name)
         self.assertEqual(response_data.get("message"), expected_error.value[0].format(*args, **kwargs))
+
+    def check_response(self, expected: dict, response, request: dict):
+        for actual_key, actual_value in response.items():
+            self.assertTrue(actual_key in expected, "La clé '{}' existe dans la réponse, mais n'est pas attendue".format(actual_key))
+            expected_value = expected.get(actual_key)
+
+            # Cas d'une valeur à ne pas checker
+            if type(expected_value) is str and expected_value == "no_check":
+                continue
+
+            # Cas d'une valeur à reprendre de la requête
+            if type(expected_value) is str and "{request}." in expected_value:
+                key_from_request = expected_value[len("{request}."):]
+                self.assertTrue(key_from_request in request, "La clé '{}' n'a pas été trouvée dans la requête".format(key_from_request))
+                value_from_request = request.get(key_from_request)
+                self.assertEqual(value_from_request, actual_value)
+                continue
+
+            self.assertEqual(type(expected_value), type(actual_value), "Les types ne correspondent pas pour la clé '{}'".format(actual_key))
+
+            # Cas d'un objet
+            if type(expected_value) is dict:
+                self.check_response(expected_value, actual_value, request=request)
+
+            # Cas d'une liste
+            elif type(expected_value) is list:
+                self.assertEqual(len(expected_value), len(actual_value), "Les tailles de liste pour la clé '{}' ne correspondent pas".format(actual_key))
+                for idx, expected_element in enumerate(expected_value):
+                    actual_element = actual_value[idx]
+                    if type(expected_element) is dict:
+                        self.check_response(expected_element, actual_element, request=request)
+                    else:
+                        self.assertEqual(expected_element, actual_element)
+            else:
+                self.assertEqual(expected_value, actual_value)
+
+    def check_entity(self, expected: dict, instance, request: dict):
+        pass # TODO

@@ -23,57 +23,6 @@ def _get_url_detail(tache_id: int):
 class TestTache(SebaniaTestCase):
     url = reverse_lazy('taches-list')
 
-    def _check_response(self, expected, response_data, expected_user_id: int):
-        # Compare user
-        expected.pop('user')
-        actual_user = response_data.pop('user')
-        self.assertEqual(expected_user_id, actual_user.get("id"))
-
-        # Remove fields that we cannot compare
-        response_data.pop('id')
-        for parcelle in response_data.get('parcelles', []):
-            parcelle.pop("id")
-            parcelle.pop("superficie")
-            parcelle.pop("type")
-        for culture_tache in response_data.get('cultures', []):
-            for parcelle in culture_tache.get('parcelles', []):
-                parcelle.pop("id")
-                parcelle.pop("superficie")
-                parcelle.pop("type")
-
-        self.assertEqual(expected, response_data)
-
-    def _check_database(self, expected, tache_id: int, expected_user_id: int):
-        tache = Tache.objects.get(id=tache_id)
-        self.assertEqual(tache.date.strftime("%d/%m/%Y"), expected.get("date"))
-        self.assertEqual(tache.activite_id, expected.get("activite").get("id"))
-        self.assertEqual(tache.user_id, expected_user_id)
-        self.assertEqual(tache.duree_minutes, expected.get("duree_minutes"))
-        self.assertEqual(tache.commentaire, expected.get("commentaire"))
-        self.assertEqual(tache.get_fields_are_missing(), expected.get("fields_are_missing"))
-        self._check_common_fields_from_database(expected, tache)
-        if expected.get("cultures") is not None:
-            self.assertEqual(tache.cultures.count(), len(expected.get("cultures")))
-            for expected_culture in expected.get("cultures"):
-                actual_culture = next(culture_tache for culture_tache in tache.cultures.all() if
-                                      culture_tache.culture.id == expected_culture.get("culture").get("id"))
-                self.assertIsNotNone(actual_culture, "La culture id={} n'a pas été trouvée".format(
-                    expected_culture.get("culture").get("id")))
-                self._check_common_fields_from_database(expected_culture, actual_culture)
-
-    def _check_common_fields_from_database(self, expected, instance):
-        self.assertEqual(instance.nature, expected.get("nature"))
-        self.assertEqual(instance.quantite, expected.get("quantite"))
-        if expected.get("unite_id") is not None:
-            self.assertEqual(instance.unite.id, expected.get("unite_id"))
-        if expected.get("parcelle_ids") is not None:
-            self.assertEqual(len(instance.parcelles.all()), len(expected.get("parcelle_ids")))
-            for expected_parcelle_id in expected.get("parcelle_ids"):
-                actual_parcelle = next(
-                    parcelle for parcelle in instance.parcelles.all() if parcelle.id == expected_parcelle_id)
-                self.assertIsNotNone(actual_parcelle,
-                                     "La parcelle id={} n'a pas été trouvée".format(expected_parcelle_id))
-
     def _create_or_update(self, test_data, expected_status_code, tache_id: int = None):
         test_data_copy = deepcopy(test_data)
         request = test_data_copy.get("request")
@@ -110,12 +59,9 @@ class TestTache(SebaniaTestCase):
         else:
             response = self.client.post(self.url, request, format='json', headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, expected_status_code)
-        response_data = json.loads(response.content)
         if expected_status_code <= status.HTTP_201_CREATED:
-            expected_user_id = request.get("user_id")
-            expected_tache_id = response_data.get("id")
-            self._check_response(expected_response, response_data, expected_user_id)
-            self._check_database(expected_response, expected_tache_id, expected_user_id)
+            response_data = json.loads(response.content)
+            self.check_response(expected_response, response_data, request)
         elif tache_id is None:
             # Il faut vérifier que la tâche n'a pas été créée en base (uniquement lors de la création)
             taches = Tache.objects.filter(user=self.get_current_user(),
