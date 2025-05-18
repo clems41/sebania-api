@@ -1,3 +1,5 @@
+import datetime
+
 test_ok_champs_manquants = {
     "request": {
         "date": "04/04/2025",
@@ -29,6 +31,18 @@ test_ok_champs_manquants = {
         "nature": None,
         "fields_are_missing": True,
         "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 5,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": None,
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": None,
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -69,6 +83,18 @@ test_ok_simple = {
         "nature": None,
         "fields_are_missing": True,
         "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 5,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": None,
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -126,6 +152,25 @@ test_ok_simple_complet = {
         "nature": "Montagne",
         "fields_are_missing": True,
         "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 3,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "nom": "Tunnel 1",
+            },
+            {
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite_id": 16,
+        "nature": "Montagne",
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -230,6 +275,45 @@ test_ok_avec_cultures = {
         "nature": "",
         "fields_are_missing": False,
         "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 3,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [
+
+            {
+                "culture_id": 8,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 16,
+                "nature": "Montagne",
+            },
+            {
+                "culture_id": 12,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 1,
+                "nature": "",
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": "",
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
 }
@@ -350,6 +434,53 @@ test_ok_avec_cultures_complet = {
         },
         "nature": "Montagne",
         "fields_are_missing": False,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "id": "no_check",
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 3,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture_id": 5,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 16,
+                "nature": "Montagne",
+            },
+            {
+                "culture_id": 21,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 52.3,
+                "unite_id": 1,
+                "nature": "",
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "nom": "Tunnel 1",
+            },
+            {
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite_id": 16,
+        "nature": "Montagne",
         "vocal_id": "no_check"
     },
     "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],

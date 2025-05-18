@@ -27,6 +27,7 @@ class TestTache(SebaniaTestCase):
         test_data_copy = deepcopy(test_data)
         request = test_data_copy.get("request")
         expected_response = test_data_copy.get("expected_response")
+        expected_entity = test_data_copy.get("expected_entity")
         parcelles_to_create = test_data_copy.get("parcelles_to_create", None)
 
         # Ajout de l'ID du user dans la requête qui diffère à chaque test
@@ -62,6 +63,8 @@ class TestTache(SebaniaTestCase):
         if expected_status_code <= status.HTTP_201_CREATED:
             response_data = json.loads(response.content)
             self.check_response(expected_response, response_data, request)
+            tache = Tache.objects.get(id=response_data.get("id"))
+            self.check_entity(expected_entity, tache, request)
         elif tache_id is None:
             # Il faut vérifier que la tâche n'a pas été créée en base (uniquement lors de la création)
             taches = Tache.objects.filter(user=self.get_current_user(),

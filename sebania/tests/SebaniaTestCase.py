@@ -63,23 +63,18 @@ class SebaniaTestCase(APITransactionTestCase):
         self.assertEqual(response_data.get("message"), expected_error.value[0].format(*args, **kwargs))
 
     def check_response(self, expected: dict, response, request: dict):
+        """
+        Vérifie que la réponse obtenue correspond bien aux données attendues (expected).
+        Tous les attributs de la réponse sont contrôlés, si un attribut se trouve dans la réponse et n'est pas attendu dans expected, une erreur sera levée.
+        La valeur 'no_check' dans le dict expected permet de ne pas contrôler un champ.
+        On peut préciser une valeur à contrôler depuis la requête avec la clé {request}.<key_in_request_dict>.
+        """
         for actual_key, actual_value in response.items():
             self.assertTrue(actual_key in expected, "La clé '{}' existe dans la réponse, mais n'est pas attendue".format(actual_key))
             expected_value = expected.get(actual_key)
 
-            # Cas d'une valeur à ne pas checker
-            if type(expected_value) is str and expected_value == "no_check":
+            if self._precheck_data(expected_value, actual_value, request):
                 continue
-
-            # Cas d'une valeur à reprendre de la requête
-            if type(expected_value) is str and "{request}." in expected_value:
-                key_from_request = expected_value[len("{request}."):]
-                self.assertTrue(key_from_request in request, "La clé '{}' n'a pas été trouvée dans la requête".format(key_from_request))
-                value_from_request = request.get(key_from_request)
-                self.assertEqual(value_from_request, actual_value)
-                continue
-
-            self.assertEqual(type(expected_value), type(actual_value), "Les types ne correspondent pas pour la clé '{}'".format(actual_key))
 
             # Cas d'un objet
             if type(expected_value) is dict:
@@ -93,9 +88,46 @@ class SebaniaTestCase(APITransactionTestCase):
                     if type(expected_element) is dict:
                         self.check_response(expected_element, actual_element, request=request)
                     else:
-                        self.assertEqual(expected_element, actual_element)
+                        self.assertEqual(expected_element, actual_element, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(actual_key))
             else:
-                self.assertEqual(expected_value, actual_value)
+                self.assertEqual(expected_value, actual_value, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(actual_key))
 
     def check_entity(self, expected: dict, instance, request: dict):
-        pass # TODO
+        """
+        Vérifie que l'instance fournie correspond bien aux données attendues (expected).
+        Tous les attributs de l'instance ne seront pas vérifiés, il est donc nécessaire de passer dans le dict expected seulement les champs à contrôler.
+        On peut préciser une valeur à contrôler depuis la requête avec la clé {request}.<key_in_request_dict>.
+        """
+        for expected_key, expected_value in expected.items():
+            self.assertTrue(hasattr(instance, expected_key),
+            "La clé '{}' est attendue mais n'existe pas dans l'instance de type {}".format(expected_key, type(instance)))
+            actual_value = getattr(instance, expected_key)
+            if self._precheck_data(expected_value, actual_value, request):
+                continue
+
+            # Cas d'une liste
+            if type(expected_value) is list:
+                actual_elements = actual_value.all()
+                self.assertEqual(len(expected_value), len(actual_elements), "Les tailles de liste pour la clé '{}' ne correspondent pas".format(expected_key))
+                for idx, actual_element in enumerate(actual_elements):
+                    expected_element = expected_value[idx]
+                    self.check_entity(expected_element, actual_element, request=request)
+            else:
+                self.assertEqual(expected_value, actual_value, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(expected_key))
+
+    def _precheck_data(self, expected, actual, request: dict):
+        """
+        Retourne True si la donnée est considérée comme vérifiée et False sinon.
+        """
+        # Cas d'une valeur à ne pas checker
+        if type(expected) is str and expected == "no_check":
+            return True
+
+        # Cas d'une valeur à reprendre de la requête
+        if type(expected) is str and "{request}." in expected:
+            key_from_request = expected[len("{request}."):]
+            self.assertTrue(key_from_request in request, "La clé '{}' n'a pas été trouvée dans la requête".format(key_from_request))
+            value_from_request = request.get(key_from_request)
+            self.assertEqual(value_from_request, actual, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(key_from_request))
+            return True
+        return False
