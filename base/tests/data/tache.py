@@ -437,7 +437,6 @@ test_ok_avec_cultures_complet = {
         "vocal_id": "no_check"
     },
     "expected_entity": {
-        "id": "no_check",
         "date": datetime.date(2025, 4, 4),
         "activite_id": 3,
         "user_id": "{request}.user_id",

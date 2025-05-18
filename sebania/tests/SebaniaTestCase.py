@@ -62,11 +62,13 @@ class SebaniaTestCase(APITransactionTestCase):
         self.assertEqual(response_data.get("code"), expected_error.name)
         self.assertEqual(response_data.get("message"), expected_error.value[0].format(*args, **kwargs))
 
-    def check_response(self, expected: dict, response, request: dict):
+    def check_response(self, expected: dict, response, request: dict = None):
         """
         Vérifie que la réponse obtenue correspond bien aux données attendues (expected).
         Tous les attributs de la réponse sont contrôlés, si un attribut se trouve dans la réponse et n'est pas attendu dans expected, une erreur sera levée.
         La valeur 'no_check' dans le dict expected permet de ne pas contrôler un champ.
+        La valeur 'is_not_none' dans le dict expected permet de contrôler que le champ n'est pas à None.
+        La valeur 'is_none' dans le dict expected permet de contrôler que le champ est à None.
         On peut préciser une valeur à contrôler depuis la requête avec la clé {request}.<key_in_request_dict>.
         """
         for actual_key, actual_value in response.items():
@@ -92,10 +94,12 @@ class SebaniaTestCase(APITransactionTestCase):
             else:
                 self.assertEqual(expected_value, actual_value, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(actual_key))
 
-    def check_entity(self, expected: dict, instance, request: dict):
+    def check_entity(self, expected: dict, instance, request: dict = None):
         """
         Vérifie que l'instance fournie correspond bien aux données attendues (expected).
         Tous les attributs de l'instance ne seront pas vérifiés, il est donc nécessaire de passer dans le dict expected seulement les champs à contrôler.
+        La valeur 'is_not_none' dans le dict expected permet de contrôler que le champ n'est pas à None.
+        La valeur 'is_none' dans le dict expected permet de contrôler que le champ est à None.
         On peut préciser une valeur à contrôler depuis la requête avec la clé {request}.<key_in_request_dict>.
         """
         for expected_key, expected_value in expected.items():
@@ -115,17 +119,31 @@ class SebaniaTestCase(APITransactionTestCase):
             else:
                 self.assertEqual(expected_value, actual_value, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(expected_key))
 
-    def _precheck_data(self, expected, actual, request: dict):
+    def _precheck_data(self, expected, actual, request: dict = None):
         """
         Retourne True si la donnée est considérée comme vérifiée et False sinon.
         """
+        if type(expected) is not str:
+            return False
+
         # Cas d'une valeur à ne pas checker
-        if type(expected) is str and expected == "no_check":
+        if expected == "no_check":
+            return True
+
+        # Cas d'une valeur supposée None
+        if expected == "is_none":
+            self.assertIsNone(actual)
+            return True
+
+        # Cas d'une valeur supposée pas None
+        if expected == "is_not_none":
+            self.assertIsNotNone(actual)
             return True
 
         # Cas d'une valeur à reprendre de la requête
-        if type(expected) is str and "{request}." in expected:
+        if "{request}." in expected:
             key_from_request = expected[len("{request}."):]
+            self.assertIsNotNone(request, "La clé '{}' est sensée être récupérée de l'objet request, mais ce dernier est null".format(key_from_request))
             self.assertTrue(key_from_request in request, "La clé '{}' n'a pas été trouvée dans la requête".format(key_from_request))
             value_from_request = request.get(key_from_request)
             self.assertEqual(value_from_request, actual, "Les valeurs ne correspondent pas pour l'attribut '{}'".format(key_from_request))
