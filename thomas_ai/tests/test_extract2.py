@@ -1,8 +1,6 @@
 import datetime
-import json
-import os.path
 
-from base.models import Tache, Ferme, User
+from base.models import Tache, Ferme
 from base.models.vocal import Vocal, VocalStatut
 from sebania.tests import test_fixtures
 from sebania.utils.db_utils import get_ferme_for_user
@@ -281,59 +279,163 @@ class TestExtract(TaskTestcase):
                 "commentaire": ""
             },
         ]
-        expected_tache = None
-        self._run_testcase(output, expected_entities, parcelles_to_create=["Tunnel 1", "Tunnel 2", "Tunnel 3"])
+        self._run_testcase(output, None, parcelles_to_create=["Tunnel 1", "Tunnel 2", "Tunnel 3"])
 
     def test_extract_nok_parcelles(self):
         output = [
             {
                 "activite": "gestion des bioagresseurs",
                 "duree_minutes": 20,
-                "parcelles": ["serre 1", "terasse"],
-                "cultures": ["céleri branche", "blette", "poireau"],
-                "quantite": 9,
-                "unite": "litres",
+                "cultures": [
+                    {
+                        "nom": "céleri branche",
+                        "quantite": 9,
+                        "unite": "litres",
+                        "parcelles": ["serre 1", "terrasse"]
+                    },
+                    {
+                        "nom": "blette",
+                        "quantite": 0,
+                        "unite": "",
+                        "parcelles": ["serre 2"]
+                    },
+                    {
+                        "nom": "poireau",
+                        "quantite": 0,
+                        "unite": "",
+                        "parcelles": ["jardin"]
+                    }
+                ],
                 "commentaire": ""
             },
         ]
-        expected_tache = Tache(activite_id=10, duree_minutes=20, quantite=9, unite_id=14, commentaire="")
-        expected_cultures = [6, 19, 35]
-        self.create_parcelle("Jardin")
-        expected_parcelles = [self.create_parcelle("Serre 1")]
-        self._run_testcase(output, expected_entities, parcelles_to_create=["Tunnel 1", "Tunnel 2", "Tunnel 3"])
+        expected_entities = [
+            {
+                "activite_id": 10,
+                "duree_minutes": 20,
+                "cultures": [
+                    {
+                        "culture_id": 19,
+                        "quantite": 9,
+                        "unite_id": 14,
+                        "nature": None,
+                        "parcelles": [
+                            {
+                                "nom": "Serre 1",
+                            },
+                        ]
+                    },
+                    {
+                        "culture_id": 6,
+                        "quantite": 0,
+                        "unite_id": None,
+                        "nature": None,
+                        "parcelles": [
+                            {
+                                "nom": "Serre 2",
+                            }
+                        ]
+                    },
+                    {
+                        "culture_id": 35,
+                        "quantite": 0,
+                        "unite_id": None,
+                        "nature": None,
+                        "parcelles": [
+                            {
+                                "nom": "Jardin",
+                            }
+                        ]
+                    }
+                ],
+                "parcelles": [],
+                "quantite": None,
+                "unite_id": None,
+                "nature": None,
+                "commentaire": "",
+                "vocal_id": "is_not_none"
+            }
+        ]
+        self._run_testcase(output, expected_entities, parcelles_to_create=["Serre 1", "Serre 2", "Jardin", "Tunnel 1"])
 
     def test_extract_ok_unites(self):
         output = [
             {
                 "activite": "récolte",
                 "duree_minutes": 180,
-                "parcelles": ["serre 1"],
-                "cultures": ["tomate"],
-                "quantite": 12,
-                "unite": "kg",
+                "cultures": [
+                    {
+                        "nom": "tomate",
+                        "quantite": 12,
+                        "unite": "kg",
+                        "parcelles": []
+
+                    }
+                ],
                 "commentaire": ""
             },
         ]
-        expected_tache = Tache(activite_id=17, duree_minutes=180, quantite=12, unite_id=1, commentaire="")
-        expected_cultures = [43]
-        expected_parcelles = [self.create_parcelle("Serre 1")]
-        self._run_testcase(output, expected_entities, parcelles_to_create=["Tunnel 1", "Tunnel 2", "Tunnel 3"])
+        expected_entities = [
+            {
+                "activite_id": 17,
+                "duree_minutes": 180,
+                "cultures": [
+                    {
+                        "culture_id": 43,
+                        "quantite": 12,
+                        "unite_id": 1,
+                        "nature": None,
+                        "parcelles": []
+                    }
+                ],
+                "parcelles": [],
+                "quantite": None,
+                "unite_id": None,
+                "nature": None,
+                "commentaire": "",
+                "vocal_id": "is_not_none"
+            }
+        ]
+        self._run_testcase(output, expected_entities, parcelles_to_create=[])
 
     def test_extract_nok_unites(self):
         output = [
             {
                 "activite": "récolte",
                 "duree_minutes": 180,
-                "parcelles": ["serre 1"],
-                "cultures": ["tomate"],
-                "quantite": 12,
-                "unite": "melons",
+                "cultures": [
+                    {
+                        "nom": "tomate",
+                        "quantite": 12,
+                        "unite": "melons",
+                        "parcelles": []
+
+                    }
+                ],
                 "commentaire": ""
             },
         ]
-        expected_tache = Tache(activite_id=17, duree_minutes=180, quantite=12, commentaire="")
-        expected_cultures = [43]
-        expected_parcelles = [self.create_parcelle("Serre 1")]
+        expected_entities = [
+            {
+                "activite_id": 17,
+                "duree_minutes": 180,
+                "cultures": [
+                    {
+                        "culture_id": 43,
+                        "quantite": 12,
+                        "unite_id": None,
+                        "nature": None,
+                        "parcelles": []
+                    }
+                ],
+                "parcelles": [],
+                "quantite": None,
+                "unite_id": None,
+                "nature": None,
+                "commentaire": "",
+                "vocal_id": "is_not_none"
+            }
+        ]
         self._run_testcase(output, expected_entities, parcelles_to_create=["Tunnel 1", "Tunnel 2", "Tunnel 3"])
 
     def test_extract_nok_output_bad_format(self):
@@ -362,6 +464,8 @@ class TestExtract(TaskTestcase):
         expected_nb_taches = 0
         if expected_entities is not None:
             expected_nb_taches = len(expected_entities)
+        else:
+            expected_entities = []
         self.assertEqual(len(taches), expected_nb_taches)
         for idx, expected_entity in enumerate(expected_entities):
             entity = taches[idx]

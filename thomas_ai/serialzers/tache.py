@@ -19,25 +19,30 @@ class CultureTacheOutputSerializer(serializers.ModelSerializer):
         model = CultureTache
         fields = ["parcelles", "nom", "unite", "quantite", "nature"]
 
+    def is_valid(self, raise_exception=False):
+        culture_nom = self.initial_data.get('nom')
+        culture = get_one_or_none(Culture, nom__iexact=culture_nom)
+        if culture is None:
+            return False
+        return super().is_valid(raise_exception=raise_exception)
+
     def create(self, validated_data):
         ferme = self.context.get("ferme")
         culture_nom = validated_data.get("nom", None)
-        culture = get_one_or_none(Culture, nom__iexact=culture_nom)
+        culture = get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOM_NOT_FOUND, culture_nom), nom__iexact=culture_nom)
         unite_nom = validated_data.get("unite", None)
         unite = get_one_or_none(Unite, nom__iexact=unite_nom)
         quantite = validated_data.get("quantite", None)
         nature = validated_data.get("nature", None)
-        if culture is not None:
-            instance = CultureTache.objects.create(culture=culture, quantite=quantite, unite=unite, nature=nature)
-            # Ajout des parcelles
-            parcelles = validated_data.get("parcelles")
-            if parcelles is not None:
-                for parcelle_nom in parcelles:
-                    parcelle = get_one_or_none(Parcelle, nom__iexact=parcelle_nom, ferme=ferme)
-                    if parcelle is not None:
-                        instance.parcelles.add(parcelle)
-            return instance
-        return None
+        instance = CultureTache.objects.create(culture=culture, quantite=quantite, unite=unite, nature=nature)
+        # Ajout des parcelles
+        parcelles = validated_data.get("parcelles")
+        if parcelles is not None:
+            for parcelle_nom in parcelles:
+                parcelle = get_one_or_none(Parcelle, nom__iexact=parcelle_nom, ferme=ferme)
+                if parcelle is not None:
+                    instance.parcelles.add(parcelle)
+        return instance
 
 
 class TacheOutputSerializer(serializers.ModelSerializer):
@@ -69,8 +74,11 @@ class TacheOutputSerializer(serializers.ModelSerializer):
         # Ajout des cultures
         if cultures is not None:
             for culture in cultures:
-                serializer = CultureTacheOutputSerializer(data=culture, context={"ferme": ferme})
-                serializer.is_valid(raise_exception=True)
-                culture_tache = serializer.save()
-                tache.cultures.add(culture_tache)
+                try:
+                    serializer = CultureTacheOutputSerializer(data=culture, context={"ferme": ferme})
+                    if serializer.is_valid():
+                        culture_tache = serializer.save()
+                        tache.cultures.add(culture_tache)
+                except CustomException:
+                    continue
         return tache
