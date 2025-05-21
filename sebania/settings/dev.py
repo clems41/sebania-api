@@ -17,5 +17,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'faster_whisper': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }

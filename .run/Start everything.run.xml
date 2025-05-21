@@ -4,6 +4,13 @@
       <settings>
         <option name="envFilePath" value="" />
         <option name="commandLineOptions" value="--build" />
+        <option name="services">
+          <list>
+            <option value="background-tasks" />
+            <option value="api" />
+            <option value="db" />
+          </list>
+        </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />
       </settings>
     </deployment>

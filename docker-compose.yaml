@@ -46,10 +46,8 @@ services:
       - whisper_models:/app/whisper/
 
   background-tasks:
-    build: &build-thomas
-      dockerfile: Dockerfile_ai
-      tags:
-        - thomas-ai:0.1.0
+    build:
+      <<: *build-sebania
     container_name: sebania-background-tasks
     environment:
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
@@ -77,7 +75,7 @@ services:
 
   testcases:
     build:
-      <<: *build-thomas
+      <<: *build-sebania
     container_name: sebania-testcases
     environment:
       DJANGO_SETTINGS_MODULE: sebania.settings.test
