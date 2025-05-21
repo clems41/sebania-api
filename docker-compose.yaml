@@ -72,6 +72,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: "python manage.py process_tasks"
 
   testcases:
     build:
