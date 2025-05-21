@@ -47,14 +47,17 @@ class SebaniaTestCase(APITransactionTestCase):
         return {"Authorization": "Bearer " + access_token}
 
     def get_password_received_from_email(self, user_email: str) -> str:
+        start_password_marker = '<div class="password-box">'
+        end_password_marker = '</div>'
         emails = mail.outbox
         self.assertTrue(len(emails) > 0)
         matches = [e for e in emails if e.to[0] == user_email]
         self.assertEqual(len(matches), 1)
         email_body = matches[0].body
-        start_password = email_body.find('<td> ') + len('<td> ')
-        stop_password = email_body.find(' </td>')
-        return email_body[start_password: stop_password]
+        start_password = email_body.find(start_password_marker) + len(start_password_marker)
+        password_with_end_of_email = email_body[start_password: ]
+        stop_password = password_with_end_of_email.find(end_password_marker)
+        return password_with_end_of_email[: stop_password]
 
     def check_error_response(self, response, expected_error: ErrorCode, *args, **kwargs):
         response_data = json.loads(response.content)
