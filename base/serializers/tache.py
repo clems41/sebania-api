@@ -1,6 +1,3 @@
-from copy import deepcopy
-from typing import List
-
 from django.db import transaction
 from rest_framework import serializers
 
@@ -8,7 +5,6 @@ from base.models import Tache, Parcelle, User, Activite, Culture, Ferme, Unite
 from base.models.tache import CultureTache
 from base.serializers.activite import ActiviteSerializer
 from base.serializers.culture import CultureSerializer
-from base.serializers.parcelle import ParcelleSerializer
 from base.serializers.unite import UniteSerializer
 from base.serializers.user import UserSerializer
 from sebania.exceptions.custom_exception import CustomException
@@ -16,11 +12,15 @@ from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils, serializer_utils, ferme_utils
 from sebania.utils.db_utils import get_one_or_raise_exception
 
+class TacheParcelleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Parcelle
+        fields = ["id", "nom"]
 
 class CultureTacheSerializer(serializers.ModelSerializer):
     culture = CultureSerializer(read_only=True)
     culture_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
-    parcelles = ParcelleSerializer(read_only=True, many=True)
+    parcelles = TacheParcelleSerializer(read_only=True, many=True)
     parcelle_ids = serializers.ListField(write_only=True, required=False, default=[], allow_empty=True, allow_null=True,
         child=serializers.IntegerField()
     )
@@ -62,7 +62,6 @@ class CultureTacheSerializer(serializers.ModelSerializer):
         return instance
 
 
-
 class TacheSerializer(serializers.ModelSerializer):
     activite = ActiviteSerializer(read_only=True)
     activite_id = serializers.IntegerField(write_only=True)
@@ -74,7 +73,7 @@ class TacheSerializer(serializers.ModelSerializer):
     commentaire = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     vocal_id = serializers.IntegerField(read_only=True)
     fields_are_missing = serializers.BooleanField(read_only=True)
-    parcelles = ParcelleSerializer(read_only=True, many=True)
+    parcelles = TacheParcelleSerializer(read_only=True, many=True)
     parcelle_ids = serializers.ListField(write_only=True, required=False, default=[], allow_empty=True, allow_null=True,
         child=serializers.IntegerField()
     )

@@ -47,10 +47,12 @@ class TestTache(SebaniaTestCase):
                 parcelles.append(parcelle)
 
             # Ajout de l'ID des parcelles dans la requête qui diffère à chaque test
-            parcelle_ids = [parcelles[parcelle_id - 1].id if parcelle_id <= len(parcelles) else parcelle_id for parcelle_id in request.get("parcelle_ids", [])]
+            parcelle_ids = [parcelles[parcelle_id - 1].id if parcelle_id <= len(parcelles) else parcelle_id for
+                            parcelle_id in request.get("parcelle_ids", [])]
             request["parcelle_ids"] = parcelle_ids
             for culture_tache in request.get("cultures", []):
-                parcelle_ids = [parcelles[parcelle_id - 1].id if parcelle_id <= len(parcelles) else parcelle_id  for parcelle_id in culture_tache.get("parcelle_ids", [])]
+                parcelle_ids = [parcelles[parcelle_id - 1].id if parcelle_id <= len(parcelles) else parcelle_id for
+                                parcelle_id in culture_tache.get("parcelle_ids", [])]
                 culture_tache["parcelle_ids"] = parcelle_ids
 
         # Envoi requête
@@ -225,7 +227,8 @@ class TestUpdateTache(TestTache):
         if test_data_copy["request"]["user_id"] is None:
             test_data_copy["request"]["user_id"] = self.get_current_user().id
         ferme = get_ferme_for_user(test_data_copy["request"]["user_id"])
-        old_tache = test_fixtures.create_tache(user_id=test_data_copy["request"]["user_id"], ferme=ferme, nb_parcelles=4)
+        old_tache = test_fixtures.create_tache(user_id=test_data_copy["request"]["user_id"], ferme=ferme,
+                                               nb_parcelles=4)
         old_parcelle_ids = [model_to_dict(parcelle).get("id") for parcelle in old_tache.parcelles.all()]
         old_culture_ids = [model_to_dict(culture).get("id") for culture in old_tache.cultures.all()]
         self._create_or_update(test_data_copy, expected_status_code=expected_status_code, tache_id=old_tache.id)
@@ -234,13 +237,16 @@ class TestUpdateTache(TestTache):
         if expected_status_code == status.HTTP_200_OK:
             # On vérifie les modifications sur les parcelles
             for old_parcelle_id in old_parcelle_ids:
-                self.assertIsNotNone(Parcelle.objects.get(id=old_parcelle_id)) # on vérifie que la parcelle n'a pas été supprimée de la DB
-                self.assertFalse(old_parcelle_id in map(lambda new_parcelle: new_parcelle.id, new_tache.parcelles.all())) # on vérifie que les anciennes parcelles ne sont plus reliées à la tâche
+                self.assertIsNotNone(Parcelle.objects.get(
+                    id=old_parcelle_id))  # on vérifie que la parcelle n'a pas été supprimée de la DB
+                self.assertFalse(old_parcelle_id in map(lambda new_parcelle: new_parcelle.id,
+                                                        new_tache.parcelles.all()))  # on vérifie que les anciennes parcelles ne sont plus reliées à la tâche
 
                 # On vérifie que les anciennes culture_tâches ont été supprimées
                 for old_culture_tache_id in old_culture_ids:
                     self.assertRaises(CultureTache.DoesNotExist, CultureTache.objects.get, id=old_culture_tache_id)
-                    self.assertFalse(old_culture_tache_id in map(lambda new_culture_tache: new_culture_tache.id, new_tache.cultures.all()))
+                    self.assertFalse(old_culture_tache_id in map(lambda new_culture_tache: new_culture_tache.id,
+                                                                 new_tache.cultures.all()))
 
     def test_ok_update_simple(self):
         self._update(data.test_ok_simple, expected_status_code=status.HTTP_200_OK)
@@ -253,7 +259,7 @@ class TestUpdateTache(TestTache):
 
     def test_ok_update_avec_cultures_complet(self):
         self._update(data.test_ok_avec_cultures_complet,
-                               expected_status_code=status.HTTP_200_OK)
+                     expected_status_code=status.HTTP_200_OK)
 
     def test_ok_update_employe(self):
         responsable = test_fixtures.create_user()
@@ -395,28 +401,72 @@ class TestGetTache(SebaniaTestCase):
         for actual_tache in actual_taches:
             expected_tache = next((x for x in expected_taches if x.id == actual_tache.get("id")), None)
             self.assertIsNotNone(expected_tache)
-            self.assertEqual(expected_tache.activite_id, actual_tache.get("activite").get("id"))
-            self.assertEqual(expected_tache.user_id, actual_tache.get("user").get("id"))
-            self.assertEqual(expected_tache.date.strftime("%d/%m/%Y"), actual_tache.get("date"))
-            self.assertEqual(expected_tache.duree_minutes, actual_tache.get("duree_minutes"))
-            self.assertEqual(expected_tache.commentaire, actual_tache.get("commentaire"))
-            for expected_culture in expected_tache.cultures.all():
-                actual_culture = next(
-                    (x for x in actual_tache.get("cultures") if
-                     x.get("culture").get("id") == expected_culture.culture.id), None)
-                self.assertIsNotNone(actual_culture)
-                self.assertEqual(expected_culture.culture.nom, actual_culture.get("culture").get("nom"))
-                self.assertEqual(expected_culture.nature, actual_culture.get("nature"))
-                self.assertEqual(expected_culture.quantite, actual_culture.get("quantite"))
-                if expected_culture.unite_id is not None:
-                    self.assertEqual(expected_culture.unite_id, actual_culture.get("unite").get("id"))
-                for expected_parcelle in expected_culture.parcelles.all():
-                    actual_parcelle = next(
-                        (x for x in actual_culture.get("parcelles") if x.get("id") == expected_parcelle.id), None)
-                    self.assertIsNotNone(actual_parcelle)
-                    self.assertEqual(expected_parcelle.nom, actual_parcelle.get("nom"))
-                    self.assertEqual(expected_parcelle.superficie, actual_parcelle.get("superficie"))
-                    self.assertEqual(expected_parcelle.type_id, actual_parcelle.get("type").get("id"))
+            self.assertEqual(expected_tache.parcelles.count(), len(actual_tache.get("parcelles")))
+            self.assertEqual(expected_tache.cultures.count(), len(actual_tache.get("cultures")))
+            expected_response = {
+                "id": expected_tache.id,
+                "date": expected_tache.date.strftime("%d/%m/%Y"),
+                "activite": {
+                    "id": expected_tache.activite.id,
+                    "nom": expected_tache.activite.nom,
+                    "need_culture": expected_tache.activite.need_culture
+                },
+                "user": {
+                    "id": expected_tache.user.id,
+                    "email": "no_check",
+                    "first_name": "no_check",
+                    "last_name": "no_check",
+                },
+                "duree_minutes": expected_tache.duree_minutes,
+                "cultures": "no_check",
+                "commentaire": expected_tache.commentaire,
+                "parcelles": "no_check",
+                "quantite": expected_tache.quantite,
+                "unite": {
+                    "id": expected_tache.unite_id,
+                    "nom": expected_tache.unite.nom,
+                    "recolte_compatible": expected_tache.unite.recolte_compatible,
+                },
+                "nature": expected_tache.nature,
+                "fields_are_missing": "no_check",
+                "vocal_id": "no_check"
+            }
+            self.check_response(expected_response, actual_tache)
+            self._compare_parcelles(expected_tache.parcelles.all(), actual_tache.get("parcelles"))
+            self._compare_cultures(expected_tache.cultures.all(), actual_tache.get("cultures"))
+
+    def _compare_parcelles(self, expected_parcelles,  actual_parcelles):
+        for expected_parcelle in expected_parcelles:
+            actual_parcelle = next(
+                (x for x in actual_parcelles if x.get("id") == expected_parcelle.id), None)
+            self.assertIsNotNone(actual_parcelle)
+            expected_response_parcelle = {
+                "id": expected_parcelle.id,
+                "nom": expected_parcelle.nom,
+            }
+            self.check_response(expected_response_parcelle, actual_parcelle)
+
+    def _compare_cultures(self, expected_cultures,  actual_cultures):
+        for expected_culture in expected_cultures:
+            actual_culture = next(
+                (x for x in actual_cultures if x.get("culture").get("id") == expected_culture.culture.id), None)
+            self.assertIsNotNone(actual_culture)
+            expected_response_culture = {
+                "culture": {
+                    "id": expected_culture.culture.id,
+                    "nom": expected_culture.culture.nom
+                },
+                "parcelles": "no_check",
+                "quantite": expected_culture.quantite,
+                "unite": {
+                    "id": expected_culture.unite.id,
+                    "nom": expected_culture.unite.nom,
+                    "recolte_compatible": expected_culture.unite.recolte_compatible,
+                },
+                "nature": expected_culture.nature,
+            }
+            self.check_response(expected_response_culture, actual_culture)
+            self._compare_parcelles(expected_culture.parcelles.all(), actual_culture.get("parcelles"))
 
     def test_ok_get_one(self):
         responsable = self.init_current_user()

@@ -133,14 +133,10 @@ test_ok_simple_complet = {
             {
                 "id": "no_check",
                 "nom": "Tunnel 1",
-                "superficie": "no_check",
-                "type": "no_check",
             },
             {
                 "id": "no_check",
                 "nom": "Tunnel 2",
-                "superficie": "no_check",
-                "type": "no_check",
             }
         ],
         "quantite": 12.0,
@@ -228,14 +224,10 @@ test_ok_avec_cultures = {
                     {
                         "id": "no_check",
                         "nom": "Tunnel 1",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     },
                     {
                         "id": "no_check",
                         "nom": "Tunnel 3",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -255,8 +247,6 @@ test_ok_avec_cultures = {
                     {
                         "id": "no_check",
                         "nom": "Tunnel 2",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -371,14 +361,10 @@ test_ok_avec_cultures_complet = {
                     {
                         "id": "no_check",
                         "nom": "Tunnel 1",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     },
                     {
                         "id": "no_check",
                         "nom": "Tunnel 3",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     }
                 ],
                 "quantite": 12.0,
@@ -398,8 +384,6 @@ test_ok_avec_cultures_complet = {
                     {
                         "id": "no_check",
                         "nom": "Tunnel 2",
-                        "superficie": "no_check",
-                        "type": "no_check",
                     }
                 ],
                 "quantite": 52.3,
@@ -416,14 +400,10 @@ test_ok_avec_cultures_complet = {
             {
                 "id": "no_check",
                 "nom": "Tunnel 1",
-                "superficie": "no_check",
-                "type": "no_check",
             },
             {
                 "id": "no_check",
                 "nom": "Tunnel 2",
-                "superficie": "no_check",
-                "type": "no_check",
             }
         ],
         "quantite": 12.0,
