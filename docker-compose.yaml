@@ -17,10 +17,9 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
 
   api:
+    image: sebania/sebania:${SEBANIA_VERSION:-0.1.0}
     build: &build-sebania
       dockerfile: Dockerfile
-      tags:
-        - sebania-api:0.1.0
     container_name: sebania-api
     ports:
       - "8000:8000"
@@ -49,6 +48,7 @@ services:
       - whisper_models:/app/whisper/
 
   background-tasks:
+    image: sebania/sebania:${SEBANIA_VERSION:-0.1.0}
     build:
       <<: *build-sebania
     container_name: sebania-background-tasks
