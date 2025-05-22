@@ -24,32 +24,10 @@ services:
     container_name: sebania-api
     ports:
       - "8000:8000"
-    depends_on:
+    depends_on: &db-healthy
       db:
         condition: service_healthy
-    environment:
-      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-      DATABASE_HOST: db
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SMTP_PORT: ${SMTP_PORT}
-      DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
-      DROPBOX_SECRET: ${DROPBOX_SECRET}
-      DROPBOX_KEY: ${DROPBOX_KEY}
-    volumes:
-      - whisper_models:/app/whisper/
-
-  background-tasks:
-    build:
-      <<: *build-sebania
-    container_name: sebania-background-tasks
-    environment:
+    environment: &env-variables
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
       DATABASE_HOST: db
       DATABASE_PORT: ${DATABASE_PORT}
@@ -69,9 +47,17 @@ services:
       MISTRAL_API_KEY: ${MISTRAL_API_KEY}
     volumes:
       - whisper_models:/app/whisper/
+
+  background-tasks:
+    build:
+      <<: *build-sebania
+    container_name: sebania-background-tasks
+    environment:
+      <<: *env-variables
+    volumes:
+      - whisper_models:/app/whisper/
     depends_on:
-      db:
-        condition: service_healthy
+      <<: *db-healthy
     command: "python manage.py process_tasks"
 
   testcases:
@@ -86,8 +72,7 @@ services:
     volumes:
       - whisper_models:/app/whisper/
     depends_on:
-      db:
-        condition: service_healthy
+      <<: *db-healthy
     command: "python manage.py test --no-input"
 
 volumes:

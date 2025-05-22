@@ -22,10 +22,14 @@ RUN pip install --no-cache-dir -r requirements.txt
  
 # Stage 2: Production stage
 FROM python:3.12-slim
- 
+
 RUN useradd -m -r appuser && \
    mkdir /app && \
    chown -R appuser /app
+
+# Create directory to store Whisper models
+RUN mkdir /app/whisper/ && \
+   chown -R appuser /app/whisper/
  
 # Copy the Python dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
