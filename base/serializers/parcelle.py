@@ -18,11 +18,16 @@ class ParcelleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Parcelle
-        fields = ["id", "nom", "superficie", "type", "type_id"]
+        fields = ["id", "nom", "longueur", "largeur", "largeur_passe_pieds", "nombre_planches", "type", "type_id"]
 
-    def validate_superficie(self, value):
+    def validate_longueur(self, value):
         if value is not None and value <= 0:
-            raise CustomException(ErrorCode.PARCELLE_SUPERFICIE_INCORRECT)
+            raise CustomException(ErrorCode.PARCELLE_LONGUEUR_INCORRECT)
+        return value
+
+    def validate_largeur(self, value):
+        if value is not None and value <= 0:
+            raise CustomException(ErrorCode.PARCELLE_LARGEUR_INCORRECT)
         return value
 
     def validate_nom(self, value):

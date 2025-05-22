@@ -65,7 +65,7 @@ class SebaniaTestCase(APITransactionTestCase):
         self.assertEqual(response_data.get("code"), expected_error.name)
         self.assertEqual(response_data.get("message"), expected_error.value[0].format(*args, **kwargs))
 
-    def check_response(self, expected: dict, response, request: dict = None):
+    def check_response(self, expected: dict, response: dict, request: dict = None):
         """
         Vérifie que la réponse obtenue correspond bien aux données attendues (expected).
         Tous les attributs de la réponse sont contrôlés, si un attribut se trouve dans la réponse et n'est pas attendu dans expected, une erreur sera levée.

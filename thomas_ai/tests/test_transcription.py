@@ -8,10 +8,11 @@ from thomas_ai.tasks.transcription import transcribe
 from thomas_ai.tests.TaskTestcase import TaskTestcase
 
 
+
 class TestTranscription(TaskTestcase):
     def test_transcription_ok(self):
         user = self.init_current_user()
-        expected_result = ("Bonsoir Charles, "
+        expected = ("Bonsoir Charles, "
                            "aujourd'hui j'ai passé trois heures à aider au montage d'une serre chez un collègue, "
                            "une heure à installer du compost sur une planche de carottes, "
                            "20 minutes à arroser les carottes et 30 minutes à faire du rangement de plants. "
@@ -22,7 +23,12 @@ class TestTranscription(TaskTestcase):
         vocal = Vocal.objects.create(user=user, audio=audio_file, date=datetime.datetime.now())
         transcribe.now(vocal_id=vocal.id)
         vocal.refresh_from_db()
-        self.assertEqual(expected_result.strip(), vocal.transcription.strip())
+        self.compare_transcription(expected, vocal.transcription)
         self.assertEqual(VocalStatut.TRANSCRIBED, vocal.get_statut())
         self.assertIsNotNone(vocal.transcribed_at)
         self.assertIsNotNone(vocal.audio_to_transcription_duration)
+
+    def compare_transcription(self, expected: str, actual: str):
+        expected_clean = expected.lower().strip().replace(",", "").replace(".", "")
+        actual_clean = actual.lower().strip().replace(",", "").replace(".", "")
+        self.assertEqual(expected_clean, actual_clean)

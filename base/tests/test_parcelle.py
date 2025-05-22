@@ -7,6 +7,7 @@ from base.models import Parcelle, TypeParcelle, Ferme, User
 from sebania.tests import test_fixtures
 from sebania.tests.SebaniaTestCase import SebaniaTestCase
 from sebania.utils import crypto_utils
+from sebania.utils.db_utils import get_one_or_none
 
 
 def _get_url_detail(parcelle_id: int):
@@ -16,37 +17,8 @@ def _get_url_detail(parcelle_id: int):
 class TestParcelle(SebaniaTestCase):
     url_list = reverse_lazy('parcelles-list')
 
-    def _check_response(self, request, response, ferme: Ferme):
-        response_data = json.loads(response.content)
-        self.assertIsNotNone(response_data.get("id"))
-        self.assertEqual(response_data.get("nom"), request.get("nom"))
-        self.assertEqual(response_data.get("superficie"), request.get("superficie"))
-        if request.get("type_id") is not None:
-            self.assertEqual(response_data.get("type").get("id"), request.get("type_id"))
-            self.assertIsNotNone(response_data.get("type").get("nom"))
-        parcelle_id = response_data.get("id")
-        self._check_in_database(request, parcelle_id, ferme)
-
-    def _compare_instance_and_response(self, response):
-        response_data = json.loads(response.content)
-        instance = Parcelle.objects.get(id=response_data.get("id"))
-        self.assertEqual(response_data.get("id"), instance.id)
-        self.assertEqual(response_data.get("nom"), instance.nom)
-        self.assertEqual(response_data.get("superficie"), instance.superficie)
-        if instance.type is not None:
-            self.assertEqual(response_data.get("type").get("id"), instance.type.id)
-            self.assertEqual(response_data.get("type").get("nom"), instance.type.nom)
-
-    def _check_in_database(self, request, parcelle_id, ferme: Ferme):
-        parcelle = Parcelle.objects.get(id=parcelle_id)
-        if request.get("type_id") is not None:
-            type_parcelle = TypeParcelle.objects.get(id=request.get("type_id"))
-            self.assertEqual(parcelle.type, type_parcelle)
-        self.assertEqual(parcelle.nom, request.get("nom"))
-        self.assertEqual(parcelle.superficie, request.get("superficie"))
-        self.assertEqual(parcelle.ferme, ferme)
-
-    def _send_parcelle_and_check_response(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), superficie: float = 120.0, type_id: int = 1,
+    def _send_parcelle_and_check_response(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), longueur: float = 120.0,
+                                          largeur: float = 120.0, largeur_passe_pieds: float | None = 0.8, nb_planches: int | None = 8, type_id: int | None = 1,
                          user: User = None, ferme: Ferme = None,
                          expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -55,9 +27,37 @@ class TestParcelle(SebaniaTestCase):
             ferme = test_fixtures.create_ferme(responsable=user)
         request = {
             "nom": nom,
-            "superficie": superficie,
+            "longueur": longueur,
+            "largeur": largeur,
+            "largeur_passe_pieds": largeur_passe_pieds,
+            "nombre_planches": nb_planches,
             "type_id": type_id,
         }
+        expected_response = {
+            "id": "no_check",
+            "nom": nom,
+            "longueur": longueur,
+            "largeur": largeur,
+            "largeur_passe_pieds": largeur_passe_pieds,
+            "nombre_planches": nb_planches,
+            "type": "is_none"
+        }
+        expected_entity = {
+            "nom": nom,
+            "longueur": longueur,
+            "largeur": largeur,
+            "largeur_passe_pieds": largeur_passe_pieds,
+            "nombre_planches": nb_planches,
+            "type_id": type_id,
+            "ferme_id": ferme.id,
+        }
+        if type_id is not None:
+            type_parcelle = get_one_or_none(TypeParcelle, id=type_id)
+            if type_parcelle is not None:
+                expected_response["type"] = {
+                    "id": type_id,
+                    "nom": type_parcelle.nom
+                }
         # UPDATE
         if parcelle_id is not None:
             response = self.client.put(_get_url_detail(parcelle_id), request, headers=self.get_jwt_headers(), format='json')
@@ -66,9 +66,13 @@ class TestParcelle(SebaniaTestCase):
             response = self.client.post(self.url_list, request, headers=self.get_jwt_headers(), format='json')
         self.assertEqual(response.status_code, expected_status_code)
         if expected_status_code == status.HTTP_200_OK or expected_status_code == status.HTTP_201_CREATED:
-            self._check_response(request, response, ferme)
+            response_data = json.loads(response.content)
+            self.check_response(expected_response, response_data)
+            parcelle = Parcelle.objects.get(id=response_data.get("id"))
+            self.check_entity(expected_entity, parcelle)
 
-    def _update_parcelle(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), superficie: float = 120.0, type_id: int = 1,
+    def _update_parcelle(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), longueur: float = 120.0, largeur: float = 120.0,
+                         largeur_passe_pieds: float = 0.8, nb_planches: int = 8, type_id: int = 1,
                          user: User = None, ferme: Ferme = None,
                          expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -79,7 +83,7 @@ class TestParcelle(SebaniaTestCase):
             existing_parcelle = test_fixtures.create_parcelle(ferme)
             parcelle_id = existing_parcelle.id
         self._send_parcelle_and_check_response(expected_status_code=expected_status_code, parcelle_id=parcelle_id, ferme=ferme, user=user,
-                                               nom=nom, superficie=superficie, type_id=type_id)
+                                               nom=nom, longueur=longueur, largeur=largeur, largeur_passe_pieds=largeur_passe_pieds, nb_planches=nb_planches, type_id=type_id)
 
     def _delete_parcelle(self, parcelle_id: int = None, user: User = None, ferme: Ferme = None, expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -101,10 +105,28 @@ class TestParcelle(SebaniaTestCase):
         if parcelle_id is None:
             parcelle = test_fixtures.create_parcelle(ferme)
             parcelle_id = parcelle.id
+        else:
+            parcelle = get_one_or_none(Parcelle, id=parcelle_id)
+        if parcelle is not None:
+            expected_response = {
+                "id": parcelle_id,
+                "nom": parcelle.nom,
+                "longueur": parcelle.longueur,
+                "largeur": parcelle.largeur,
+                "largeur_passe_pieds": parcelle.largeur_passe_pieds,
+                "nombre_planches": parcelle.nombre_planches,
+                "type": "is_none"
+            }
+            if parcelle.type_id is not None:
+                expected_response["type"] = {
+                    "id": parcelle.type_id,
+                    "nom": parcelle.type.nom
+                }
         response = self.client.get(_get_url_detail(parcelle_id), headers=self.get_jwt_headers())
         self.assertEqual(expected_status_code, response.status_code)
         if expected_status_code == status.HTTP_200_OK:
-            self._compare_instance_and_response(response)
+            response_data = json.loads(response.content)
+            self.check_response(expected_response, response_data)
 
     def _create_parcelles(self, nb_parcelles):
         responsable = self.init_current_user()
@@ -118,12 +140,12 @@ class TestParcelle(SebaniaTestCase):
         response_data = json.loads(response.content)
         self.assertEqual(len(response_data), nb_parcelles)
 
-    def test_ok_create(self):
+    def test_ok_create_complet(self):
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED)
 
-    def test_ok_create_sans_type_superficie(self):
+    def test_ok_create_minimum(self):
         # On doit pouvoir créer une parcelle en donnant juste un nom
-        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, superficie=None, type_id=None)
+        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, largeur_passe_pieds=None, type_id=None, nb_planches=None)
 
     def test_ok_create_nom_already_exists_different_ferme(self):
         other_ferme = test_fixtures.create_ferme()
@@ -139,8 +161,11 @@ class TestParcelle(SebaniaTestCase):
         existing_parcelle = test_fixtures.create_parcelle(ferme)
         self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, nom=existing_parcelle.nom, ferme=ferme, user=responsable)
 
-    def test_nok_create_superficie_zero(self):
-        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, superficie=0)
+    def test_nok_create_longueur_zero(self):
+        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, longueur=0)
+
+    def test_nok_create_largeur_zero(self):
+        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_400_BAD_REQUEST, largeur=0)
 
     def test_ok_update(self):
         self._update_parcelle(expected_status_code=status.HTTP_200_OK)
@@ -162,8 +187,11 @@ class TestParcelle(SebaniaTestCase):
         existing_parcelle = test_fixtures.create_parcelle(ferme)
         self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, nom=existing_parcelle.nom, ferme=ferme, user=responsable)
 
-    def test_nok_update_superficie_zero(self):
-        self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, superficie=0)
+    def test_nok_update_longueur_zero(self):
+        self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, longueur=0)
+
+    def test_nok_update_largeur_zero(self):
+        self._update_parcelle(expected_status_code=status.HTTP_400_BAD_REQUEST, largeur=0)
 
     def test_ok_delete(self):
         self._delete_parcelle(expected_status_code=status.HTTP_204_NO_CONTENT)
