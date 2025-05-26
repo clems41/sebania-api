@@ -88,6 +88,12 @@ class ErrorCode(Enum):
     VOCAL_NOT_FOUND = "Le vocal id={} n'a pas été trouvé", status.HTTP_404_NOT_FOUND
 
     """
+    ERREURS LIEES AUX SUGGESTIONS
+    """
+    SUGGESTIONS_ACTIVITE_MISSING = "Le filtre 'activite_id' n'ets pas fourni", status.HTTP_400_BAD_REQUEST
+    SUGGESTIONS_CULTURE_MISSING = "Le filtre 'culture_id' n'ets pas fourni", status.HTTP_400_BAD_REQUEST
+
+    """
     ERREURS LIEES A L'IA
     """
     IA_OUTPUT_LEN_INCORRECTE = "{actual} sorties attendues pour l'analyse faite par CrewAI, mais seulement {expected} ont été trouvées", status.HTTP_500_INTERNAL_SERVER_ERROR

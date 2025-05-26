@@ -23,7 +23,7 @@ def create_parcelle(ferme: Ferme, nom: str | None = None, longueur: float=120, l
                                    nombre_planches=nombre_planches, type_id=type_id, ferme=ferme)
 
 def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,
-                 culture_ids = [3, 8], activite_id = 3, quantite=425.2, unite_id=4) -> Tache:
+                 culture_ids = [3, 8], activite_id = 3, quantite=425.2, unite_id=4, parcelle_ids = None) -> Tache:
     tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=activite_id, duree_minutes=duree_minutes,
                                  commentaire=crypto_utils.random_string(length=150), quantite=quantite,
                                  unite_id=unite_id, nature=crypto_utils.random_string(length=20))
@@ -31,13 +31,23 @@ def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datet
         culture = Culture.objects.get(id=culture_id)
         culture_tache = CultureTache.objects.create(culture=culture, quantite=quantite,
                                  unite_id=unite_id, nature=crypto_utils.random_string(length=20))
+        if parcelle_ids is not None:
+            for parcelle_id in parcelle_ids:
+                parcelle = Parcelle.objects.get(id=parcelle_id)
+                culture_tache.parcelles.add(parcelle)
+        else:
+            for _ in range(nb_parcelles):
+                parcelle = create_parcelle(ferme)
+                culture_tache.parcelles.add(parcelle)
+        tache.cultures.add(culture_tache)
+    if parcelle_ids is not None:
+        for parcelle_id in parcelle_ids:
+            parcelle = Parcelle.objects.get(id=parcelle_id)
+            tache.parcelles.add(parcelle)
+    else:
         for _ in range(nb_parcelles):
             parcelle = create_parcelle(ferme)
-            culture_tache.parcelles.add(parcelle)
-        tache.cultures.add(culture_tache)
-    for _ in range(nb_parcelles):
-        parcelle = create_parcelle(ferme)
-        tache.parcelles.add(parcelle)
+            tache.parcelles.add(parcelle)
     return tache
 
 def create_ferme(responsable: User = None, employes=None, nb_parcelles: int = 0) -> Ferme:
