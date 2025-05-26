@@ -14,7 +14,7 @@ test_ok_champs_manquants = {
         "activite": {
             "id": 5,
             "nom": "Paillage",
-            "need_culture": True
+            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -66,7 +66,7 @@ test_ok_simple = {
         "activite": {
             "id": 5,
             "nom": "Paillage",
-            "need_culture": True
+            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -118,7 +118,7 @@ test_ok_simple_complet = {
         "activite": {
             "id": 3,
             "nom": "Apport de MO (Amender)",
-            "need_culture": True
+            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -146,7 +146,7 @@ test_ok_simple_complet = {
             "recolte_compatible": False,
         },
         "nature": "Montagne",
-        "fields_are_missing": True,
+        "fields_are_missing": False,
         "vocal_id": "no_check"
     },
     "expected_entity": {
@@ -174,7 +174,7 @@ test_ok_simple_complet = {
 test_ok_avec_cultures = {
     "request": {
         "date": "04/04/2025",
-        "activite_id": 3,
+        "activite_id": 7,
         "user_id": None,
         "duree_minutes": 20,
         "cultures": [
@@ -203,9 +203,9 @@ test_ok_avec_cultures = {
         "id": "no_check",
         "date": "04/04/2025",
         "activite": {
-            "id": 3,
-            "nom": "Apport de MO (Amender)",
-            "need_culture": True
+            "id": 7,
+            "nom": "Semis direct",
+            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -268,7 +268,7 @@ test_ok_avec_cultures = {
     },
     "expected_entity": {
         "date": datetime.date(2025, 4, 4),
-        "activite_id": 3,
+        "activite_id": 7,
         "user_id": "{request}.user_id",
         "duree_minutes": 20,
         "cultures": [
@@ -342,7 +342,7 @@ test_ok_avec_cultures_complet = {
         "activite": {
             "id": 3,
             "nom": "Apport de MO (Amender)",
-            "need_culture": True
+            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",

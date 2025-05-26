@@ -409,7 +409,7 @@ class TestGetTache(SebaniaTestCase):
                 "activite": {
                     "id": expected_tache.activite.id,
                     "nom": expected_tache.activite.nom,
-                    "need_culture": expected_tache.activite.need_culture
+                    "niveau_complexite": expected_tache.activite.niveau_complexite
                 },
                 "user": {
                     "id": expected_tache.user.id,

@@ -10,7 +10,7 @@ from sebania.utils.db_utils import get_one_or_raise_exception
 class ActiviteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activite
-        fields = ['id', 'nom', 'need_culture']
+        fields = ['id', 'nom', 'niveau_complexite']
 
 class ActiviteFermeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='activite.id')

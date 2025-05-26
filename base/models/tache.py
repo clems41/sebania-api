@@ -28,18 +28,37 @@ class Tache(BaseModel):
     parcelles = models.ManyToManyField(Parcelle)
 
     def get_fields_are_missing(self) -> bool:
-        if not self.activite.need_culture:
-            return self.duree_minutes >= 0
-        elif self.cultures.count() == 0:
+        if self.duree_minutes <= 0:
             return True
-        else:
-            for culture_tache in self.cultures.all():
-                if self.activite_id == 17:
-                    if culture_tache.quantite == 0 or culture_tache.unite is None:
-                        # cas d'une récolte sans quantité ou sans unité pour au moins une des cultures : return True
-                        return True
-                else:
-                    if culture_tache.parcelles.count() == 0:
-                        # cas d'une saisie de culture sans préciser la parcelle : return True
-                        return True
-            return False
+        match self.activite.niveau_complexite:
+            case 1:
+                return False
+            case 2:
+                return self.quantite is None or self.quantite == 0
+            case 3:
+                return self.parcelles.count() == 0
+            case 4:
+                return self.quantite is None or self.quantite == 0 or self.parcelles.count() == 0
+            case 5:
+                return self.cultures.count() == 0
+            case 6:
+                return self.cultures.count() == 0 or self._quantite_is_missing_in_at_least_one_culture()
+            case 7:
+                return self.cultures.count() == 0 or self._parcelles_is_missing_in_at_least_one_culture()
+            case 8:
+                return (self.cultures.count() == 0 or self._quantite_is_missing_in_at_least_one_culture() or
+                        self._parcelles_is_missing_in_at_least_one_culture())
+            case _:
+                return False
+
+    def _quantite_is_missing_in_at_least_one_culture(self) -> bool:
+        for culture_tache in self.cultures.all():
+            if culture_tache.quantite is None or culture_tache.quantite == 0 or culture_tache.unite is None:
+                return True
+        return False
+
+    def _parcelles_is_missing_in_at_least_one_culture(self) -> bool:
+        for culture_tache in self.cultures.all():
+            if culture_tache.parcelles.count() == 0:
+                return True
+        return False
