@@ -1,9 +1,14 @@
-import datetime
 from enum import Enum
+
+from django.db import models
 
 from base.models import User
 from base.models.base import BaseModel
-from django.db import models
+
+
+class VocalOrigine(models.TextChoices):
+    TACHES = "taches"
+    PARCELLES = "parcelles"
 
 class VocalStatut(Enum):
     RECEIVED = "received"
@@ -34,6 +39,7 @@ class Vocal(BaseModel):
     parcelles_non_trouvees = models.TextField(null=True, blank=True)
     cultures_non_trouvees = models.TextField(null=True, blank=True)
     errors = models.TextField(blank=True, null=True)
+    origine = models.CharField(choices=VocalOrigine.choices)
 
     def get_statut(self):
         statut = VocalStatut.RECEIVED

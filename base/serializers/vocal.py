@@ -11,7 +11,7 @@ class VocalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vocal
-        fields = ["id", "statut", "created_at", "transcribed_at", "finished_at", "analyzed_at", "date"]
+        fields = ["id", "statut", "created_at", "transcribed_at", "finished_at", "analyzed_at", "date", "origine"]
 
 
     def to_representation(self, instance):
