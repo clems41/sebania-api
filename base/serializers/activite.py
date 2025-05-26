@@ -16,10 +16,10 @@ class ActiviteFermeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='activite.id')
     nom = serializers.CharField(source='activite.nom', read_only=True)
     mots_cles = serializers.CharField(source='activite.mots_cles', read_only=True)
-    need_culture = serializers.BooleanField(source='activite.need_culture', read_only=True)
+    niveau_complexite = serializers.IntegerField(source='activite.niveau_complexite', read_only=True)
     class Meta:
         model = ActiviteFerme
-        fields = ['id', 'nom', 'categorie', 'mots_cles', 'need_culture']
+        fields = ['id', 'nom', 'categorie', 'mots_cles', 'niveau_complexite']
 
     def validate_id(self, value):
         get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOT_FOUND, value), id=value)

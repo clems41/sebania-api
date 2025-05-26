@@ -3,64 +3,64 @@ import json
 
 # Données reformatées en dur, version complète
 activites_data = """
-ID	nom	default	categorie_default	need_culture	mots_cles
-1	Production de plant	true	production	true	semis,pépinière,jeunes,plants,rempotage,bouturage
-2	Travail du sol	true	production	true	préparation sol,labour,motoculteur,rotavateur,grelinette,Actisol,Canadien,tracteur,outil,engin
-3	Apport de MO (Amender)	true	production	true	compost,fumier,amendement,apport,mo,matière,organique,broyat,épandeur,tracteur,brouette,rateau
-4	Fertilisation	true	production	true	engrais,nutriments,sol,apport,granulé,NPK,azote,oligo,oligoéléments,lisier
-5	Paillage	true	production	true	paille,mulch,BRF,Broyat,couvrir
-6	Bâchage	true	production	true	bâche,occultation,désherbage,plastique,tissée,enterrer
-7	Semis direct	true	production	true	graines,ligne,plantation,volée,semoir,en place,monorang,multirang
-8	Plantation	true	production	true	plants,repiquage,cultures,implantation,motte,jeune plant,godets
-9	Gestion climatique	true	production	true	serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes,ouvrir
-10	Gestion des bioagresseurs	true	production	true	insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose
-11	Irrigation	true	production	true	arrosage,goutte,eau,tuyau,aspersion,planifier
-12	Désherbage	true	production	true	mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser
-13	Taille	true	production	true	élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage
-14	Palissage	true	production	true	ficelle,tuteur,support,dérouler
-15	Destruction de culture	true	production	true	arrachage,broyage,roulage,nettoyage,engrais,verts
-16	Suivi de culture	true	production	true	observation,croissance,planning,planification,tour du champ,tour,regarder,checker
-17	Récolte	true	production	true	cueillette,maturité,rendement,poids,caisse,retirer,bottes
-18	Nettoyage	true	production	true	outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre
-19	Livrer	true	commercialisation	true	transport,distribution,clients,camion,fourgon,livraison,apporter,donner
-20	Stockage	true	commercialisation	true	chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage
-21	Charger / Décharger	true	commercialisation	true	logistique,palettes,livraison,chercher
-22	Communication / Marketing	true	commercialisation	false	réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message
-23	Marché	true	commercialisation	true	stand,vente,dépot,préparer
-24	Vente directe	true	commercialisation	true	client,ferme,circuit,court,ferme,place,sur
-25	Panier AMAP	true	commercialisation	true	abonnement,distribution,consommateurs,commandes
-26	Gestion des stocks	true	commercialisation	true	inventaire,produits,suivi,logistique
-27	Préparation de commande	true	commercialisation	true	tri,pesée,conditionnement,cagettes,paniers,liste
-28	Comptabilité	true	administratif	false	bilan,facturation,gestion,impôts
-29	Administratif	true	administratif	false	papier,déclarations,dossiers,impôts
-30	Planifier	true	administratif	false	agenda,planning,tâches,planification,calendrier,rotation,assolement
-31	Veille	true	administratif	false	informations,réglementations,tendances
-32	Achat / Commande	true	administratif	true	fournisseurs,approvisionnement,matériel
-33	Ranger	true	général	false	outils,local,organisation,ordre,classer
-34	Accueil du public	true	général	false	visite,communication,pédagogie
-35	Réparer	true	général	false	bricolage,maintenance,outils
-36	Construire	true	général	false	bâtiment,abri,bricolage,serre,outils,aménagements
-37	Aménager	true	général	false	organisation,espace,infrastructure
-38	Entretenir	true	général	false	propreté,maintenance,suivi,tailler,élaguer
-39	Formation	true	général	false	apprentissage,stage,cours,études
-40	Accompagnement	true	général	false	pédagogie,conseil,suivi,aide
-41	Production de compost	true	général	false	déchets,fertilité,mo,matière,organique
-42	Gestion des intrants	true	général	false	engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles
-43	Réunions	true	général	false	équipe,planning,communication,discussions,rencontres
-44	Volailles	true	secondaire	false	poules,œufs,élevage,viande,oeufs
-45	Floriculture	true	secondaire	false	fleurs,décoration,culture,bouquet
-46	Brassiculture	true	secondaire	false	bière,brassage,fermentation
-47	Apiculture	true	secondaire	false	abeilles,miel,ruche
-48	Champignons	true	secondaire	false	myciculture,substrat,cave
-49	Boissons	true	secondaire	false	jus,sirop,fermentation,alccol
-50	Conserves	true	secondaire	false	transformation,bocaux,stérilisation
-51	Boulangerie	true	secondaire	false	pain,four,farine
-52	Verger	true	secondaire	false	arbres,fruits,taille
-53	Semences	true	secondaire	true	graines,reproduction,sélection,production
-54	Atelier pédagogique	true	secondaire	false	scolaire,animation,formation
-55	Auxiliaires de culture	true	secondaire	true	insectes,utiles,lutte,biologique,biodiversité
-56	Transformation	true	secondaire	true	atelier,produits,agroalimentaire,conserves
-57	Activités syndicales	true	secondaire	false	syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs
+ID	nom	default	categorie_default	mots_cles	niveau_complexite
+1	Production de plant	true	production	semis,pépinière,jeunes,plants,rempotage,bouturage	6
+2	Travail du sol	true	production	préparation sol,labour,motoculteur,rotavateur,grelinette,Actisol,Canadien,tracteur,outil,engin	3
+3	Apport de MO (Amender)	true	production	compost,fumier,amendement,apport,mo,matière,organique,broyat,épandeur,tracteur,brouette,rateau	4
+4	Fertilisation	true	production	engrais,nutriments,sol,apport,granulé,NPK,azote,oligo,oligoéléments,lisier	8
+5	Paillage	true	production	paille,mulch,BRF,Broyat,couvrir	8
+6	Bâchage	true	production	bâche,occultation,désherbage,plastique,tissée,enterrer	4
+7	Semis direct	true	production	graines,ligne,plantation,volée,semoir,en place,monorang,multirang	8
+8	Plantation	true	production	plants,repiquage,cultures,implantation,motte,jeune plant,godets	8
+9	Gestion climatique	true	production	serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes,ouvrir	3
+10	Gestion des bioagresseurs	true	production	insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose	8
+11	Irrigation	true	production	arrosage,goutte,eau,tuyau,aspersion,planifier	7
+12	Désherbage	true	production	mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser	7
+13	Taille	true	production	élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage	7
+14	Palissage	true	production	ficelle,tuteur,support,dérouler	7
+15	Destruction de culture	true	production	arrachage,broyage,roulage,nettoyage,engrais,verts	7
+16	Suivi de culture	true	production	observation,croissance,planning,planification,tour du champ,tour,regarder,checker	7
+17	Récolte	true	production	cueillette,maturité,rendement,poids,caisse,retirer,bottes	8
+18	Nettoyage	true	production	outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre	1
+19	Livrer	true	commercialisation	transport,distribution,clients,camion,fourgon,livraison,apporter,donner	6
+20	Stockage	true	commercialisation	chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage	6
+21	Charger / Décharger	true	commercialisation	logistique,palettes,livraison,chercher	6
+22	Communication / Marketing	true	commercialisation	réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message	1
+23	Marché	true	commercialisation	stand,vente,dépot,préparer	6
+24	Vente directe	true	commercialisation	client,ferme,circuit,court,ferme,place,sur	6
+25	Panier AMAP	true	commercialisation	abonnement,distribution,consommateurs,commandes	6
+26	Gestion des stocks	true	commercialisation	inventaire,produits,suivi,logistique	5
+27	Préparation de commande	true	commercialisation	tri,pesée,conditionnement,cagettes,paniers,liste	6
+28	Comptabilité	true	administratif	bilan,facturation,gestion,impôts	1
+29	Administratif	true	administratif	papier,déclarations,dossiers,impôts	1
+30	Planifier	true	administratif	agenda,planning,tâches,planification,calendrier,rotation,assolement	1
+31	Veille	true	administratif	informations,réglementations,tendances	1
+32	Achat / Commande	true	administratif	fournisseurs,approvisionnement,matériel	6
+33	Ranger	true	général	outils,local,organisation,ordre,classer	3
+34	Accueil du public	true	général	visite,communication,pédagogie	3
+35	Réparer	true	général	bricolage,maintenance,outils	3
+36	Construire	true	général	bâtiment,abri,bricolage,serre,outils,aménagements	3
+37	Aménager	true	général	organisation,espace,infrastructure	3
+38	Entretenir	true	général	propreté,maintenance,suivi,tailler,élaguer	3
+39	Formation	true	général	apprentissage,stage,cours,études	1
+40	Accompagnement	true	général	pédagogie,conseil,suivi,aide	5
+41	Production de compost	true	général	déchets,fertilité,mo,matière,organique	2
+42	Gestion des intrants	true	général	engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles	8
+43	Réunions	true	général	équipe,planning,communication,discussions,rencontres	1
+44	Volailles	true	secondaire	poules,œufs,élevage,viande,oeufs	1
+45	Floriculture	true	secondaire	fleurs,décoration,culture,bouquet	1
+46	Brassiculture	true	secondaire	bière,brassage,fermentation	1
+47	Apiculture	true	secondaire	abeilles,miel,ruche	1
+48	Champignons	true	secondaire	myciculture,substrat,cave	1
+49	Boissons	true	secondaire	jus,sirop,fermentation,alccol	1
+50	Conserves	true	secondaire	transformation,bocaux,stérilisation	1
+51	Boulangerie	true	secondaire	pain,four,farine	1
+52	Verger	true	secondaire	arbres,fruits,taille	1
+53	Semences	true	secondaire	graines,reproduction,sélection,production	6
+54	Atelier pédagogique	true	secondaire	scolaire,animation,formation	3
+55	Auxiliaires de culture	true	production	insectes,utiles,lutte,biologique,biodiversité	8
+56	Transformation	true	secondaire	atelier,produits,agroalimentaire,conserves	6
+57	Activités syndicales	true	secondaire	syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs	1
 """, "base.Activite", "activite_default.json"
 
 cultures_data = """
