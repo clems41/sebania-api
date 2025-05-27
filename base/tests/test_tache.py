@@ -408,8 +408,7 @@ class TestGetTache(SebaniaTestCase):
                 "date": expected_tache.date.strftime("%d/%m/%Y"),
                 "activite": {
                     "id": expected_tache.activite.id,
-                    "nom": expected_tache.activite.nom,
-                    "niveau_complexite": expected_tache.activite.niveau_complexite
+                    "nom": expected_tache.activite.nom
                 },
                 "user": {
                     "id": expected_tache.user.id,
@@ -424,8 +423,7 @@ class TestGetTache(SebaniaTestCase):
                 "quantite": expected_tache.quantite,
                 "unite": {
                     "id": expected_tache.unite_id,
-                    "nom": expected_tache.unite.nom,
-                    "recolte_compatible": expected_tache.unite.recolte_compatible,
+                    "nom": expected_tache.unite.nom
                 },
                 "nature": expected_tache.nature,
                 "fields_are_missing": "no_check",
@@ -461,7 +459,6 @@ class TestGetTache(SebaniaTestCase):
                 "unite": {
                     "id": expected_culture.unite.id,
                     "nom": expected_culture.unite.nom,
-                    "recolte_compatible": expected_culture.unite.recolte_compatible,
                 },
                 "nature": expected_culture.nature,
             }

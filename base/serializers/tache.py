@@ -1,9 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from base.models import Tache, Parcelle, User, Activite, Culture, Ferme, Unite
+from base.models import Tache, Parcelle, User, Activite, Culture, Ferme
 from base.models.tache import CultureTache
-from base.serializers.activite import ActiviteSerializer
+from base.models.unite import Unite
+from base.serializers.activite import ActiviteShortSerializer
 from base.serializers.culture import CultureSerializer
 from base.serializers.unite import UniteSerializer
 from base.serializers.user import UserSerializer
@@ -63,7 +64,7 @@ class CultureTacheSerializer(serializers.ModelSerializer):
 
 
 class TacheSerializer(serializers.ModelSerializer):
-    activite = ActiviteSerializer(read_only=True)
+    activite = ActiviteShortSerializer(read_only=True)
     activite_id = serializers.IntegerField(write_only=True)
     date = serializers.DateField(input_formats=['%d/%m/%Y'], format='%d/%m/%Y')
     user = UserSerializer(read_only=True)

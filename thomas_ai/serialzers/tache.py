@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from base.models import Tache, Activite, Culture, Parcelle, Unite
+from base.models import Tache, Activite, Culture, Parcelle
 from base.models.tache import CultureTache
+from base.models.unite import Unite
 from base.models.vocal import Vocal
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode

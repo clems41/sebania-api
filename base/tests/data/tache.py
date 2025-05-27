@@ -14,7 +14,6 @@ test_ok_champs_manquants = {
         "activite": {
             "id": 5,
             "nom": "Paillage",
-            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -66,7 +65,6 @@ test_ok_simple = {
         "activite": {
             "id": 5,
             "nom": "Paillage",
-            "niveau_complexite": "no_check"
         },
         "user": {
             "id": "{request}.user_id",
@@ -117,8 +115,7 @@ test_ok_simple_complet = {
         "date": "04/04/2025",
         "activite": {
             "id": 3,
-            "nom": "Apport de MO (Amender)",
-            "niveau_complexite": "no_check"
+            "nom": "Apport de MO (Amender)"
         },
         "user": {
             "id": "{request}.user_id",
@@ -143,7 +140,6 @@ test_ok_simple_complet = {
         "unite": {
             "id": 16,
             "nom": "brouettes",
-            "recolte_compatible": False,
         },
         "nature": "Montagne",
         "fields_are_missing": False,
@@ -204,8 +200,7 @@ test_ok_avec_cultures = {
         "date": "04/04/2025",
         "activite": {
             "id": 7,
-            "nom": "Semis direct",
-            "niveau_complexite": "no_check"
+            "nom": "Semis direct"
         },
         "user": {
             "id": "{request}.user_id",
@@ -234,7 +229,6 @@ test_ok_avec_cultures = {
                 "unite": {
                     "id": 16,
                     "nom": "brouettes",
-                    "recolte_compatible": False,
                 },
                 "nature": "Montagne",
             },
@@ -253,7 +247,6 @@ test_ok_avec_cultures = {
                 "unite": {
                     "id": 1,
                     "nom": "kg",
-                    "recolte_compatible": True,
                 },
                 "nature": "",
             }
@@ -341,8 +334,7 @@ test_ok_avec_cultures_complet = {
         "date": "04/04/2025",
         "activite": {
             "id": 3,
-            "nom": "Apport de MO (Amender)",
-            "niveau_complexite": "no_check"
+            "nom": "Apport de MO (Amender)"
         },
         "user": {
             "id": "{request}.user_id",
@@ -371,7 +363,6 @@ test_ok_avec_cultures_complet = {
                 "unite": {
                     "id": 16,
                     "nom": "brouettes",
-                    "recolte_compatible": False,
                 },
                 "nature": "Montagne",
             },
@@ -390,7 +381,6 @@ test_ok_avec_cultures_complet = {
                 "unite": {
                     "id": 1,
                     "nom": "kg",
-                    "recolte_compatible": True,
                 },
                 "nature": "",
             }
@@ -410,7 +400,6 @@ test_ok_avec_cultures_complet = {
         "unite": {
             "id": 16,
             "nom": "brouettes",
-            "recolte_compatible": False,
         },
         "nature": "Montagne",
         "fields_are_missing": False,

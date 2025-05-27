@@ -1,6 +1,5 @@
 import datetime
 import json
-from datetime import timedelta
 
 from django.urls import reverse_lazy
 from django.utils import timezone

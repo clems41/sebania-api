@@ -7,7 +7,14 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "semis,pépinière,jeunes,plants,rempotage,bouturage",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        4,
+        9,
+        10,
+        11,
+        13
+      ]
     }
   },
   {
@@ -18,7 +25,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "préparation sol,labour,motoculteur,rotavateur,grelinette,Actisol,Canadien,tracteur,outil,engin",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -29,7 +37,13 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "compost,fumier,amendement,apport,mo,matière,organique,broyat,épandeur,tracteur,brouette,rateau",
-      "niveau_complexite": "4"
+      "niveau_complexite": "4",
+      "unites": [
+        1,
+        16,
+        18,
+        19
+      ]
     }
   },
   {
@@ -40,7 +54,12 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "engrais,nutriments,sol,apport,granulé,NPK,azote,oligo,oligoéléments,lisier",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        1,
+        14,
+        16
+      ]
     }
   },
   {
@@ -51,7 +70,15 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "paille,mulch,BRF,Broyat,couvrir",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        1,
+        6,
+        7,
+        16,
+        18,
+        19
+      ]
     }
   },
   {
@@ -62,7 +89,10 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "bâche,occultation,désherbage,plastique,tissée,enterrer",
-      "niveau_complexite": "4"
+      "niveau_complexite": "4",
+      "unites": [
+        6
+      ]
     }
   },
   {
@@ -73,7 +103,10 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "graines,ligne,plantation,volée,semoir,en place,monorang,multirang",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        17
+      ]
     }
   },
   {
@@ -84,7 +117,10 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "plants,repiquage,cultures,implantation,motte,jeune plant,godets",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        17
+      ]
     }
   },
   {
@@ -95,7 +131,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "serre,température,ventilation,voilage,voile,thermique,ouvrant,moteur,portes,ouvrir",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -106,7 +143,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "insectes,maladies,traitements,phyto,sanitaire,lutte,filets,pulvériser,mélange,dose",
-      "niveau_complexite": "8"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -117,7 +155,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "arrosage,goutte,eau,tuyau,aspersion,planifier",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -128,7 +167,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "mauvaises,herbes,sarclage,binage,manuel,mechanique,pulvériser",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -139,7 +179,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "élagage,coupe,entretien,forme,égourmandage,effeuillage,étêtage",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -150,7 +191,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "ficelle,tuteur,support,dérouler",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -161,7 +203,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "arrachage,broyage,roulage,nettoyage,engrais,verts",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -172,7 +215,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "observation,croissance,planning,planification,tour du champ,tour,regarder,checker",
-      "niveau_complexite": "7"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -183,7 +227,14 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "cueillette,maturité,rendement,poids,caisse,retirer,bottes",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -194,7 +245,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "outils,matériel,hygiène,propreté,parer,parage,nettoyeuse,laver,lavage,station,lavabo,process,eau,passe à l'eau,enlever,terre",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -205,7 +257,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "transport,distribution,clients,camion,fourgon,livraison,apporter,donner",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -216,7 +275,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "chambre,froide,entrepôt,conservation,logistique,mise en caisse,emballage",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -227,7 +293,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "logistique,palettes,livraison,chercher",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -238,7 +311,8 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "réseaux,sociaux,clients,marketing,emails,courriers,presse,interview,radio,mail,mailling,list,whatsapp,message",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -249,7 +323,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "stand,vente,dépot,préparer",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -260,7 +341,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "client,ferme,circuit,court,ferme,place,sur",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -271,7 +359,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "abonnement,distribution,consommateurs,commandes",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -282,7 +377,8 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "inventaire,produits,suivi,logistique",
-      "niveau_complexite": "5"
+      "niveau_complexite": "5",
+      "unites": []
     }
   },
   {
@@ -293,7 +389,14 @@
       "default": true,
       "categorie_default": "commercialisation",
       "mots_cles": "tri,pesée,conditionnement,cagettes,paniers,liste",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        5,
+        12
+      ]
     }
   },
   {
@@ -304,7 +407,8 @@
       "default": true,
       "categorie_default": "administratif",
       "mots_cles": "bilan,facturation,gestion,impôts",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -315,7 +419,8 @@
       "default": true,
       "categorie_default": "administratif",
       "mots_cles": "papier,déclarations,dossiers,impôts",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -326,7 +431,8 @@
       "default": true,
       "categorie_default": "administratif",
       "mots_cles": "agenda,planning,tâches,planification,calendrier,rotation,assolement",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -337,7 +443,8 @@
       "default": true,
       "categorie_default": "administratif",
       "mots_cles": "informations,réglementations,tendances",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -348,7 +455,17 @@
       "default": true,
       "categorie_default": "administratif",
       "mots_cles": "fournisseurs,approvisionnement,matériel",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12,
+        14,
+        19
+      ]
     }
   },
   {
@@ -359,7 +476,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "outils,local,organisation,ordre,classer",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -370,7 +488,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "visite,communication,pédagogie",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -381,7 +500,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "bricolage,maintenance,outils",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -392,7 +512,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "bâtiment,abri,bricolage,serre,outils,aménagements",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -403,7 +524,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "organisation,espace,infrastructure",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -414,7 +536,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "propreté,maintenance,suivi,tailler,élaguer",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -425,7 +548,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "apprentissage,stage,cours,études",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -436,7 +560,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "pédagogie,conseil,suivi,aide",
-      "niveau_complexite": "5"
+      "niveau_complexite": "5",
+      "unites": []
     }
   },
   {
@@ -447,7 +572,12 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "déchets,fertilité,mo,matière,organique",
-      "niveau_complexite": "2"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        16,
+        19
+      ]
     }
   },
   {
@@ -458,7 +588,13 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "engrais,semences,stockage,mo,matière,organique,brf,essence,gasoil,phyto,produits,voiles",
-      "niveau_complexite": "8"
+      "niveau_complexite": "8",
+      "unites": [
+        1,
+        14,
+        16,
+        19
+      ]
     }
   },
   {
@@ -469,7 +605,8 @@
       "default": true,
       "categorie_default": "général",
       "mots_cles": "équipe,planning,communication,discussions,rencontres",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -480,7 +617,12 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "poules,œufs,élevage,viande,oeufs",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5
+      ]
     }
   },
   {
@@ -491,7 +633,8 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "fleurs,décoration,culture,bouquet",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   },
   {
@@ -502,7 +645,10 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "bière,brassage,fermentation",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        14
+      ]
     }
   },
   {
@@ -513,7 +659,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "abeilles,miel,ruche",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -524,7 +677,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "myciculture,substrat,cave",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -535,7 +695,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "jus,sirop,fermentation,alccol",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -546,7 +713,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "transformation,bocaux,stérilisation",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -557,7 +731,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "pain,four,farine",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -568,7 +749,14 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "arbres,fruits,taille",
-      "niveau_complexite": "1"
+      "niveau_complexite": "2",
+      "unites": [
+        1,
+        2,
+        5,
+        14,
+        19
+      ]
     }
   },
   {
@@ -579,7 +767,11 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "graines,reproduction,sélection,production",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        5
+      ]
     }
   },
   {
@@ -590,7 +782,8 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "scolaire,animation,formation",
-      "niveau_complexite": "3"
+      "niveau_complexite": "3",
+      "unites": []
     }
   },
   {
@@ -601,7 +794,8 @@
       "default": true,
       "categorie_default": "production",
       "mots_cles": "insectes,utiles,lutte,biologique,biodiversité",
-      "niveau_complexite": "8"
+      "niveau_complexite": "7",
+      "unites": []
     }
   },
   {
@@ -612,7 +806,17 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "atelier,produits,agroalimentaire,conserves",
-      "niveau_complexite": "6"
+      "niveau_complexite": "6",
+      "unites": [
+        1,
+        2,
+        5,
+        9,
+        10,
+        12,
+        14,
+        19
+      ]
     }
   },
   {
@@ -623,7 +827,8 @@
       "default": true,
       "categorie_default": "secondaire",
       "mots_cles": "syndicat,agriculture,droits,FNSEA,Conf,JA,Jeunes agriculteurs",
-      "niveau_complexite": "1"
+      "niveau_complexite": "1",
+      "unites": []
     }
   }
 ]

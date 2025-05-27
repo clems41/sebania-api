@@ -1,8 +1,8 @@
-from enum import Enum
-
 from django.db import models
 
 from base.models import Ferme
+from base.models.unite import Unite
+
 
 class Activite(models.Model):
     nom = models.CharField(max_length=120, unique=True)
@@ -10,6 +10,7 @@ class Activite(models.Model):
     categorie_default = models.CharField(max_length=30, null=True)
     mots_cles = models.TextField()
     niveau_complexite = models.IntegerField(default=1)
+    unites = models.ManyToManyField(Unite)
 
 class ActiviteFerme(models.Model):
     class Meta:
