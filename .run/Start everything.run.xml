@@ -9,6 +9,7 @@
             <option value="background-tasks" />
             <option value="api" />
             <option value="db" />
+            <option value="migrate-database" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />

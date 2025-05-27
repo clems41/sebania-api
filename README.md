@@ -75,7 +75,7 @@ Remplacez la valeur `<MISTRAL_API_KEY>` par la clé récupérée à la section [
 
 Démarrez l'API avec la base de données PostgreSQL :
 ```bash
-docker compose up db api background-tasks -d --pull always
+docker compose up db api background-tasks migrate-database -d --build
 ```
 
 Cela peut prendre quelques minutes lors de la première compilation de l'image Docker.
