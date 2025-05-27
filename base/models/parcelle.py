@@ -12,7 +12,7 @@ class Parcelle(BaseModel):
     nom = models.CharField(max_length=80)
     longueur = models.FloatField()
     largeur = models.FloatField()
-    largeur_passe_pieds = models.FloatField(null=True, blank=True)
+    largeur_planche = models.FloatField(null=True, blank=True)
     nombre_planches = models.IntegerField(null=True, blank=True)
     type = models.ForeignKey(TypeParcelle, on_delete=models.CASCADE, null=True)
     ferme = models.ForeignKey(Ferme, on_delete=models.CASCADE)

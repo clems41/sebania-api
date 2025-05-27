@@ -16,10 +16,10 @@ def create_user(email: str = None) -> User:
                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
 
 def create_parcelle(ferme: Ferme, nom: str | None = None, longueur: float=120, largeur: float=30,
-                    largeur_passe_pieds: float | None=0.8, nombre_planches: int | None=8, type_id: int | None=1) -> Parcelle:
+                    largeur_planche: float | None=0.8, nombre_planches: int | None=8, type_id: int | None=1) -> Parcelle:
     if nom is None:
         nom = crypto_utils.random_string()
-    return Parcelle.objects.create(nom=nom, longueur=longueur, largeur=largeur, largeur_passe_pieds=largeur_passe_pieds,
+    return Parcelle.objects.create(nom=nom, longueur=longueur, largeur=largeur, largeur_planche=largeur_planche,
                                    nombre_planches=nombre_planches, type_id=type_id, ferme=ferme)
 
 def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,

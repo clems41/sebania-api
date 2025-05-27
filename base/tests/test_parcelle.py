@@ -18,7 +18,7 @@ class TestParcelle(SebaniaTestCase):
     url_list = reverse_lazy('parcelles-list')
 
     def _send_parcelle_and_check_response(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), longueur: float = 120.0,
-                                          largeur: float = 120.0, largeur_passe_pieds: float | None = 0.8, nb_planches: int | None = 8, type_id: int | None = 1,
+                                          largeur: float = 120.0, largeur_planche: float | None = 0.8, nb_planches: int | None = 8, type_id: int | None = 1,
                          user: User = None, ferme: Ferme = None,
                          expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -29,7 +29,7 @@ class TestParcelle(SebaniaTestCase):
             "nom": nom,
             "longueur": longueur,
             "largeur": largeur,
-            "largeur_passe_pieds": largeur_passe_pieds,
+            "largeur_planche": largeur_planche,
             "nombre_planches": nb_planches,
             "type_id": type_id,
         }
@@ -38,7 +38,7 @@ class TestParcelle(SebaniaTestCase):
             "nom": nom,
             "longueur": longueur,
             "largeur": largeur,
-            "largeur_passe_pieds": largeur_passe_pieds,
+            "largeur_planche": largeur_planche,
             "nombre_planches": nb_planches,
             "type": "is_none"
         }
@@ -46,7 +46,7 @@ class TestParcelle(SebaniaTestCase):
             "nom": nom,
             "longueur": longueur,
             "largeur": largeur,
-            "largeur_passe_pieds": largeur_passe_pieds,
+            "largeur_planche": largeur_planche,
             "nombre_planches": nb_planches,
             "type_id": type_id,
             "ferme_id": ferme.id,
@@ -72,7 +72,7 @@ class TestParcelle(SebaniaTestCase):
             self.check_entity(expected_entity, parcelle)
 
     def _update_parcelle(self, parcelle_id: int  = None, nom: str = crypto_utils.random_string(), longueur: float = 120.0, largeur: float = 120.0,
-                         largeur_passe_pieds: float = 0.8, nb_planches: int = 8, type_id: int = 1,
+                         largeur_planche: float = 0.8, nb_planches: int = 8, type_id: int = 1,
                          user: User = None, ferme: Ferme = None,
                          expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -83,7 +83,7 @@ class TestParcelle(SebaniaTestCase):
             existing_parcelle = test_fixtures.create_parcelle(ferme)
             parcelle_id = existing_parcelle.id
         self._send_parcelle_and_check_response(expected_status_code=expected_status_code, parcelle_id=parcelle_id, ferme=ferme, user=user,
-                                               nom=nom, longueur=longueur, largeur=largeur, largeur_passe_pieds=largeur_passe_pieds, nb_planches=nb_planches, type_id=type_id)
+                                               nom=nom, longueur=longueur, largeur=largeur, largeur_planche=largeur_planche, nb_planches=nb_planches, type_id=type_id)
 
     def _delete_parcelle(self, parcelle_id: int = None, user: User = None, ferme: Ferme = None, expected_status_code: int = status.HTTP_200_OK):
         if user is None:
@@ -113,7 +113,7 @@ class TestParcelle(SebaniaTestCase):
                 "nom": parcelle.nom,
                 "longueur": parcelle.longueur,
                 "largeur": parcelle.largeur,
-                "largeur_passe_pieds": parcelle.largeur_passe_pieds,
+                "largeur_planche": parcelle.largeur_planche,
                 "nombre_planches": parcelle.nombre_planches,
                 "type": "is_none"
             }
@@ -145,7 +145,7 @@ class TestParcelle(SebaniaTestCase):
 
     def test_ok_create_minimum(self):
         # On doit pouvoir créer une parcelle en donnant juste un nom
-        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, largeur_passe_pieds=None, type_id=None, nb_planches=None)
+        self._send_parcelle_and_check_response(expected_status_code=status.HTTP_201_CREATED, largeur_planche=None, type_id=None, nb_planches=None)
 
     def test_ok_create_nom_already_exists_different_ferme(self):
         other_ferme = test_fixtures.create_ferme()

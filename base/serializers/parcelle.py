@@ -18,7 +18,7 @@ class ParcelleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Parcelle
-        fields = ["id", "nom", "longueur", "largeur", "largeur_passe_pieds", "nombre_planches", "type", "type_id"]
+        fields = ["id", "nom", "longueur", "largeur", "largeur_planche", "nombre_planches", "type", "type_id"]
 
     def validate_longueur(self, value):
         if value is not None and value <= 0:
