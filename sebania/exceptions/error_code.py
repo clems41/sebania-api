@@ -49,6 +49,8 @@ class ErrorCode(Enum):
     PARCELLE_LONGUEUR_INCORRECT = "La longueur doit être supérieure à 0", status.HTTP_400_BAD_REQUEST
     PARCELLE_LARGEUR_INCORRECT = "La largeur doit être supérieure à 0", status.HTTP_400_BAD_REQUEST
     PARCELLE_NOM_DEJA_EXISTANT = "Le nom={} de parcelle est déjà utilisée", status.HTTP_400_BAD_REQUEST
+    TYPE_PARCELLE_NOT_FOUND = "Le type parcelle id={} n'a pu être trouvée pour la ferme concernée", status.HTTP_404_NOT_FOUND
+    TYPE_PARCELLE_NOM_NOT_FOUND = "Le type parcelle nom={} n'a pu être trouvée pour la ferme concernée", status.HTTP_404_NOT_FOUND
     
     """
     ERREURS LIEES AUX ACTIVITES

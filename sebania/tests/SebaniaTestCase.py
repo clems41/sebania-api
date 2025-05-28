@@ -21,7 +21,9 @@ class SebaniaTestCase(APITransactionTestCase):
     def get_current_user_credentials(self):
         return self.current_user_credentials
 
-    def init_current_user(self, email = crypto_utils.random_email(), password = crypto_utils.generate_password()):
+    def init_current_user(self, email = None, password = crypto_utils.generate_password()):
+        if email is None:
+            email = crypto_utils.random_email()
         user = User.objects.create_user(email=email, password=password,
                                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
         self.assertIsNotNone(user)

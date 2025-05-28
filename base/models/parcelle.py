@@ -13,6 +13,7 @@ class Parcelle(BaseModel):
     longueur = models.FloatField(null=True)
     largeur = models.FloatField(null=True)
     superficie = models.FloatField(null=True)
+    superficie_cultivee = models.FloatField(null=True)
     largeur_planche = models.FloatField(null=True, blank=True)
     largeur_passe_pieds = models.FloatField(null=True, blank=True)
     nombre_planches = models.IntegerField(null=True, blank=True)
