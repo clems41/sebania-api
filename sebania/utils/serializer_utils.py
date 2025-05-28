@@ -10,3 +10,6 @@ def get_ferme_from_context(context):
 
 def is_not_zero(value):
     return value is not None and value != 0
+
+def is_zero(value):
+    return value is None or value == 0

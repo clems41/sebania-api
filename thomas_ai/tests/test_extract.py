@@ -628,7 +628,7 @@ class TestExtractParcelle(TaskTestcase):
                 "largeur_planche": 0,
                 "largeur_passe_pieds": 0,
                 "type_id": 4,
-                "superficie_cultivee": 0
+                "superficie_cultivee": None
             },
         ]
         self._run_testcase(output, expected_entities)
@@ -796,7 +796,7 @@ class TestExtractParcelle(TaskTestcase):
                 "largeur_planche": 0,
                 "largeur_passe_pieds": 0,
                 "type_id": 3,
-                "superficie_cultivee": 0
+                "superficie_cultivee": None
             },
         ]
         self._run_testcase(output, expected_entities)
@@ -852,7 +852,7 @@ class TestExtractParcelle(TaskTestcase):
                 "largeur_planche": 0,
                 "largeur_passe_pieds": 0,
                 "type_id": 5,
-                "superficie_cultivee": 0
+                "superficie_cultivee": None
             },
         ]
         self._run_testcase(output, expected_entities)
