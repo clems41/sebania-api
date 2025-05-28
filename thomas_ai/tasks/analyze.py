@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils import timezone
 from mistralai import Mistral
 
-from base.models.vocal import Vocal
+from base.models.vocal import Vocal, VocalOrigine
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils.db_utils import get_ferme_for_user
@@ -19,6 +19,8 @@ mistral_client = Mistral(api_key=mistral_api_key)
 def analyze(vocal_id: int):
     # Récupération du vocal sans l'audio qui a déjà été traité
     vocal = Vocal.objects.defer('audio').get(id=vocal_id)
+    if vocal.origine not in [VocalOrigine.TACHES, VocalOrigine.PARCELLES]:
+        raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE)
     start_time = datetime.now()
 
     # Récupération des parcelles de la ferme
@@ -26,16 +28,12 @@ def analyze(vocal_id: int):
     parcelles = ",".join([parcelle.nom for parcelle in ferme.parcelle_set.all()])
 
     # Analyse avec Mistral Agent
-    query = """
-    Transcription: {transcription}
-    Parcelles: {parcelles}
-    """.format(transcription=vocal.transcription, parcelles=parcelles)
     chat_response = mistral_client.agents.complete(
-        agent_id="ag:76bf0d16:20250515:untitled-agent:832efb79",
+        agent_id=_get_agent_id(vocal),
         messages=[
             {
                 "role": "user",
-                "content": query,
+                "content": _get_query(vocal, parcelles),
             },
         ],
     )
@@ -55,3 +53,17 @@ def analyze(vocal_id: int):
 
     # Envoi dans la queue suivante pour l'extraction des tâches à partir du JSON généré
     extract(vocal_id=vocal_id)
+
+def _get_agent_id(vocal: Vocal) -> str:
+    return settings.MISTRAL_AGENTS[vocal.origine]
+
+def _get_query(vocal: Vocal, parcelles) -> str:
+    if vocal.origine == VocalOrigine.PARCELLES:
+        return "{transcription}".format(transcription=vocal.transcription)
+    elif vocal.origine == VocalOrigine.TACHES:
+        return """
+        Transcription: {transcription}
+        Parcelles: {parcelles}
+        """.format(transcription=vocal.transcription, parcelles=parcelles)
+    else:
+        return ""

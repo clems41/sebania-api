@@ -79,7 +79,7 @@ class VocalViewSet(ModelViewSet):
             elif origine_str == 'taches':
                 origine = VocalOrigine.TACHES
             else:
-                raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE.format(",".join([origine.value for origine in VocalOrigine.values])))
+                raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE)
         if 'date' not in query_params and origine == VocalOrigine.TACHES:
             raise CustomException(ErrorCode.VOCAL_DATE_MANQUANTE)
         if origine == VocalOrigine.TACHES:
@@ -92,5 +92,5 @@ class VocalViewSet(ModelViewSet):
         elif origine == VocalOrigine.PARCELLES:
             vocaux = Vocal.objects.defer('audio').filter(user=request.user, finished_at__isnull=True, origine=origine)
         else:
-            raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE.format(",".join([origine.value for origine in VocalOrigine.values])))
+            raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE)
         return Response(VocalSerializer(vocaux, many=True).data, status=status.HTTP_200_OK)
