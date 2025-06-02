@@ -1,5 +1,7 @@
 from .base import *
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 DEBUG = True
 INSTALLED_APPS += [
     'debug_toolbar',
