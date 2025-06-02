@@ -6,6 +6,7 @@ dj-inmemorystorage==2.1.0
 Django==5.1.8
 django-background-tasks==1.2.8
 django-debug-toolbar==5.1.0
+django-cors-headers==4.7.0
 django-extensions==3.2.3
 django-filter==25.1
 django-storages==1.14.6
