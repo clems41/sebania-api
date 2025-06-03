@@ -26,6 +26,7 @@ class ErrorCode(Enum):
     USER_EMAIL_ALREADY_EXISTS = "Un utilisateur existe déjà avec l'adresse email {}", status.HTTP_409_CONFLICT
     USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE = "Les employés ne peuvent pas agir pour les responsables ou les autres employés", status.HTTP_403_FORBIDDEN
     USER_NOT_FOUND = "L'utilisateur id={} n'a pas pu être trouvé", status.HTTP_404_NOT_FOUND
+    USER_WITH_EMAIL_NOT_FOUND = "L'utilisateur avec l'email={} n'a pas pu être trouvé", status.HTTP_404_NOT_FOUND
     USER_OLD_PASSWORD_INCORRECT = "L'ancien mot de passe ne correspond pas", status.HTTP_403_FORBIDDEN
 
     """

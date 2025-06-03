@@ -8,6 +8,8 @@ from base.validators.user import validate_email
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils, crypto_utils
+from sebania.utils.db_utils import get_one_or_raise_exception
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField()
@@ -30,7 +32,8 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def reset_password(self):
         self.is_valid(raise_exception=True)
-        user = User.objects.get(email=self.data['email'])
+        email = self.data['email']
+        user = get_one_or_raise_exception(User, CustomException(ErrorCode.USER_WITH_EMAIL_NOT_FOUND, email), email=email)
         new_password = crypto_utils.generate_password()
         user.set_password(new_password)
         user.save()
