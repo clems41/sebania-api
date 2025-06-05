@@ -17,11 +17,13 @@ class UpdateFermeDetailsTestCase(SebaniaTestCase):
         new_adresse = crypto_utils.random_string()
         new_superficie = 3000
         new_methodes_agricoles = [1]
+        new_code_postal = 98800
         request = {
             "methodes_agricoles": new_methodes_agricoles,
             "nom": new_nom,
             "adresse": new_adresse,
             "superficie_cultivee": new_superficie,
+            "code_postal": new_code_postal,
         }
         response = self.client.put(self.url, request, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, expected_status_code)
@@ -32,8 +34,8 @@ class UpdateFermeDetailsTestCase(SebaniaTestCase):
             self.assertEqual(response_data.get('nom'), request.get('nom'))
             self.assertEqual(response_data.get('adresse'), request.get('adresse'))
             self.assertEqual(response_data.get('superficie'), request.get('superficie'))
-            self.assertEqual(len(response_data.get('methodes')), 1)
-            self.assertEqual(response_data.get('methodes')[0].get("id"), request.get("methodes_agricoles")[0])
+            self.assertEqual(len(response_data.get('methodes_agricoles')), 1)
+            self.assertEqual(response_data.get('methodes_agricoles')[0].get("id"), request.get("methodes_agricoles")[0])
 
     def test_ok_update_ferme_details(self):
         # Création du responsable et de la ferme et des employés

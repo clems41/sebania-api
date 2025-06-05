@@ -185,7 +185,7 @@ class AuthRegisterTestCase(SebaniaTestCase):
 
         # verification que les méthodes agricoles ont bien été
         methodes_ids = ferme_request_data.get('methodes_agricoles')
-        for methode in ferme.methodes.all():
+        for methode in ferme.methodes_agricoles.all():
             self.assertTrue(methode.id in methodes_ids)
 
         employes_data = ferme_request_data.get('employes')

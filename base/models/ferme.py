@@ -13,6 +13,6 @@ class Ferme(BaseModel):
     code_postal = models.CharField(null=True, blank=True)
     adresse = models.TextField(null=True, blank=True)
     superficie_cultivee = models.FloatField(null=True)
-    methodes = models.ManyToManyField(MethodeAgricole)
+    methodes_agricoles = models.ManyToManyField(MethodeAgricole)
     responsable = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='responsable')
     employes = models.ManyToManyField(User, related_name='employes')

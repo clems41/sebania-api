@@ -71,7 +71,7 @@ def create_ferme(responsable: User = None, employes=None, nb_parcelles: int = 0)
 
     # Ajout des méthodes
     methode = MethodeAgricole.objects.get(nom__iregex='biologique')
-    ferme.methodes.add(methode)
+    ferme.methodes_agricoles.add(methode)
 
     # Création des parcelles associées
     for _ in range(nb_parcelles):

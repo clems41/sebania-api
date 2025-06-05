@@ -77,18 +77,18 @@ class FermeSerializer(ModelSerializer):
 
         # Ajout des méthodes agricoles
         methodes_agricoles = MethodeAgricole.objects.filter(id__in=methodes_agricoles_ids)
-        ferme.methodes.set(methodes_agricoles)
+        ferme.methodes_agricoles.set(methodes_agricoles)
         _create_data(ferme)
         return ferme
 
 
 class FermeViewSerializer(ModelSerializer):
-    methodes = MethodeAgricoleSerializer(many=True)
+    methodes_agricoles = MethodeAgricoleSerializer(many=True)
     responsable = UserSerializer(read_only=True)
     employes = EmployeSerializer(many=True)
     class Meta:
         model = Ferme
-        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes", "code_postal"]
+        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes_agricoles", "code_postal"]
 
 
 class UpdateFermeSerializer(ModelSerializer):
@@ -97,4 +97,11 @@ class UpdateFermeSerializer(ModelSerializer):
     )
     class Meta:
         model = Ferme
-        fields = ["nom", "adresse", "superficie_cultivee", "methodes_agricoles"]
+        fields = ["nom", "adresse", "superficie_cultivee", "methodes_agricoles", "code_postal"]
+
+    def validate_code_postal(self, value):
+        if value is None:
+            return None
+        if len(value) != 5:
+            raise CustomException(ErrorCode.FERME_CODE_POSTAL_INCORRECT, value)
+        return value

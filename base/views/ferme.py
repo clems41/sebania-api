@@ -104,7 +104,8 @@ class FermeViewSet(ViewSet):
         ferme.nom = serializer.validated_data["nom"]
         ferme.adresse = serializer.validated_data["adresse"]
         ferme.superficie_cultivee = serializer.validated_data["superficie_cultivee"]
-        methodes = MethodeAgricole.objects.filter(id__in=serializer.validated_data["methodes_agricoles"])
-        ferme.methodes.set(methodes)
+        ferme.code_postal = serializer.validated_data["code_postal"]
+        methodes_agricoles = MethodeAgricole.objects.filter(id__in=serializer.validated_data["methodes_agricoles"])
+        ferme.methodes_agricoles.set(methodes_agricoles)
         ferme.save()
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)
