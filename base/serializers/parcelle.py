@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from base.models import Parcelle, TypeParcelle
+from base.models import Parcelle, TypeParcelle, Ferme
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import db_utils
@@ -37,26 +37,30 @@ class ParcelleSerializer(serializers.ModelSerializer):
             raise CustomException(ErrorCode.PARCELLE_LARGEUR_INCORRECT)
         return value
 
-    def validate_nom(self, value):
-        request = self.context.get("request")
-        ferme = get_ferme_from_request(request)
-        nb_parcelles_with_same_name = Parcelle.objects.filter(nom=value, ferme=ferme).count()
-        if nb_parcelles_with_same_name > 0:
-            raise CustomException(ErrorCode.PARCELLE_NOM_DEJA_EXISTANT, value)
-        return value
-
     def validate_type_id(self, value):
         db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.TYPE_PARCELLE_NOT_FOUND, value), id=value)
         return value
 
+    def check_if_nom_already_exists(self, nom: str, ferme: Ferme, existing_parcelle_id: int = None):
+        existing_parcelle_ids = []
+        if existing_parcelle_id is not None:
+            existing_parcelle_ids.append(existing_parcelle_id)
+        nb_parcelles_with_same_name = Parcelle.objects.filter(nom=nom, ferme=ferme).exclude(id__in=existing_parcelle_ids).count()
+        if nb_parcelles_with_same_name > 0:
+            raise CustomException(ErrorCode.PARCELLE_NOM_DEJA_EXISTANT, nom)
+
     def create(self, validated_data):
         request = self.context.get("request")
         ferme = get_ferme_from_request(request)
+        self.check_if_nom_already_exists(validated_data["nom"], ferme)
         parcelle = Parcelle.objects.create(ferme=ferme, **validated_data)
         parcelle.fill_empty_fields(all_fields=False)
         return parcelle
 
     def update(self, instance, validated_data):
+        request = self.context.get("request")
+        ferme = get_ferme_from_request(request)
+        self.check_if_nom_already_exists(validated_data["nom"], ferme, instance.id)
         super(ParcelleSerializer, self).update(instance, validated_data)
         instance.fill_empty_fields(all_fields=False)
         return instance

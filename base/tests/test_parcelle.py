@@ -251,6 +251,46 @@ class TestParcelle(SebaniaTestCase):
         }
         self._update_parcelle(request, expected_response, expected_entity, expected_status_code=status.HTTP_200_OK)
 
+    def test_ok_update_nom_inchange(self):
+        responsable = self.init_current_user()
+        ferme = test_fixtures.create_ferme(responsable=responsable)
+        existing_parcelle = test_fixtures.create_parcelle(ferme)
+        request = {
+            "nom": existing_parcelle.nom,
+            "longueur": 120,
+            "largeur": 30,
+            "largeur_planche": 0.8,
+            "nombre_planches": 30,
+            "type_id": 1,
+        }
+        expected_response = {
+            "id": "no_check",
+            "nom": existing_parcelle.nom,
+            "longueur": 120,
+            "largeur": 30,
+            "largeur_planche": 0.8,
+            "largeur_passe_pieds": 0.2,
+            "superficie": 3600,
+            "superficie_cultivee": 2880,
+            "nombre_planches": 30,
+            "type": {
+                "id": 1,
+                "nom": "Plein champ",
+            }
+        }
+        expected_entity = {
+            "nom": existing_parcelle.nom,
+            "longueur": 120,
+            "largeur": 30,
+            "largeur_planche": 0.8,
+            "largeur_passe_pieds": 0.2,
+            "superficie": 3600,
+            "superficie_cultivee": 2880,
+            "nombre_planches": 30,
+            "type_id": 1,
+        }
+        self._update_parcelle(request, expected_response, expected_entity, expected_status_code=status.HTTP_200_OK, parcelle_id=existing_parcelle.id)
+
     def test_ok_update_nom_already_exists_different_ferme(self):
         user = self.init_current_user()
         ferme = test_fixtures.create_ferme(responsable=user)
