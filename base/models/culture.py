@@ -11,6 +11,11 @@ class Culture(models.Model):
 class CultureFerme(models.Model):
     class Meta:
         db_table = "base_culture_ferme"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['culture', 'ferme'], name='unique_ferme_culture_combination'
+            )
+        ]
     culture = models.ForeignKey(Culture, on_delete=models.DO_NOTHING)
     ferme = models.ForeignKey(Ferme, on_delete=models.DO_NOTHING)
     categorie = models.CharField(max_length=30)

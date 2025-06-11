@@ -46,7 +46,8 @@ class FermeViewSet(ViewSet):
         db_utils.soft_delete_employe(user_id)
         return Response(FermeViewSerializer(ferme).data, status=status.HTTP_200_OK)
 
-    @extend_schema(description="Récupération/Modification de la liste des activités de la ferme avec regroupement par catégorie")
+    @extend_schema(description="Récupération/Modification de la liste des activités de la ferme avec regroupement par catégorie",
+                   responses=ActiviteFermeSerializer(many=True))
     @action(detail=False, methods=['get', 'put'], url_path='activites', serializer_class=UpdateActiviteFermeSerializer)
     def activites(self, request):
         ferme = db_utils.get_ferme_from_request(request)
@@ -56,16 +57,13 @@ class FermeViewSet(ViewSet):
                 raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
             serializer = self.serializer_class(data=request.data, context={"ferme": ferme})
             serializer.is_valid(raise_exception=True)
-            items = serializer.save()
-        elif request.method == 'GET':
-            items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("activite__nom")
-        data = {
-            "activites": items
-        }
-        serializer = self.serializer_class(data)
+            serializer.save()
+        items = ActiviteFerme.objects.filter(ferme=ferme).all().order_by("activite__nom")
+        serializer = ActiviteFermeSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @extend_schema(description="Récupération/Modification de la liste des cultures de la ferme avec regroupement par catégorie")
+    @extend_schema(description="Récupération/Modification de la liste des cultures de la ferme avec regroupement par catégorie",
+                   responses=CultureFermeSerializer(many=True))
     @action(detail=False, methods=['get', 'put'], url_path='cultures', serializer_class=UpdateCultureFermeSerializer)
     def cultures(self, request):
         ferme = db_utils.get_ferme_from_request(request)
@@ -75,13 +73,9 @@ class FermeViewSet(ViewSet):
                 raise CustomException(ErrorCode.USER_EMPLOYE_CANNOT_POST_FOR_RESPONSABLE)
             serializer = self.serializer_class(data=request.data, context={"ferme": ferme})
             serializer.is_valid(raise_exception=True)
-            items = serializer.save()
-        elif request.method == 'GET':
-            items = CultureFerme.objects.filter(ferme=ferme).all().order_by("culture__nom")
-        data = {
-            "cultures": items
-        }
-        serializer = self.serializer_class(data)
+            serializer.save()
+        items = CultureFerme.objects.filter(ferme=ferme).all().order_by("culture__nom")
+        serializer = CultureFermeSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(description="Récupération des informations concernant la ferme associée à l'utilisateur")

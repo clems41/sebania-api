@@ -20,23 +20,27 @@ class CultureFermeSerializer(serializers.ModelSerializer):
         fields = ['id', 'nom', 'categorie']
 
     def validate_id(self, value):
-        get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOT_FOUND, value), id=value)
         return value
 
 class UpdateCultureFermeSerializer(serializers.Serializer):
-    cultures = CultureFermeSerializer(many=True)
+    cultures = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    categorie = serializers.CharField()
 
     @transaction.atomic
     def create(self, validated_data):
         ferme = self.context.get('ferme')
+        categorie = validated_data.pop('categorie')
+        culture_ids = validated_data.pop('cultures')
         result = []
         # Cleanup old association
-        CultureFerme.objects.filter(ferme=ferme).delete()
+        CultureFerme.objects.filter(ferme=ferme, categorie=categorie).delete()
 
         # Create new association
-        for culture in validated_data.pop('cultures'):
-            culture_id = culture.pop('culture').pop('id')
-            categorie = culture.pop('categorie')
+        for culture_id in culture_ids:
+            get_one_or_raise_exception(Culture, CustomException(ErrorCode.CULTURE_NOT_FOUND, culture_id), id=culture_id)
+            CultureFerme.objects.filter(ferme=ferme, culture_id=culture_id).delete() # cleanup old association before
             culture_ferme = CultureFerme.objects.create(ferme=ferme, culture_id=culture_id, categorie=categorie)
             result.append(culture_ferme)
         return result

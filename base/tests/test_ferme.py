@@ -225,6 +225,7 @@ class FermeAddEmployeTestCase(SebaniaTestCase):
         response = self.client.post(self.url, request, headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+
 class ConfigurationFermeTestCase(SebaniaTestCase):
     url = None
     keyword = None
@@ -234,64 +235,22 @@ class ConfigurationFermeTestCase(SebaniaTestCase):
             responsable = self.init_current_user()
             test_fixtures.create_ferme(responsable)
         response = self.client.put(self.url, data=json.dumps(request),
-            content_type='application/json', headers=self.get_jwt_headers())
+                                   content_type='application/json', headers=self.get_jwt_headers())
         self.assertEqual(response.status_code, expected_status_code)
+        return response
 
     def _get_working_request(self):
         categorie1 = crypto_utils.random_string()
-        categorie2 = crypto_utils.random_string()
-        categorie3 = crypto_utils.random_string()
         return {
-            self.keyword: [
-                {
-                    "id": 1,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 5,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 8,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 12,
-                    "categorie": categorie2
-                },
-                {
-                    "id": 15,
-                    "categorie": categorie3
-                },
-            ]
+            "categorie": categorie1,
+            self.keyword: [5, 8, 12, 14]
         }
 
     def _get_second_request(self):
         categorie1 = crypto_utils.random_string()
-        categorie2 = crypto_utils.random_string()
         return {
-            self.keyword: [
-                {
-                    "id": 8,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 9,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 17,
-                    "categorie": categorie1
-                },
-                {
-                    "id": 13,
-                    "categorie": categorie2
-                },
-                {
-                    "id": 2,
-                    "categorie": categorie1
-                },
-            ]
+            "categorie": categorie1,
+            self.keyword: [8, 9, 17, 2]
         }
 
     def _get_data(self):
@@ -300,15 +259,11 @@ class ConfigurationFermeTestCase(SebaniaTestCase):
         return json.loads(response.content)
 
     def _check_data(self, request):
-        data = self._get_data()[self.keyword]
-        self.assertEqual(len(data), len(request[self.keyword]))
-        for expected_data in request[self.keyword]:
-            actual_data = next(actual_data for actual_data in data if actual_data['id'] == expected_data['id'])
-            self.assertIsNotNone(actual_data)
-            self.assertIsNotNone(actual_data['nom'])
-            self.assertEqual(actual_data['categorie'], expected_data['categorie'])
-            if self.keyword == "activites":
-                self.assertIsNotNone(actual_data['mots_cles'])
+        data = self._get_data()
+        expected_categorie = request['categorie']
+        for expected_item_id in request[self.keyword]:
+            actual_item = next(item for item in data if item.get("categorie") == expected_categorie and item.get("id") == expected_item_id)
+            self.assertIsNotNone(actual_item, "L'élément id={} n'a pas été trouvé en base".format(expected_item_id))
 
 
 class TestConfigurationActiviteFerme(ConfigurationFermeTestCase):
@@ -327,25 +282,51 @@ class TestConfigurationActiviteFerme(ConfigurationFermeTestCase):
         self._send_request(second_request)
         self._check_data(second_request)
 
-    def test_activites_nok_activite_not_found(self):
+    def test_activites_ok_culture_id_duplicate(self):
         request = {
-            "activites": [
-                {
-                    "id": 999,
-                    "categorie": crypto_utils.random_string()
-                }
-            ]
+            "activites": [5],
+            "categorie": crypto_utils.random_string()
+        }
+        self._send_request(request)
+
+    def test_activites_ok_2updates_same_categorie(self):
+        request1 = {
+            "categorie": "categorie1",
+            "activites": [5, 8, 9, 12],
+        }
+        self._send_request(request1)
+        request2 = {
+            "categorie": "categorie1",
+            "activites": [8, 13, 20],
+        }
+        self._send_request(request2)
+        self._check_data(request2)
+
+    def test_activites_ok_2updates_different_categorie(self):
+        request1 = {
+            "categorie": "categorie1",
+            "activites": [5, 8, 9, 12],
+        }
+        self._send_request(request1)
+        request2 = {
+            "categorie": "categorie2",
+            "activites": [8, 13, 20],
+        }
+        self._send_request(request2)
+        data = self._get_data()
+        self.assertEqual(len(data), 6) # 6 different item with only 2 categories
+
+    def test_activites_nok_culture_not_found(self):
+        request = {
+            "activites": [999],
+            "categorie": crypto_utils.random_string()
         }
         self._send_request(request, expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_activites_nok_categorie_empty(self):
         request = {
-            "activites": [
-                {
-                    "id": 12,
-                    "categorie": ""
-                }
-            ]
+            "activites": [12],
+            "categorie": ""
         }
         self._send_request(request, expected_status_code=status.HTTP_400_BAD_REQUEST)
 
@@ -372,25 +353,51 @@ class TestConfigurationCultureFerme(ConfigurationFermeTestCase):
         self._send_request(second_request)
         self._check_data(second_request)
 
+    def test_cultures_ok_culture_id_duplicate(self):
+        request = {
+            "cultures": [5, 5],
+            "categorie": crypto_utils.random_string()
+        }
+        self._send_request(request)
+
+    def test_cultures_ok_2updates_same_categorie(self):
+        request1 = {
+            "categorie": "categorie1",
+            "cultures": [5, 8, 9, 12],
+        }
+        self._send_request(request1)
+        request2 = {
+            "categorie": "categorie1",
+            "cultures": [8, 13, 20],
+        }
+        self._send_request(request2)
+        self._check_data(request2)
+
+    def test_cultures_ok_2updates_different_categorie(self):
+        request1 = {
+            "categorie": "categorie1",
+            "cultures": [5, 8, 9, 12],
+        }
+        self._send_request(request1)
+        request2 = {
+            "categorie": "categorie2",
+            "cultures": [8, 13, 20],
+        }
+        self._send_request(request2)
+        data = self._get_data()
+        self.assertEqual(len(data), 6) # 6 different item with only 2 categories
+
     def test_cultures_nok_culture_not_found(self):
         request = {
-            "cultures": [
-                {
-                    "id": 999,
-                    "categorie": crypto_utils.random_string()
-                }
-            ]
+            "cultures": [999],
+            "categorie": crypto_utils.random_string()
         }
         self._send_request(request, expected_status_code=status.HTTP_404_NOT_FOUND)
 
     def test_cultures_nok_categorie_empty(self):
         request = {
-            "cultures": [
-                {
-                    "id": 12,
-                    "categorie": ""
-                }
-            ]
+            "cultures": [12],
+            "categorie": ""
         }
         self._send_request(request, expected_status_code=status.HTTP_400_BAD_REQUEST)
 

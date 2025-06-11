@@ -24,6 +24,7 @@ class ErrorResponse(Response):
         }
         if settings.DEBUG:
             data["traceback"] = traceback.format_exc()
+            logger.warning("Error occurred with custom exception: %s", custom_exception)
         super().__init__(data=data, status=custom_exception.status_code)
 
 

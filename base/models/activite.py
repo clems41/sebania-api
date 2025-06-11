@@ -15,6 +15,11 @@ class Activite(models.Model):
 class ActiviteFerme(models.Model):
     class Meta:
         db_table = "base_activite_ferme"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['activite', 'ferme'], name='unique_ferme_activite_combination'
+            )
+        ]
     activite = models.ForeignKey(Activite, on_delete=models.DO_NOTHING)
     ferme = models.ForeignKey(Ferme, on_delete=models.DO_NOTHING)
     categorie = models.CharField(max_length=30)

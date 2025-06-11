@@ -29,24 +29,25 @@ class ActiviteFermeSerializer(serializers.ModelSerializer):
         model = ActiviteFerme
         fields = ['id', 'nom', 'categorie', 'mots_cles', 'niveau_complexite', 'unites']
 
-    def validate_id(self, value):
-        get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOT_FOUND, value), id=value)
-        return value
-
 class UpdateActiviteFermeSerializer(serializers.Serializer):
-    activites = ActiviteFermeSerializer(many=True)
+    activites = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    categorie = serializers.CharField()
 
     @transaction.atomic
     def create(self, validated_data):
         ferme = self.context.get('ferme')
+        categorie = validated_data.pop('categorie')
+        activite_ids = validated_data.pop('activites')
         result = []
         # Cleanup old association
-        ActiviteFerme.objects.filter(ferme=ferme).delete()
+        ActiviteFerme.objects.filter(ferme=ferme, categorie=categorie).delete()
 
         # Create new association
-        for activite in validated_data.pop('activites'):
-            activite_id = activite.pop('activite').pop('id')
-            categorie = activite.pop('categorie')
+        for activite_id in activite_ids:
+            get_one_or_raise_exception(Activite, CustomException(ErrorCode.ACTIVITE_NOT_FOUND, activite_id), id=activite_id)
+            ActiviteFerme.objects.filter(ferme=ferme, activite_id=activite_id).delete() # cleanup old association before
             activite_ferme = ActiviteFerme.objects.create(ferme=ferme, activite_id=activite_id, categorie=categorie)
             result.append(activite_ferme)
         return result
