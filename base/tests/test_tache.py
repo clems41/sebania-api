@@ -415,6 +415,7 @@ class TestGetTache(SebaniaTestCase):
                     "email": "no_check",
                     "first_name": "no_check",
                     "last_name": "no_check",
+                    "roles": "no_check",
                 },
                 "duree_minutes": expected_tache.duree_minutes,
                 "cultures": "no_check",
