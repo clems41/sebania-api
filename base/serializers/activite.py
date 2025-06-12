@@ -12,7 +12,7 @@ class ActiviteSerializer(serializers.ModelSerializer):
     unites = UniteSerializer(many=True, read_only=True)
     class Meta:
         model = Activite
-        fields = ['id', 'nom', 'niveau_complexite', 'unites']
+        fields = ['id', 'nom', 'niveau_complexite', 'unites', 'mots_cles']
 
 class ActiviteShortSerializer(serializers.ModelSerializer):
     class Meta:
