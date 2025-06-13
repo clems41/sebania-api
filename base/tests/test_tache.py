@@ -408,7 +408,9 @@ class TestGetTache(SebaniaTestCase):
                 "date": expected_tache.date.strftime("%d/%m/%Y"),
                 "activite": {
                     "id": expected_tache.activite.id,
-                    "nom": expected_tache.activite.nom
+                    "nom": expected_tache.activite.nom,
+                    "niveau_complexite": expected_tache.activite.niveau_complexite,
+                    "unites": "no_check"
                 },
                 "user": {
                     "id": expected_tache.user.id,

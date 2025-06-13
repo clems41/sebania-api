@@ -15,9 +15,10 @@ class ActiviteSerializer(serializers.ModelSerializer):
         fields = ['id', 'nom', 'niveau_complexite', 'unites', 'mots_cles']
 
 class ActiviteShortSerializer(serializers.ModelSerializer):
+    unites = UniteSerializer(many=True, read_only=True)
     class Meta:
         model = Activite
-        fields = ['id', 'nom']
+        fields = ['id', 'nom', 'niveau_complexite', 'unites']
 
 class ActiviteFermeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='activite.id')
