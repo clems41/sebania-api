@@ -24,7 +24,7 @@ class CultureTache(models.Model):
             case 7:
                 return self.parcelles is None or self.parcelles.count() == 0
             case 8:
-                return (self.quantite is None or self.quantite == 0) & (
+                return (self.quantite is None or self.quantite == 0) or (
                         self.parcelles is None or self.parcelles.count() == 0
                 )
             case _:

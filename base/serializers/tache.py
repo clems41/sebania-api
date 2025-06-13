@@ -116,10 +116,10 @@ class TacheSerializer(serializers.ModelSerializer):
         return value
 
     def _add_cultures(self, cultures, instance: Tache, ferme: Ferme):
-        # Cleanup old cultures
-        instance.cultures.all().delete()
         # Create new ones
         if cultures is not None:
+            # Cleanup old cultures
+            instance.cultures.all().delete()
             for culture in cultures:
                 serializer = CultureTacheSerializer(data=culture, context={"ferme": ferme})
                 serializer.is_valid(raise_exception=True)
@@ -127,10 +127,10 @@ class TacheSerializer(serializers.ModelSerializer):
                 instance.cultures.add(culture_tache)
 
     def _add_parcelles(self, parcelle_ids, instance: Tache, ferme: Ferme):
-        # Cleanup old parcelles
-        instance.parcelles.clear()
         # Create new ones
         if parcelle_ids is not None:
+            # Cleanup old parcelles
+            instance.parcelles.clear()
             for parcelle_id in parcelle_ids:
                 parcelle = get_one_or_raise_exception(Parcelle, CustomException(ErrorCode.PARCELLE_NOT_FOUND, parcelle_id), id=parcelle_id, ferme=ferme)
                 instance.parcelles.add(parcelle)
@@ -138,8 +138,8 @@ class TacheSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def _create_or_update(self, instance, validated_data):
         ferme = serializer_utils.get_ferme_from_context(self.context)
-        cultures = validated_data.pop("cultures")
-        parcelle_ids = validated_data.pop("parcelle_ids")
+        cultures = validated_data.pop("cultures", None)
+        parcelle_ids = validated_data.pop("parcelle_ids", None)
         validated_data["ferme_id"] = ferme.id
         if instance is None:
             instance = super(TacheSerializer, self).create(validated_data)
