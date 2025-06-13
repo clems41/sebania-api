@@ -432,7 +432,7 @@ class TestGetTache(SebaniaTestCase):
             }
             self.check_response(expected_response, actual_tache)
             self._compare_parcelles(expected_tache.parcelles.all(), actual_tache.get("parcelles"))
-            self._compare_cultures(expected_tache.cultures.all(), actual_tache.get("cultures"))
+            self._compare_cultures(expected_tache.cultures.all(), actual_tache.get("cultures"), expected_tache.activite.niveau_complexite)
 
     def _compare_parcelles(self, expected_parcelles,  actual_parcelles):
         for expected_parcelle in expected_parcelles:
@@ -445,7 +445,7 @@ class TestGetTache(SebaniaTestCase):
             }
             self.check_response(expected_response_parcelle, actual_parcelle)
 
-    def _compare_cultures(self, expected_cultures,  actual_cultures):
+    def _compare_cultures(self, expected_cultures,  actual_cultures, niveau_complexite: int):
         for expected_culture in expected_cultures:
             actual_culture = next(
                 (x for x in actual_cultures if x.get("culture").get("id") == expected_culture.culture.id), None)
@@ -462,6 +462,7 @@ class TestGetTache(SebaniaTestCase):
                     "nom": expected_culture.unite.nom,
                 },
                 "nature": expected_culture.nature,
+                "fields_are_missing": expected_culture.get_fields_are_missing(niveau_complexite),
             }
             self.check_response(expected_response_culture, actual_culture)
             self._compare_parcelles(expected_culture.parcelles.all(), actual_culture.get("parcelles"))

@@ -235,6 +235,7 @@ test_ok_avec_cultures = {
                     "nom": "brouettes",
                 },
                 "nature": "Montagne",
+                "fields_are_missing": False,
             },
             {
                 "culture": {
@@ -253,6 +254,7 @@ test_ok_avec_cultures = {
                     "nom": "kg",
                 },
                 "nature": "",
+                "fields_are_missing": False,
             }
         ],
         "commentaire": "Mon petit commentaire éàô",
@@ -370,6 +372,7 @@ test_ok_avec_cultures_complet = {
                     "nom": "brouettes",
                 },
                 "nature": "Montagne",
+                "fields_are_missing": False,
             },
             {
                 "culture": {
@@ -388,6 +391,7 @@ test_ok_avec_cultures_complet = {
                     "nom": "kg",
                 },
                 "nature": "",
+                "fields_are_missing": False,
             }
         ],
         "commentaire": "Mon petit commentaire éàô",

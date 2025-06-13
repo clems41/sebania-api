@@ -29,10 +29,11 @@ class CultureTacheSerializer(serializers.ModelSerializer):
     nature = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     unite_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
     unite = UniteSerializer(read_only=True)
+    fields_are_missing = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = CultureTache
-        fields = ["culture", "culture_id", "parcelles", "parcelle_ids", "quantite", "nature", "unite", "unite_id"]
+        fields = ["culture", "culture_id", "parcelles", "parcelle_ids", "quantite", "nature", "unite", "unite_id", "fields_are_missing"]
 
     def validate_culture_id(self, value):
         if value is not None:
@@ -90,6 +91,8 @@ class TacheSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: Tache):
         representation = super().to_representation(instance)
         representation["fields_are_missing"] = instance.get_fields_are_missing()
+        for culture_tache_idx, culture_tache in enumerate(representation["cultures"]):
+            culture_tache["fields_are_missing"] = instance.cultures.all()[culture_tache_idx].get_fields_are_missing(instance.activite.niveau_complexite)
         return representation
 
     def validate_activite_id(self, value):

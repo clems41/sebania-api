@@ -13,6 +13,24 @@ class CultureTache(models.Model):
     nature = models.TextField(null=True, blank=True)
     parcelles = models.ManyToManyField(Parcelle)
 
+    def get_fields_are_missing(self, niveau_complexite: int) -> bool:
+        if self.culture.id is None:
+            return True
+        match niveau_complexite:
+            case 1, 2, 3, 4, 5:
+                return False
+            case 6:
+                return self.quantite is None or self.quantite == 0
+            case 7:
+                return self.parcelles is None or self.parcelles.count() == 0
+            case 8:
+                return (self.quantite is None or self.quantite == 0) & (
+                        self.parcelles is None or self.parcelles.count() == 0
+                )
+            case _:
+                return False
+
+
 class Tache(BaseModel):
     ferme = models.ForeignKey(Ferme, on_delete=models.CASCADE)
     activite = models.ForeignKey(Activite, on_delete=models.CASCADE)
