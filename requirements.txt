@@ -29,7 +29,6 @@ ply==3.11
 psycopg2-binary==2.9.10
 PyJWT==2.9.0
 pytest==8.3.5
-python-memcached==1.62
 pytz==2025.2
 PyYAML==6.0.2
 referencing==0.36.2
