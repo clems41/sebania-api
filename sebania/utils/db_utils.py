@@ -25,20 +25,26 @@ def user_is_responsable(user_id : int):
 def user_is_employe(user_id : int):
     return Group.objects.get(name='EMPLOYE').user_set.filter(id=user_id).exists()
 
-def get_ferme_for_user(request) -> Ferme:
+def get_ferme_from_request(request) -> Ferme:
     """
     Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
     """
     if request.user is None or not request.user.is_authenticated:
-        raise CustomException(ErrorCode.AUTH_USER_MUST_BE_AUTHENTICATED)
-    if user_is_responsable(request.user.id):
-        return Ferme.objects.get(responsable=request.user)
-    elif user_is_employe(request.user.id):
-        return Ferme.objects.get(employes__id=request.user.id)
-    else:
-        raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, request.user.id)
+        raise CustomException(ErrorCode.USER_MUST_BE_AUTHENTICATED)
+    return get_ferme_for_user(request.user.id)
 
-def get_one_or_raise_exception(queryset, exception: CustomException, *filter_args, **filter_kwargs):
+def get_ferme_for_user(user_id: int) -> Ferme:
+    """
+    Retourne la ferme associée à l'utilisateur, qu'il soit responsable ou employés
+    """
+    if user_is_responsable(user_id):
+        return Ferme.objects.get(responsable_id=user_id)
+    elif user_is_employe(user_id):
+        return Ferme.objects.get(employes__id=user_id)
+    else:
+        raise CustomException(ErrorCode.FERME_NOT_FOUND_FOR_USER, user_id)
+
+def get_one_or_raise_exception(queryset, exception: CustomException, defer_fields: list = None, *filter_args, **filter_kwargs):
     """
     Retourne l'instance de l'objet demandé si elle existe, sinon lève une exception
     """
@@ -50,9 +56,26 @@ def get_one_or_raise_exception(queryset, exception: CustomException, *filter_arg
         )
         raise CustomException(ErrorCode.GLOBAL_WRONG_ARG, method="get_one_or_raise_exception", actual=klass__name, must_be="Model, Manager or QuerySet")
     try:
+        if defer_fields:
+            queryset = queryset.defer(*defer_fields)
         return queryset.get(*filter_args, **filter_kwargs)
     except queryset.model.DoesNotExist:
         raise exception
 
-
-
+def get_one_or_none(queryset, defer_fields: list = None, *filter_args, **filter_kwargs):
+    """
+    Retourne l'instance de l'objet demandé si elle existe, sinon None
+    """
+    if hasattr(queryset, "_default_manager"):
+        queryset = queryset._default_manager.all()
+    if not hasattr(queryset, "get"):
+        klass__name = (
+            queryset.__name__ if isinstance(queryset, type) else queryset.__class__.__name__
+        )
+        raise CustomException(ErrorCode.GLOBAL_WRONG_ARG, method="get_one_or_none", actual=klass__name, must_be="Model, Manager or QuerySet")
+    try:
+        if defer_fields:
+            queryset = queryset.defer(*defer_fields)
+        return queryset.get(*filter_args, **filter_kwargs)
+    except queryset.model.DoesNotExist:
+        return None

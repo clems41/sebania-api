@@ -1,0 +1,9 @@
+build:
+  docker:
+    api: Dockerfile
+    migrate-database: Dockerfile
+    background-tasks: Dockerfile
+run:
+  api: gunicorn --bind 0.0.0.0:8000 --workers 3 sebania.wsgi:application
+  migrate-database: bash -c "python manage.py migrate && python manage.py loaddata activite_default culture_default type_parcelle unite auth_group methode_agricole"
+  background-tasks: python manage.py process_tasks

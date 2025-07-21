@@ -15,6 +15,16 @@ EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = ""
 EMAIL_USE_TLS = True
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "inmemorystorage.InMemoryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -47,6 +57,11 @@ LOGGING = {
     },
     'loggers': {
         'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'faster_whisper': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,

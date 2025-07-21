@@ -4,9 +4,11 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import User
 from base.serializers.ferme import FermeSerializer
+from base.validators.user import validate_email
 from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils, crypto_utils
+from sebania.utils.db_utils import get_one_or_raise_exception
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -30,7 +32,8 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def reset_password(self):
         self.is_valid(raise_exception=True)
-        user = User.objects.get(email=self.data['email'])
+        email = self.data['email']
+        user = get_one_or_raise_exception(User, CustomException(ErrorCode.USER_WITH_EMAIL_NOT_FOUND, email), email=email)
         new_password = crypto_utils.generate_password()
         user.set_password(new_password)
         user.save()
@@ -43,6 +46,16 @@ class RegisterUserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'password', 'first_name', 'last_name', 'ferme']
+
+    def is_valid(self, raise_exception=False):
+        email_responsable = self.initial_data.get('email')
+        validate_email(email_responsable)
+        employes = self.initial_data.get("ferme").get('employes')
+        if employes is not None:
+            for employe in employes:
+                employe_email = employe.get("email")
+                validate_email(employe_email)
+        return super().is_valid(raise_exception=raise_exception)
 
     @transaction.atomic
     def create(self, validated_data, **kwargs):

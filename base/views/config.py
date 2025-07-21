@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from base.filters.activite import ActiviteFilter
+from base.filters.culture import CultureFilter
 from base.models import MethodeAgricole, TypeParcelle, Culture, Activite, Error
 from base.models.unite import Unite
 from base.serializers.activite import ActiviteSerializer
@@ -30,6 +31,13 @@ class ConfigViewSet(GenericViewSet):
         # Cas particulier pour get_activites => appliquer le filtre manuellement
         if self.action == 'get_activites':
             filtre = ActiviteFilter(self.request.GET, queryset=items)
+            if not filtre.is_valid():
+                return Response(filtre.errors, status=status.HTTP_400_BAD_REQUEST)
+            items = filtre.qs
+
+        # Cas particulier pour get_cultures => appliquer le filtre manuellement
+        elif self.action == 'get_cultures':
+            filtre = CultureFilter(self.request.GET, queryset=items)
             if not filtre.is_valid():
                 return Response(filtre.errors, status=status.HTTP_400_BAD_REQUEST)
             items = filtre.qs
@@ -62,6 +70,9 @@ class ConfigViewSet(GenericViewSet):
 
 
     @extend_schema(description="Liste l'ensemble des cultures disponibles dans la base de données pour créer la liste des cultures personnalisées de la ferme",
+                   parameters=[
+                       OpenApiParameter("query", str, required=False, description="Filtre les cultures selon leur nom")
+                   ],
                    responses=CultureSerializer(many=True))
     @action(detail=False, methods=['get'], url_path='cultures',
             serializer_class=CultureSerializer, queryset=Culture.objects.all().order_by("nom"))
@@ -87,5 +98,12 @@ class ConfigViewSet(GenericViewSet):
     def get_errors(self, request):
         codes = []
         for error_code in ErrorCode:
-            codes.append(error_code.name)
+            code = error_code.name
+            message = error_code.value[0]
+            status_error = error_code.value[1]
+            codes.append({
+                'code': code,
+                'message': message,
+                'status': status_error,
+            })
         return Response(codes, status=status.HTTP_200_OK)

@@ -5,4 +5,3 @@ from base.models.activite import Activite, ActiviteFerme
 from base.models.culture import Culture, CultureFerme
 from base.models.error import Error
 from base.models.tache import Tache
-from base.models.unite import Unite

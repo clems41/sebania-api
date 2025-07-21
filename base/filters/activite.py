@@ -15,7 +15,8 @@ class ActiviteFilter(django_filters.FilterSet):
     def filter_by_query(self, queryset, name, value):
         if len(value.strip()) < 3:
             raise CustomException(ErrorCode.ACTIVITE_QUERY_TOO_SHORT, len(value.strip()))
-
-        return queryset.filter(
-            Q(nom__icontains=value) | Q(mots_cles__icontains=value)
-        )
+        query_split = value.strip().split(' ')
+        filters = Q()
+        for query in query_split:
+            filters |= Q(nom__icontains=query) | Q(mots_cles__icontains=query)
+        return queryset.filter(filters)

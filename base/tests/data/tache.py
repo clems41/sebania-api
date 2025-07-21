@@ -1,0 +1,474 @@
+import datetime
+
+test_ok_champs_manquants = {
+    "request": {
+        "date": "04/04/2025",
+        "activite_id": 5,
+        "user_id": None,  # surcharger avant l'envoi des requêtes
+        "duree_minutes": 90,
+        "cultures": []
+    },
+    "expected_response": {
+        "id": "no_check",
+        "date": "04/04/2025",
+        "activite": {
+            "id": 5,
+            "nom": "Paillage",
+            "niveau_complexite": "no_check",
+            "unites": "no_check"
+        },
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+            "roles": "no_check",
+        },
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": None,
+        "parcelles": [],
+        "quantite": None,
+        "unite": None,
+        "nature": None,
+        "fields_are_missing": True,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 5,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": None,
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": None,
+    },
+    "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
+}
+
+test_ok_simple = {
+    "request": {
+        "date": "04/04/2025",
+        "activite_id": 5,
+        "user_id": None,  # surcharger avant l'envoi des requêtes
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelle_ids": [],
+        "nature": None,
+        "quantite": None,
+        "unite_id": None
+    },
+    "expected_response": {
+        "id": "no_check",
+        "date": "04/04/2025",
+        "activite": {
+            "id": 5,
+            "nom": "Paillage",
+            "niveau_complexite": "no_check",
+            "unites": "no_check"
+        },
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+            "roles": "no_check",
+        },
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite": None,
+        "nature": None,
+        "fields_are_missing": True,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 5,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 90,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": None,
+    },
+    "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
+}
+
+test_ok_simple_complet = {
+    "request": {
+        "date": "04/04/2025",
+        "activite_id": 3,
+        "user_id": None,
+        "duree_minutes": 20,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelle_ids": [1, 2],
+        "quantite": 12,
+        "nature": "Montagne",
+        "unite_id": 16
+    },
+    "expected_response": {
+        "id": "no_check",
+        "date": "04/04/2025",
+        "activite": {
+            "id": 3,
+            "nom": "Apport de MO (Amender)",
+            "niveau_complexite": "no_check",
+            "unites": "no_check"
+        },
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+            "roles": "no_check",
+        },
+        "duree_minutes": 20,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "id": "no_check",
+                "nom": "Tunnel 1",
+            },
+            {
+                "id": "no_check",
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite": {
+            "id": 16,
+            "nom": "brouettes",
+        },
+        "nature": "Montagne",
+        "fields_are_missing": False,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 3,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "nom": "Tunnel 1",
+            },
+            {
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite_id": 16,
+        "nature": "Montagne",
+    },
+    "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
+}
+
+test_ok_avec_cultures = {
+    "request": {
+        "date": "04/04/2025",
+        "activite_id": 7,
+        "user_id": None,
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture_id": 8,
+                "parcelle_ids": [1, 3],
+                "quantite": 12,
+                "nature": "Montagne",
+                "unite_id": 16
+            },
+            {
+                "culture_id": 12,
+                "parcelle_ids": [2],
+                "quantite": 12,
+                "nature": "",
+                "unite_id": 1
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelle_ids": [],
+        "quantite": None,
+        "nature": "",
+        "unite_id": None
+    },
+    "expected_response": {
+        "id": "no_check",
+        "date": "04/04/2025",
+        "activite": {
+            "id": 7,
+            "nom": "Semis direct",
+            "niveau_complexite": "no_check",
+            "unites": "no_check"
+        },
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+            "roles": "no_check",
+        },
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture": {
+                    "id": 8,
+                    "nom": "Butternut"
+                },
+                "parcelles": [
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite": {
+                    "id": 16,
+                    "nom": "brouettes",
+                },
+                "nature": "Montagne",
+                "fields_are_missing": False,
+            },
+            {
+                "culture": {
+                    "id": 12,
+                    "nom": "Chou kale"
+                },
+                "parcelles": [
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite": {
+                    "id": 1,
+                    "nom": "kg",
+                },
+                "nature": "",
+                "fields_are_missing": False,
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite": None,
+        "nature": "",
+        "fields_are_missing": False,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 7,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [
+
+            {
+                "culture_id": 8,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 16,
+                "nature": "Montagne",
+            },
+            {
+                "culture_id": 12,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 1,
+                "nature": "",
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [],
+        "quantite": None,
+        "unite_id": None,
+        "nature": "",
+    },
+    "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
+}
+
+test_ok_avec_cultures_complet = {
+    "request": {
+        "date": "04/04/2025",
+        "activite_id": 3,
+        "user_id": None,
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture_id": 5,
+                "parcelle_ids": [1, 3],
+                "quantite": 12,
+                "nature": "Montagne",
+                "unite_id": 16
+            },
+            {
+                "culture_id": 21,
+                "parcelle_ids": [2],
+                "quantite": 52.3,
+                "nature": "",
+                "unite_id": 1
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelle_ids": [1, 2],
+        "quantite": 12,
+        "nature": "Montagne",
+        "unite_id": 16
+    },
+    "expected_response": {
+        "id": "no_check",
+        "date": "04/04/2025",
+        "activite": {
+            "id": 3,
+            "nom": "Apport de MO (Amender)",
+            "niveau_complexite": "no_check",
+            "unites": "no_check"
+        },
+        "user": {
+            "id": "{request}.user_id",
+            "email": "no_check",
+            "first_name": "no_check",
+            "last_name": "no_check",
+            "roles": "no_check",
+        },
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture": {
+                    "id": 5,
+                    "nom": "Betterave"
+                },
+                "parcelles": [
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite": {
+                    "id": 16,
+                    "nom": "brouettes",
+                },
+                "nature": "Montagne",
+                "fields_are_missing": False,
+            },
+            {
+                "culture": {
+                    "id": 21,
+                    "nom": "Endive"
+                },
+                "parcelles": [
+                    {
+                        "id": "no_check",
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 52.3,
+                "unite": {
+                    "id": 1,
+                    "nom": "kg",
+                },
+                "nature": "",
+                "fields_are_missing": False,
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "id": "no_check",
+                "nom": "Tunnel 1",
+            },
+            {
+                "id": "no_check",
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite": {
+            "id": 16,
+            "nom": "brouettes",
+        },
+        "nature": "Montagne",
+        "fields_are_missing": False,
+        "vocal_id": "no_check"
+    },
+    "expected_entity": {
+        "date": datetime.date(2025, 4, 4),
+        "activite_id": 3,
+        "user_id": "{request}.user_id",
+        "duree_minutes": 20,
+        "cultures": [
+            {
+                "culture_id": 5,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 1",
+                    },
+                    {
+                        "nom": "Tunnel 3",
+                    }
+                ],
+                "quantite": 12.0,
+                "unite_id": 16,
+                "nature": "Montagne",
+            },
+            {
+                "culture_id": 21,
+                "parcelles": [
+                    {
+                        "nom": "Tunnel 2",
+                    }
+                ],
+                "quantite": 52.3,
+                "unite_id": 1,
+                "nature": "",
+            }
+        ],
+        "commentaire": "Mon petit commentaire éàô",
+        "parcelles": [
+            {
+                "nom": "Tunnel 1",
+            },
+            {
+                "nom": "Tunnel 2",
+            }
+        ],
+        "quantite": 12.0,
+        "unite_id": 16,
+        "nature": "Montagne",
+        "vocal_id": "no_check"
+    },
+    "parcelles_to_create": ["Tunnel 1", "Tunnel 2", "Tunnel 3"],
+}

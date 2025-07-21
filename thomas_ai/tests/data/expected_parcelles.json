@@ -1,0 +1,102 @@
+[
+  {
+    "nom": "Tunnel 1",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 2",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 3",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 4",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 5",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 6",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 7",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Tunnel 8",
+    "longueur": 40,
+    "largeur": 4,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Tunnel fraisier"
+  },
+  {
+    "nom": "Parcelle trapèze",
+    "longueur": 0,
+    "largeur": 0,
+    "superficie": 0,
+    "nombre_planches": 35,
+    "largeur_planche": 1,
+    "largeur_passe_pieds": 0,
+    "type": "Plein champ"
+  },
+  {
+    "nom": "Pépinière",
+    "longueur": 0,
+    "largeur": 0,
+    "superficie": 0,
+    "nombre_planches": 4,
+    "largeur_planche": 0,
+    "largeur_passe_pieds": 0,
+    "type": "Plein champ"
+  }
+]

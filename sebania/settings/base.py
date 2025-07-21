@@ -18,10 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 AUTH_USER_MODEL = "base.User"
 
-APPEND_SLASH=True
+APPEND_SLASH = True
 
 DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -32,10 +31,9 @@ DEFAULT_PASSWORD_LENGTH = os.getenv('DEFAULT_PASSWORD_LENGTH', 12)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,10.0.2.2,localhost:4200").split(",")
 
 DEBUG = os.environ.get("DJANGO_DEBUG", True)
-
 
 DATABASES = {
     'default': {
@@ -58,11 +56,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base',
+    'thomas_ai',
+    "corsheaders",
     'rest_framework',
     'drf_spectacular',
     'drf_yasg',
     'rest_framework_simplejwt',
-    'django_extensions'
+    'django_extensions',
+    'storages',
+    'background_task',
 ]
 
 REST_FRAMEWORK = {
@@ -81,11 +83,26 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
     'UPDATE_LAST_LOGIN': True,
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
+        "OPTIONS": {
+            "oauth2_refresh_token": os.getenv('DROPBOX_REFRESH_TOKEN'),
+            "app_secret": os.getenv('DROPBOX_SECRET'),
+            "app_key": os.getenv('DROPBOX_KEY')
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
 }
 
 SWAGGER_ENABLE = True
@@ -101,6 +118,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -141,7 +159,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sebania.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -160,7 +177,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -172,7 +188,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -182,3 +197,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# THOMAS
+WHISPER_MODEL = os.getenv('WHISPER_MODEL', "turbo")
+WHISPER_MODEL_DIRECTORY = os.getenv('WHISPER_MODEL_DIRECTORY', "/tmp/whisper_models/")
+MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
+MISTRAL_AGENTS = {
+    "taches": "ag:76bf0d16:20250515:untitled-agent:832efb79",
+    "parcelles": "ag:76bf0d16:20250528:agent-parcelle:411ba7b9",
+}

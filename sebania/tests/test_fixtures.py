@@ -6,26 +6,48 @@ from django.utils import timezone
 
 from base.models import User, Ferme, MethodeAgricole, Parcelle, Tache, Culture
 from base.models.statut import StatutJour
+from base.models.tache import CultureTache
 from sebania.utils import crypto_utils
 
-def create_user() -> User:
-    return User.objects.create_user(email=crypto_utils.random_email(), password=crypto_utils.generate_password(),
+def create_user(email: str = None) -> User:
+    if email is None:
+        email = crypto_utils.random_email()
+    return User.objects.create_user(email=email, password=crypto_utils.generate_password(),
                         first_name=crypto_utils.random_string(), last_name=crypto_utils.random_string())
 
-def create_parcelle(ferme: Ferme) -> Parcelle:
-    return Parcelle.objects.create(nom=crypto_utils.random_string(), superficie=120, type_id=1, ferme=ferme)
+def create_parcelle(ferme: Ferme, nom: str | None = None, longueur: float=120, largeur: float=30,
+                    largeur_planche: float | None=0.8, nombre_planches: int | None=8, type_id: int | None=1) -> Parcelle:
+    if nom is None:
+        nom = crypto_utils.random_string()
+    return Parcelle.objects.create(nom=nom, longueur=longueur, largeur=largeur, largeur_planche=largeur_planche,
+                                   nombre_planches=nombre_planches, type_id=type_id, ferme=ferme)
 
 def create_tache(ferme: Ferme,  user_id: int, nb_parcelles: int = 2, date: datetime = timezone.now(), duree_minutes: int  = 90,
-                 culture_ids = [3, 8], activite_id = 3, quantite=425.2, unite_id=4) -> Tache:
+                 culture_ids = [3, 8], activite_id = 3, quantite=425.2, unite_id=4, parcelle_ids = None) -> Tache:
     tache = Tache.objects.create(ferme=ferme, date=date, user_id=user_id, activite_id=activite_id, duree_minutes=duree_minutes,
                                  commentaire=crypto_utils.random_string(length=150), quantite=quantite,
                                  unite_id=unite_id, nature=crypto_utils.random_string(length=20))
     for culture_id in culture_ids:
         culture = Culture.objects.get(id=culture_id)
-        tache.cultures.add(culture)
-    for _ in range(nb_parcelles):
-        parcelle = create_parcelle(ferme)
-        tache.parcelles.add(parcelle)
+        culture_tache = CultureTache.objects.create(culture=culture, quantite=quantite,
+                                 unite_id=unite_id, nature=crypto_utils.random_string(length=20))
+        if parcelle_ids is not None:
+            for parcelle_id in parcelle_ids:
+                parcelle = Parcelle.objects.get(id=parcelle_id)
+                culture_tache.parcelles.add(parcelle)
+        else:
+            for _ in range(nb_parcelles):
+                parcelle = create_parcelle(ferme)
+                culture_tache.parcelles.add(parcelle)
+        tache.cultures.add(culture_tache)
+    if parcelle_ids is not None:
+        for parcelle_id in parcelle_ids:
+            parcelle = Parcelle.objects.get(id=parcelle_id)
+            tache.parcelles.add(parcelle)
+    else:
+        for _ in range(nb_parcelles):
+            parcelle = create_parcelle(ferme)
+            tache.parcelles.add(parcelle)
     return tache
 
 def create_ferme(responsable: User = None, employes=None, nb_parcelles: int = 0) -> Ferme:
@@ -49,7 +71,7 @@ def create_ferme(responsable: User = None, employes=None, nb_parcelles: int = 0)
 
     # Ajout des méthodes
     methode = MethodeAgricole.objects.get(nom__iregex='biologique')
-    ferme.methodes.add(methode)
+    ferme.methodes_agricoles.add(methode)
 
     # Création des parcelles associées
     for _ in range(nb_parcelles):

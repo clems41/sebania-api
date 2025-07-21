@@ -1,7 +1,7 @@
 services:
   db:
     container_name: sebania-db
-    image: postgres:17
+    image: postgres:17.4
     ports:
       - "5432:5432"
     volumes:
@@ -15,16 +15,22 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_DB: ${DATABASE_NAME}
+    networks:
+      - sebania-network
 
   api:
-    build: .
+    image: &sebania-image sebania/sebania:${SEBANIA_VERSION:-0.1.0}
+    build: &build-sebania
+      dockerfile: Dockerfile
     container_name: sebania-api
     ports:
       - "8000:8000"
     depends_on:
-      db:
+      db: &db-healthy
         condition: service_healthy
-    environment:
+      migrate-database: &db-migrated
+        condition: service_completed_successfully
+    environment: &env-variables
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
       DATABASE_HOST: db
       DATABASE_PORT: ${DATABASE_PORT}
@@ -36,37 +42,68 @@ services:
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       SMTP_PORT: ${SMTP_PORT}
+      DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
+      DROPBOX_SECRET: ${DROPBOX_SECRET}
+      DROPBOX_KEY: ${DROPBOX_KEY}
+      WHISPER_MODEL_DIRECTORY: /app/whisper/
+      WHISPER_MODEL: ${WHISPER_MODEL}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+    volumes:
+      - &volume-whisper whisper_models:/app/whisper/
+    networks:
+      - sebania-network
+
+  migrate-database:
+    image: *sebania-image
+    build:
+      <<: *build-sebania
+    container_name: sebania-migrate-database
+    environment:
+      <<: *env-variables
+    depends_on:
+      db: *db-healthy
+    command: bash -c "python manage.py migrate && python manage.py loaddata activite_default culture_default type_parcelle unite auth_group methode_agricole"
+    networks:
+      - sebania-network
 
   background-tasks:
-    build: .
+    image: *sebania-image
+    build:
+      <<: *build-sebania
     container_name: sebania-background-tasks
     environment:
-      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
-      DATABASE_HOST: db
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SMTP_PORT: ${SMTP_PORT}
+      <<: *env-variables
+    volumes:
+      - *volume-whisper
     depends_on:
-      db:
-        condition: service_healthy
+      db: *db-healthy
+      migrate-database: *db-migrated
     command: "python manage.py process_tasks"
+    networks:
+      - sebania-network
 
   testcases:
-    build: .
+    build:
+      <<: *build-sebania
     container_name: sebania-testcases
     environment:
       DJANGO_SETTINGS_MODULE: sebania.settings.test
       DATABASE_HOST: db
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+      WHISPER_MODEL_DIRECTORY: /app/whisper/
+    volumes:
+      - *volume-whisper
     depends_on:
-      db:
-        condition: service_healthy
+      db: *db-healthy
     command: "python manage.py test --no-input"
+    networks:
+      - sebania-network
 
 volumes:
   sebania_data:
+  whisper_models:
+
+networks:
+  sebania-network:
+    name: sebania-network
+    driver: bridge

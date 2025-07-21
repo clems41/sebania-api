@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from base.models import Parcelle
 from base.serializers.parcelle import ParcelleSerializer
 from sebania.permissions import HasResponsablePermission
-from sebania.utils.db_utils import get_ferme_for_user
+from sebania.utils.db_utils import get_ferme_from_request
 
 
 class ParcelleModelViewSet(ModelViewSet):
@@ -12,7 +12,7 @@ class ParcelleModelViewSet(ModelViewSet):
     queryset = Parcelle.objects.none()
 
     def get_queryset(self):
-        ferme = get_ferme_for_user(self.request)
+        ferme = get_ferme_from_request(self.request)
         return Parcelle.objects.filter(ferme=ferme).all()
 
     def get_permissions(self):

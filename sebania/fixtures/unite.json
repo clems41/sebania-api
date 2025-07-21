@@ -3,120 +3,133 @@
     "model": "base.Unite",
     "pk": 1,
     "fields": {
-      "nom": "kg",
-      "recolte_compatible": true
+      "nom": "kg"
     }
   },
   {
     "model": "base.Unite",
     "pk": 2,
     "fields": {
-      "nom": "pièces",
-      "recolte_compatible": true
+      "nom": "pièces"
     }
   },
   {
     "model": "base.Unite",
     "pk": 3,
     "fields": {
-      "nom": "bottes",
-      "recolte_compatible": true
+      "nom": "bottes"
     }
   },
   {
     "model": "base.Unite",
     "pk": 4,
     "fields": {
-      "nom": "plants",
-      "recolte_compatible": false
+      "nom": "plants"
     }
   },
   {
     "model": "base.Unite",
     "pk": 5,
     "fields": {
-      "nom": "caisses",
-      "recolte_compatible": true
+      "nom": "caisses"
     }
   },
   {
     "model": "base.Unite",
     "pk": 6,
     "fields": {
-      "nom": "m²",
-      "recolte_compatible": false
+      "nom": "m²"
     }
   },
   {
     "model": "base.Unite",
     "pk": 7,
     "fields": {
-      "nom": "mètres",
-      "recolte_compatible": false
+      "nom": "m"
     }
   },
   {
     "model": "base.Unite",
     "pk": 8,
     "fields": {
-      "nom": "hectares",
-      "recolte_compatible": false
+      "nom": "hectares"
     }
   },
   {
     "model": "base.Unite",
     "pk": 9,
     "fields": {
-      "nom": "pots",
-      "recolte_compatible": false
+      "nom": "pots"
     }
   },
   {
     "model": "base.Unite",
     "pk": 10,
     "fields": {
-      "nom": "terrines",
-      "recolte_compatible": false
+      "nom": "terrines"
     }
   },
   {
     "model": "base.Unite",
     "pk": 11,
     "fields": {
-      "nom": "plaques",
-      "recolte_compatible": false
+      "nom": "plaques"
     }
   },
   {
     "model": "base.Unite",
     "pk": 12,
     "fields": {
-      "nom": "paniers",
-      "recolte_compatible": true
+      "nom": "paniers"
     }
   },
   {
     "model": "base.Unite",
     "pk": 13,
     "fields": {
-      "nom": "godets",
-      "recolte_compatible": false
+      "nom": "godets"
     }
   },
   {
     "model": "base.Unite",
     "pk": 14,
     "fields": {
-      "nom": "litres",
-      "recolte_compatible": false
+      "nom": "litres"
     }
   },
   {
     "model": "base.Unite",
     "pk": 15,
     "fields": {
-      "nom": "lignes",
-      "recolte_compatible": false
+      "nom": "lignes"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 16,
+    "fields": {
+      "nom": "brouettes"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 17,
+    "fields": {
+      "nom": "planches"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 18,
+    "fields": {
+      "nom": "cm"
+    }
+  },
+  {
+    "model": "base.Unite",
+    "pk": 19,
+    "fields": {
+      "nom": "tonnes"
     }
   }
 ]

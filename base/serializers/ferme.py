@@ -3,6 +3,9 @@ from rest_framework.serializers import ModelSerializer
 
 from base.models import MethodeAgricole, User, Ferme, Culture, CultureFerme, ActiviteFerme, Activite
 from base.serializers.user import UserSerializer
+from base.validators.user import validate_email
+from sebania.exceptions.custom_exception import CustomException
+from sebania.exceptions.error_code import ErrorCode
 from sebania.utils import email_utils
 
 
@@ -16,6 +19,11 @@ class EmployeSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name']
+
+    def is_valid(self, raise_exception=False):
+        email = self.initial_data.get('email')
+        validate_email(email)
+        return super().is_valid(raise_exception=raise_exception)
 
     def create(self, validated_data, **kwargs):
         ferme = self.context.get('ferme')
@@ -38,14 +46,22 @@ def _create_data(ferme: Ferme):
 
 
 class FermeSerializer(ModelSerializer):
-    employes = EmployeSerializer(many=True)
+    employes = EmployeSerializer(many=True, required=False)
     methodes_agricoles = serializers.ListField(
         child=serializers.IntegerField(),
+        required=False
     )
 
     class Meta:
         model = Ferme
-        fields = ["nom", "adresse", "superficie_cultivee", "employes", "methodes_agricoles"]
+        fields = ["nom", "adresse", "superficie_cultivee", "employes", "methodes_agricoles", "code_postal"]
+
+    def validate_code_postal(self, value):
+        if value is None:
+            return None
+        if len(value) != 5:
+            raise CustomException(ErrorCode.FERME_CODE_POSTAL_INCORRECT, value)
+        return value
 
     def create(self, validated_data, **kwargs):
         # Création de la ferme
@@ -61,18 +77,18 @@ class FermeSerializer(ModelSerializer):
 
         # Ajout des méthodes agricoles
         methodes_agricoles = MethodeAgricole.objects.filter(id__in=methodes_agricoles_ids)
-        ferme.methodes.set(methodes_agricoles)
+        ferme.methodes_agricoles.set(methodes_agricoles)
         _create_data(ferme)
         return ferme
 
 
 class FermeViewSerializer(ModelSerializer):
-    methodes = MethodeAgricoleSerializer(many=True)
+    methodes_agricoles = MethodeAgricoleSerializer(many=True)
     responsable = UserSerializer(read_only=True)
     employes = EmployeSerializer(many=True)
     class Meta:
         model = Ferme
-        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes"]
+        fields = ["id", "nom", "adresse", "superficie_cultivee", "employes", "responsable", "methodes_agricoles", "code_postal"]
 
 
 class UpdateFermeSerializer(ModelSerializer):
@@ -81,4 +97,11 @@ class UpdateFermeSerializer(ModelSerializer):
     )
     class Meta:
         model = Ferme
-        fields = ["nom", "adresse", "superficie_cultivee", "methodes_agricoles"]
+        fields = ["nom", "adresse", "superficie_cultivee", "methodes_agricoles", "code_postal"]
+
+    def validate_code_postal(self, value):
+        if value is None:
+            return None
+        if len(value) != 5:
+            raise CustomException(ErrorCode.FERME_CODE_POSTAL_INCORRECT, value)
+        return value

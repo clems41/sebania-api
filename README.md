@@ -3,9 +3,14 @@
 
 ## Fonctionnement
 
-Ce projet fonctionne avec une base de données Postgres pour sauvegarder l'ensemble des données utilisateurs ainsi que les données relatives aux différents médias (films et séries).
+Ce projet fonctionne avec une base de données Postgres pour sauvegarder l'ensemble des données utilisateurs.
+Pour fonctionner, il est découpé en plusieurs briques (visibles dans le `docker-compose.yaml`) :
+- db : instance PostgreSQL 17 permettant de stocker l'ensemble des données utilisateurs
+- api : serveur API permettant de récupérer et de sauvegarder de la donnée de la base de données de manière compréhensible pour le besoin de l'application mobile
+- background_tasks : script qui exécute les tâches de fonds de manière asynchrone sans impacter les performances de l'API, comme le traitement des messages vocaux.
+- testcases : exécution des tests de l'application pour vérifier la non régression. Utile uniquement pour la CI de ce projet.
 
-## Démarrer le projet en local avec Docker
+## Démarrer le projet
 
 ### Pré-requis
 
@@ -20,12 +25,28 @@ C'est un outil qui met à disposition un serveur SMTP sans envoyer les emails. A
 
 Pour faire fonctionner MailTrap, il suffit de se créer un compte sur leur [site](https://mailtrap.io/). Vous pourrez ensuite récupérer un `username` et un `password` pour vous connecter au serveur SMTP.
 
+**Dropbox**
+
+Pour sauvegarder les vocaux, on utilise Dropbox. Pour que cela fonctionne avec l'API, il faut configurer des variables d'environnements spécifiques :
+- <DROPBOX_REFRESH_TOKEN> : token pour générer l'`access_token` utile à chaque requête vers Dropbox. Les `access_token` ont des durées de vie limitée, il faut les régénérer régulièrement, c'est pour cela qu'on utilise la mécanique de `refresh_token`.
+Suivre ce [tuto](https://django-storages.readthedocs.io/en/latest/backends/dropbox.html#get-authorization-code) pour le récupérer.
+Il faut au préalable récupérer un `access_token` depuis son compte Dropbox.
+- <DROPBOX_SECRET> : `app_secret` à récupérer depuis son compte Dropbox
+- <DROPBOX_KEY> : `app_key` à récupérer depuis son compte Dropbox
+
+**Mistral**
+
+Pour faire fonctionner la brique `background_tasks`, nous avons besoin d'une clé API Mistral (`<MISTRAL_API_KEY>`) pour faire appel à leur LLM, utile à l'analyse des vocaux.
+
+Cette clé peut être obtenue après s'être créé un compte, sur la page [Clés API](https://console.mistral.ai/api-keys).
+
 **Variables d'environnement**
 
 Pour que l'API puisse fonctionner avec Postgres mais également d'autres services externes, il est important de configurer des variables d'environnement.
 
 Pour ce faire, créer un fichier ``.env`` et copier le contenu suivant dedans :
 ```dotenv
+COMPOSE_BAKE=true
 DJANGO_SECRET_KEY=dev
 DATABASE_NAME=sebania
 DATABASE_USERNAME=sebania
@@ -36,18 +57,25 @@ SMTP_HOST=sandbox.smtp.mailtrap.io
 SMTP_USERNAME=<MAIL_TRAP_USERNAME>
 SMTP_PASSWORD=<MAIL_TRAP_PASSWORD>
 SMTP_PORT=2525
-DJANGO_SETTINGS_MODULE=sebania.settings.local
+DJANGO_SETTINGS_MODULE=sebania.settings.dev
+DROPBOX_REFRESH_TOKEN=<DROPBOX_REFRESH_TOKEN>
+DROPBOX_SECRET=<DROPBOX_SECRET>
+DROPBOX_KEY=<DROPBOX_KEY>
+WHISPER_MODEL=turbo
+WHISPER_MODEL_DIRECTORY="/tmp/whisper_models/"
+MISTRAL_API_KEY=<MISTRAL_API_KEY>
 ```
 
-Remplacez les valeurs `<MAIL_TRAP_USERNAME>` et `<MAIL_TRAP_PASSWORD>` par les identifiants récupérés à la section [Mailtrap](#pré-requis)
-
-## Lancement
+Remplacez les valeurs `<MAIL_TRAP_USERNAME>` et `<MAIL_TRAP_PASSWORD>` par les identifiants récupérés à la section [Mailtrap](#pré-requis).
+Remplacez les valeurs `<DROPBOX_REFRESH_TOKEN>`, `<DROPBOX_SECRET>` et `<DROPBOX_KEY>` par les identifiants récupérés à la section [Dropbox](#pré-requis).
+Remplacez la valeur `<MISTRAL_API_KEY>` par la clé récupérée à la section [Mistral](#pré-requis).
 
 ### Démarrer le projet en local avec Docker
 
+
 Démarrez l'API avec la base de données PostgreSQL :
 ```bash
-docker compose up -d --build
+docker compose up db api background-tasks migrate-database -d --build
 ```
 
 Cela peut prendre quelques minutes lors de la première compilation de l'image Docker.
@@ -81,8 +109,8 @@ docker compose run api python manage.py loaddata activite_default culture_defaul
 
 **Rôles**
 
-Pour le moment, il existe 2 rôles dans l'application: 
-- `RESPONSABLE` : rôle de l'utilisateur qui va s'enregister depuis le endpoint dédié en précisant les informations de sa ferme ainsi que celles de ses employés
+Pour le moment, il existe 2 rôles dans l'application :
+- `RESPONSABLE` : rôle de l'utilisateur qui va s'enregister depuis l'endpoint dédié en précisant les informations de sa ferme ainsi que celles de ses employés
 - `EMPLOYE` : rôle attribué aux utilisateurs créés automatiquement lors de l'inscription d'un responsable.
 
 **Inscription**
