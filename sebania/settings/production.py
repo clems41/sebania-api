@@ -1,5 +1,5 @@
 # SECURITY WARNING: don't run with debug turned on in production!
-from datetime import timedelta
+from .base import *
 
 DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1:8000', ]
