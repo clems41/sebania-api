@@ -49,7 +49,7 @@ ENV PYTHONUNBUFFERED=1
 USER appuser
  
 # Expose the application port
-EXPOSE 8000 
+EXPOSE $PORT
  
 # Start the application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "sebania.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "3", "sebania.wsgi:application"]
