@@ -1,6 +1,5 @@
 # SEBANIA
 
-
 ## Fonctionnement
 
 Ce projet fonctionne avec une base de données Postgres pour sauvegarder l'ensemble des données utilisateurs.
