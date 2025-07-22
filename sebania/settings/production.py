@@ -2,7 +2,6 @@
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['https://sebania-3074718177a3.herokuapp.com/', ]
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),

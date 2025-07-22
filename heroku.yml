@@ -4,7 +4,7 @@ build:
 run:
   web:
     command:
-      - gunicorn --bind 0.0.0.0:$PORT --workers 3 sebania.wsgi:application
+      - python manage.py runserver 0.0.0.0:$PORT
     image: sebania
   worker:
     command:
