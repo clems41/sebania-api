@@ -1,7 +1,7 @@
 # SECURITY WARNING: don't run with debug turned on in production!
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -18,24 +18,24 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
         },
         'faster_whisper': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
         },
     },
 }
 
 
-SWAGGER_ENABLE = True
-ADMIN_ENABLE = True
+SWAGGER_ENABLE = False
+ADMIN_ENABLE = False
