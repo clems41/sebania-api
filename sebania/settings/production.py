@@ -1,7 +1,7 @@
 # SECURITY WARNING: don't run with debug turned on in production!
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -37,5 +37,5 @@ LOGGING = {
 }
 
 
-SWAGGER_ENABLE = False
-ADMIN_ENABLE = False
+SWAGGER_ENABLE = True
+ADMIN_ENABLE = True
