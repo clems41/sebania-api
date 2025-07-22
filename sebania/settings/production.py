@@ -1,6 +1,8 @@
 # SECURITY WARNING: don't run with debug turned on in production!
 from .base import *
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 DEBUG = False
 
 SIMPLE_JWT = {
