@@ -1,9 +1,12 @@
+from django import forms
+from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
 from base.models.vocal import VocalStatut, Vocal
 
 class SendVocalSerializer(serializers.Serializer):
-    file = serializers.FileField()
+    title = forms.CharField(max_length=50)
+    file = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["m4a"])])
 
 class VocalSerializer(serializers.ModelSerializer):
     statut = serializers.ChoiceField(choices=[tag.name for tag in VocalStatut], read_only=True)

@@ -85,6 +85,7 @@ class ErrorCode(Enum):
     ERREURS LIEES AUX VOCAUX
     """
     VOCAL_FILE_UPLOAD = "Erreur lors de la récupération du message vocal depuis la requête : {}", status.HTTP_400_BAD_REQUEST
+    VOCAL_AUDIO_MANQUANT = "Le fichier audio n'a pas été trouvé dans la requête.", status.HTTP_400_BAD_REQUEST
     VOCAL_DATE_INCORRECTE = "La date fournie ({}) est incorrecte, elle doit être au format ddMMYYYY", status.HTTP_400_BAD_REQUEST
     VOCAL_DATE_MANQUANTE = "Le filtre date ne doit pas être vide lorsque le filtre origine est à 'taches'", status.HTTP_400_BAD_REQUEST
     VOCAL_ORIGINE_INCORRECTE = "Le filtre origine n'est pas correcte, doit être égal à une des valeurs suivantes : taches|parcelles", status.HTTP_400_BAD_REQUEST

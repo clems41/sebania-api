@@ -1,10 +1,11 @@
 import datetime
 
+from django.core.files.uploadedfile import UploadedFile
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -16,13 +17,27 @@ from sebania.utils.db_utils import get_one_or_raise_exception
 from thomas_ai.tasks.transcription import transcribe
 
 
+def _handle_vocal(request, date: datetime.date, origine: str):
+    form = SendVocalSerializer(request.POST, request.FILES)
+    if not form.is_valid():
+        raise CustomException(ErrorCode.VOCAL_FILE_UPLOAD, form.errors)
+
+    audio: UploadedFile = request.FILES.get('file')
+
+    if not audio or not audio.name:
+        raise CustomException(ErrorCode.VOCAL_AUDIO_MANQUANT)
+
+    vocal = Vocal.objects.create(audio=audio, user=request.user, date=date, origine=origine)
+    transcribe(vocal_id=vocal.id)
+    return Response(VocalSerializer(vocal).data, status=status.HTTP_201_CREATED)
+
 @extend_schema_view(
     create=extend_schema(exclude=True),   # cache POST de Swagger
     update=extend_schema(exclude=True),   # cache PUT de Swagger
 )
 class VocalViewSet(ModelViewSet):
     serializer_class = VocalSerializer
-    parser_classes = [FileUploadParser]
+    parser_classes = [MultiPartParser]
     queryset = Vocal.objects.defer('audio').all()
     http_method_names = ['get', 'post']  # pas de 'put' ni 'delete'
 
@@ -32,15 +47,6 @@ class VocalViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         raise CustomException(ErrorCode.GLOBAL_METHOD_NOT_ALLOWED)
 
-    def _handle_vocal(self, request, date: datetime.date, origine: VocalOrigine):
-        form = SendVocalSerializer(request.POST, request.FILES)
-        if not form.is_valid():
-            raise CustomException(ErrorCode.VOCAL_FILE_UPLOAD, form.errors)
-        file = form.validated_data['file']
-        vocal = Vocal.objects.create(audio=file, user=request.user, date=date, origine=origine)
-        transcribe(vocal_id=vocal.id)
-        return Response(VocalSerializer(vocal).data, status=status.HTTP_201_CREATED)
-
     @extend_schema(description="Envoi d'un message vocal à Thomas pour la création de tâches", responses=VocalSerializer)
     @action(detail=False, methods=['post'], url_path=r'taches/date/(?P<date>\w+)', serializer_class=SendVocalSerializer)
     def send_vocal_taches(self, request, date: str = None):
@@ -48,12 +54,12 @@ class VocalViewSet(ModelViewSet):
             validated_date = datetime.datetime.strptime(date, "%d%m%Y").date()
         except:
             raise CustomException(ErrorCode.VOCAL_DATE_INCORRECTE, date)
-        return self._handle_vocal(request, validated_date, VocalOrigine.TACHES)
+        return _handle_vocal(request, validated_date, VocalOrigine.TACHES)
 
     @extend_schema(description="Envoi d'un message vocal à Thomas pour la création des parcelles", responses=VocalSerializer)
     @action(detail=False, methods=['post'], url_path='parcelles', serializer_class=SendVocalSerializer)
     def send_vocal_parcelles(self, request):
-        return self._handle_vocal(request, timezone.now().date(), VocalOrigine.PARCELLES)
+        return _handle_vocal(request, timezone.now().date(), VocalOrigine.PARCELLES)
 
     @extend_schema(description="Récupération du statut d'un vocal", responses=VocalSerializer)
     def retrieve(self, request, pk =None):

@@ -48,6 +48,7 @@ services:
       WHISPER_MODEL_DIRECTORY: /app/whisper/
       WHISPER_MODEL: ${WHISPER_MODEL}
       MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+      PORT: ${PORT}
     volumes:
       - &volume-whisper whisper_models:/app/whisper/
     networks:

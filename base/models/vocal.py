@@ -17,13 +17,12 @@ class VocalStatut(Enum):
     FINISHED = "finished"
 
 def get_upload_path(instance, filename):
-    if filename == "file":
-        filename = get_audio_name(instance)
-    return "vocaux/{}/{}/{}/{}".format(instance.origine, instance.user.id, instance.date.strftime("%d%m%Y"), filename)
+    forced_filename = get_audio_name(instance)
+    return "vocaux/{}/{}/{}/{}".format(instance.origine, instance.user.id, instance.date.strftime("%d%m%Y"), forced_filename)
 
 def get_audio_name(instance):
     existing_vocaux_for_user_and_date = Vocal.objects.filter(user=instance.user, date=instance.date).all()
-    return "{}.mp3".format(len(existing_vocaux_for_user_and_date) + 1)
+    return "{}.m4a".format(len(existing_vocaux_for_user_and_date) + 1)
 
 class Vocal(BaseModel):
     date = models.DateField()

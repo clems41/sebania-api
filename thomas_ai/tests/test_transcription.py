@@ -17,7 +17,7 @@ class TestTranscription(TaskTestcase):
                            "une heure à installer du compost sur une planche de carottes, "
                            "20 minutes à arroser les carottes et 30 minutes à faire du rangement de plants. "
                            "Merci, bonne soirée.")
-        file_path = os.path.join(self.data_directory, "vocal.mp3")
+        file_path = os.path.join(self.data_directory, "vocal.m4a")
         with open(file_path, "rb") as f:
             audio_file = SimpleUploadedFile("file_test", f.read(), content_type="audio/mpeg")
         vocal = Vocal.objects.create(user=user, audio=audio_file, date=datetime.datetime.now())

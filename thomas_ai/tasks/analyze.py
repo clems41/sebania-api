@@ -21,8 +21,13 @@ def analyze(vocal_id: int):
     vocal = Vocal.objects.defer('audio').get(id=vocal_id)
     if vocal.origine not in [VocalOrigine.TACHES, VocalOrigine.PARCELLES]:
         raise CustomException(ErrorCode.VOCAL_ORIGINE_INCORRECTE)
-    start_time = datetime.now()
 
+    # si la transcription est vide, on ne lance pas l'analyse et on marque le vocal comme étant analysé
+    if (vocal.transcription is None) or (vocal.transcription == ''):
+        vocal.finished_at = timezone.now()
+        return
+
+    start_time = datetime.now()
     # Récupération des parcelles de la ferme
     ferme = get_ferme_for_user(vocal.user.id)
     parcelles = ",".join([parcelle.nom for parcelle in ferme.parcelle_set.all()])
@@ -48,7 +53,8 @@ def analyze(vocal_id: int):
     duration = end_time - start_time
     vocal.transcription_to_output_duration = duration
     vocal.analyzed_at = timezone.now()
-    vocal.output = json.loads(output)
+    if (output is not None) and (output != ''):
+        vocal.output = json.loads(output)
     vocal.save()
 
     # Envoi dans la queue suivante pour l'extraction des tâches à partir du JSON généré

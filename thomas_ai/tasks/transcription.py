@@ -23,11 +23,16 @@ def transcribe(vocal_id: int):
 
     # Créer un fichier temporaire à partir du FieldFile pour la transcription
     start_time = datetime.now()
-    with tempfile.NamedTemporaryFile(suffix=".mp3") as tmp:
-        tmp.write(vocal.audio.read())
-        tmp.flush()
-        segments, _ = model.transcribe(tmp.name, language="fr", log_progress=settings.DEBUG)
+    with tempfile.NamedTemporaryFile(suffix=".m4a") as tmp_m4a_file:
+        tmp_m4a_file.write(vocal.audio.read())
+        tmp_m4a_file.flush()
+        segments, _ = model.transcribe(tmp_m4a_file.name, language="fr", log_progress=settings.DEBUG)
         transcription = "".join([segment.text for segment in list(segments)])
+        # audio_segment = AudioSegment.from_file(tmp_m4a_file.name, format="m4a")
+        # with tempfile.NamedTemporaryFile(suffix=".mp3") as tmp_mp3_file:
+        #     audio_segment.export(tmp_mp3_file, format="mp3")
+        #     segments, _ = model.transcribe(tmp_mp3_file.name, language="fr", log_progress=settings.DEBUG)
+        #     transcription = "".join([segment.text for segment in list(segments)])
 
     # Mise à jour du vocal avec la transcription
     end_time = datetime.now()
