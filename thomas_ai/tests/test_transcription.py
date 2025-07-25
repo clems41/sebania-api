@@ -4,6 +4,7 @@ import os
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from base.models.vocal import Vocal, VocalStatut
+from sebania.utils import transcription_utils
 from thomas_ai.tasks.transcription import transcribe
 from thomas_ai.tests.TaskTestcase import TaskTestcase
 
@@ -29,6 +30,6 @@ class TestTranscription(TaskTestcase):
         self.assertIsNotNone(vocal.audio_to_transcription_duration)
 
     def compare_transcription(self, expected: str, actual: str):
-        expected_clean = expected.lower().strip().replace(",", "").replace(".", "")
-        actual_clean = actual.lower().strip().replace(",", "").replace(".", "")
+        expected_clean = transcription_utils.cleanup_transcription(expected)
+        actual_clean = transcription_utils.cleanup_transcription(actual)
         self.assertEqual(expected_clean, actual_clean)

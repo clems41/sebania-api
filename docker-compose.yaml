@@ -45,12 +45,9 @@ services:
       DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
       DROPBOX_SECRET: ${DROPBOX_SECRET}
       DROPBOX_KEY: ${DROPBOX_KEY}
-      WHISPER_MODEL_DIRECTORY: /app/whisper/
-      WHISPER_MODEL: ${WHISPER_MODEL}
+      LEMONFOX_API_KEY: ${LEMONFOX_API_KEY}
       MISTRAL_API_KEY: ${MISTRAL_API_KEY}
       PORT: ${PORT}
-    volumes:
-      - &volume-whisper whisper_models:/app/whisper/
     networks:
       - sebania-network
 
@@ -74,8 +71,6 @@ services:
     container_name: sebania-background-tasks
     environment:
       <<: *env-variables
-    volumes:
-      - *volume-whisper
     depends_on:
       db: *db-healthy
       migrate-database: *db-migrated
@@ -91,9 +86,7 @@ services:
       DJANGO_SETTINGS_MODULE: sebania.settings.test
       DATABASE_HOST: db
       MISTRAL_API_KEY: ${MISTRAL_API_KEY}
-      WHISPER_MODEL_DIRECTORY: /app/whisper/
-    volumes:
-      - *volume-whisper
+      LEMONFOX_API_KEY: ${LEMONFOX_API_KEY}
     depends_on:
       db: *db-healthy
     command: "python manage.py test --no-input"
@@ -102,7 +95,6 @@ services:
 
 volumes:
   sebania_data:
-  whisper_models:
 
 networks:
   sebania-network:

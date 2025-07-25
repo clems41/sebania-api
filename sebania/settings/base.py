@@ -201,6 +201,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # THOMAS
 WHISPER_MODEL = os.getenv('WHISPER_MODEL', "turbo")
 WHISPER_MODEL_DIRECTORY = os.getenv('WHISPER_MODEL_DIRECTORY', "/tmp/whisper_models/")
+LEMONFOX_API_KEY = os.getenv('LEMONFOX_API_KEY')
 MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
 MISTRAL_AGENTS = {
     "taches": "ag:76bf0d16:20250515:untitled-agent:832efb79",

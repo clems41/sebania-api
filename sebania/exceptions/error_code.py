@@ -100,4 +100,5 @@ class ErrorCode(Enum):
     """
     ERREURS LIEES A L'IA
     """
+    IA_LEMONFOX_API_ERROR = "Une erreur est survenue lors de l'appel à l'API de Lemonfox {}", status.HTTP_500_INTERNAL_SERVER_ERROR
     IA_OUTPUT_LEN_INCORRECTE = "{actual} sorties attendues pour l'analyse faite par CrewAI, mais seulement {expected} ont été trouvées", status.HTTP_500_INTERNAL_SERVER_ERROR
