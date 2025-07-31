@@ -3,7 +3,7 @@ from .base import *
 
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ORIGIN_WHITELIST").split(",")
 
-DEBUG = True
+DEBUG = False
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -39,5 +39,5 @@ LOGGING = {
 }
 
 
-SWAGGER_ENABLE = True
-ADMIN_ENABLE = True
+SWAGGER_ENABLE = False
+ADMIN_ENABLE = False
