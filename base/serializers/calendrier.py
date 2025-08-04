@@ -28,8 +28,7 @@ class CalendrierSerializer(serializers.Serializer):
         queryset = Tache.objects.filter(ferme=ferme)
 
         filtres = TacheCalendrierFilter(request.GET, queryset=queryset)
-        if not filtres.is_valid():
-            raise CustomException(ErrorCode.TACHE_CALENDRIER_FILTRE_INCORRECT)
+        filtres.is_valid(raise_exception=True)
 
         taches = filtres.qs
         taches_par_jour = cls._init_taches_par_jour(filtres)
