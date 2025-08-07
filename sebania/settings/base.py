@@ -134,7 +134,8 @@ EMAIL_HOST = os.environ.get("SMTP_HOST")
 EMAIL_HOST_USER = os.environ.get("SMTP_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD")
 EMAIL_PORT = os.environ.get("SMTP_PORT")
-EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = "bonjour@sebania.fr"
 
 FIXTURE_DIRS = [BASE_DIR / 'sebania/fixtures']

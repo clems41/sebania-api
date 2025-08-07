@@ -40,3 +40,6 @@ LOGGING = {
         },
     },
 }
+
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
