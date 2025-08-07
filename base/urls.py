@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from base.views.auth import *
 from base.views.config import ConfigViewSet
 from base.views.contact import ContactViewSet
+from base.views.dashboard import DashboardVueEnsembleViewSet
 from base.views.ferme import FermeViewSet
 from base.views.parcelle import ParcelleModelViewSet
 from base.views.suggestion import SuggestionViewSet
@@ -21,6 +22,7 @@ router.register(r'taches', TacheModelViewSet, basename='taches')
 router.register(r'contact', ContactViewSet, basename='contact')
 router.register(r'vocaux', VocalViewSet, basename='vocaux')
 router.register(r'suggestions', SuggestionViewSet, basename='suggestions')
+router.register(r'dashboards/vue-ensemble', DashboardVueEnsembleViewSet, basename='dashboards/vue-ensemble')
 urlpatterns = router.urls
 
 urlpatterns += [
