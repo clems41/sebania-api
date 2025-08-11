@@ -37,7 +37,7 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
             avg_map = {x['mois']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
             return [
                 {
-                    'date': row['mois'],
+                    'date': row['mois'].strftime("%d/%m/%Y"),
                     'duree_minutes': row['duree_minutes'] or 0,
                     'moyenne_duree_minutes': avg_map.get(row['mois'], 0)
                 }
@@ -55,7 +55,7 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
 
             return [
                 {
-                    'date': row['date'],
+                    'date': row['date'].strftime("%d/%m/%Y"),
                     'duree_minutes': row['duree_minutes'] or 0,
                     'moyenne_duree_minutes': avg_map.get(row['date'], 0)
                 }
