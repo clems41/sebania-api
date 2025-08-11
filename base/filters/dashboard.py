@@ -1,3 +1,5 @@
+import datetime
+
 from django.db.models import Q
 
 def apply_common_filters_dashboard(queryset, params):
@@ -8,7 +10,9 @@ def apply_common_filters_dashboard(queryset, params):
     parcelle_id = params.get('parcelle_id')
 
     if date_debut and date_fin:
-        queryset = queryset.filter(date__range=[date_debut, date_fin])
+        date_debut_formatted = datetime.datetime.strptime(date_debut, "%d/%m/%Y").date()
+        date_fin_formatted = datetime.datetime.strptime(date_fin, "%d/%m/%Y").date()
+        queryset = queryset.filter(date__range=[date_debut_formatted, date_fin_formatted])
 
     if culture_id:
         queryset = queryset.filter(cultures__culture_id=culture_id)

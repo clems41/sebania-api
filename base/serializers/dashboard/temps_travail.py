@@ -1,4 +1,5 @@
 from django.db.models import Sum, Avg, Count
+from django.db.models.functions import TruncMonth
 from rest_framework import serializers
 
 from base.filters.dashboard import apply_common_filters_dashboard
@@ -22,24 +23,44 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
 
         base_qs = apply_common_filters_dashboard(base_qs, params)
 
-        qs = (base_qs
-              .values('date')
-              .annotate(duree_minutes=Sum('duree_minutes'))
-              .order_by('date'))
-
-        avg_qs = (Tache.objects
+        periode = params.get('periode')
+        if periode and periode == 'mois':
+            qs = (base_qs
+                  .annotate(mois=TruncMonth('date'))
+                  .values('mois')
+                  .annotate(duree_minutes=Sum('duree_minutes'))
+                  .order_by('mois'))
+            avg_qs = (Tache.objects
+                      .annotate(mois=TruncMonth('date'))
+                      .values('mois')
+                      .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
+            avg_map = {x['mois']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
+            return [
+                {
+                    'date': row['mois'],
+                    'duree_minutes': row['duree_minutes'] or 0,
+                    'moyenne_duree_minutes': avg_map.get(row['mois'], 0)
+                }
+                for row in qs
+            ]
+        else:
+            qs = (base_qs
                   .values('date')
-                  .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
-        avg_map = {x['date']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
+                  .annotate(duree_minutes=Sum('duree_minutes'))
+                  .order_by('date'))
+            avg_qs = (Tache.objects
+                      .values('date')
+                      .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
+            avg_map = {x['date']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
 
-        return [
-            {
-                'date': row['date'],
-                'duree_minutes': row['duree_minutes'] or 0,
-                'moyenne_duree_minutes': avg_map.get(row['date'], 0)
-            }
-            for row in qs
-        ]
+            return [
+                {
+                    'date': row['date'],
+                    'duree_minutes': row['duree_minutes'] or 0,
+                    'moyenne_duree_minutes': avg_map.get(row['date'], 0)
+                }
+                for row in qs
+            ]
 
 
 class TempsTravailCardsDashboardSerializer(serializers.Serializer):
