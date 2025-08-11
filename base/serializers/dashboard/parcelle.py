@@ -15,7 +15,7 @@ class ParcellesDashboardSerializer(serializers.Serializer):
             .prefetch_related('cultures', 'parcelles') \
             .filter(ferme=ferme)
 
-        base_qs = apply_common_filters_dashboard(base_qs, params)
+        base_qs = apply_common_filters_dashboard(base_qs, params, False)
 
         qs = (base_qs
               .values('parcelles__nom')

@@ -16,7 +16,7 @@ class ActivitesDashboardSerializer(serializers.Serializer):
             .prefetch_related('cultures', 'parcelles') \
             .filter(ferme=ferme)
 
-        base_qs = apply_common_filters_dashboard(base_qs, params)
+        base_qs = apply_common_filters_dashboard(base_qs, params, False)
 
         qs = (base_qs
               .values('activite__activiteferme__categorie')
@@ -27,7 +27,7 @@ class ActivitesDashboardSerializer(serializers.Serializer):
                   .values('activite__activiteferme__categorie')
                   .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
         avg_map = {x['activite__activiteferme__categorie']: x['moyenne_duree_minutes'] for x in
-                   apply_common_filters_dashboard(avg_qs, params)}
+                   apply_common_filters_dashboard(avg_qs, params, True)}
 
         return [
             {

@@ -21,7 +21,7 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
             .prefetch_related('cultures', 'parcelles') \
             .filter(ferme=ferme)
 
-        base_qs = apply_common_filters_dashboard(base_qs, params)
+        base_qs = apply_common_filters_dashboard(base_qs, params, False)
 
         periode = params.get('periode')
         if periode and periode == 'mois':
@@ -34,7 +34,7 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
                       .annotate(mois=TruncMonth('date'))
                       .values('mois')
                       .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
-            avg_map = {x['mois']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
+            avg_map = {x['mois']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params, True)}
             return [
                 {
                     'date': row['mois'].strftime("%d/%m/%Y"),
@@ -51,7 +51,7 @@ class DureeParJourDashboardSerializer(serializers.Serializer):
             avg_qs = (Tache.objects
                       .values('date')
                       .annotate(moyenne_duree_minutes=Avg('duree_minutes')))
-            avg_map = {x['date']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params)}
+            avg_map = {x['date']: x['moyenne_duree_minutes'] for x in apply_common_filters_dashboard(avg_qs, params, True)}
 
             return [
                 {
@@ -88,10 +88,10 @@ class TempsTravailCardsDashboardSerializer(serializers.Serializer):
             .prefetch_related('cultures__culture', 'parcelles') \
             .filter(ferme=ferme)
 
-        base_qs = apply_common_filters_dashboard(base_qs, params)
+        base_qs = apply_common_filters_dashboard(base_qs, params, False)
 
         duree_totale = base_qs.aggregate(total=Sum('duree_minutes'))['total'] or 0
-        moyenne_totale = apply_common_filters_dashboard(Tache.objects, params).aggregate(avg=Avg('duree_minutes'))[
+        moyenne_totale = apply_common_filters_dashboard(Tache.objects, params, False).aggregate(avg=Avg('duree_minutes'))[
                              'avg'] or 0
 
         activite_chronophage = get_one_or_none(Activite, id=top_item(base_qs, 'activite__id', Sum))

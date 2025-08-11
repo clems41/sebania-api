@@ -2,7 +2,7 @@ import datetime
 
 from django.db.models import Q
 
-def apply_common_filters_dashboard(queryset, params):
+def apply_common_filters_dashboard(queryset, params, skip_parcelle: bool):
     date_debut = params.get('date_debut')
     date_fin = params.get('date_fin')
     culture_id = params.get('culture_id')
@@ -20,7 +20,7 @@ def apply_common_filters_dashboard(queryset, params):
     if activite_id:
         queryset = queryset.filter(activite_id=activite_id)
 
-    if parcelle_id:
+    if parcelle_id and not skip_parcelle:
         queryset = queryset.filter(
             Q(parcelles__id=parcelle_id) |
             Q(cultures__parcelles__id=parcelle_id)
