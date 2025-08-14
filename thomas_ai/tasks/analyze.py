@@ -1,5 +1,7 @@
 import json
+import logging
 from datetime import datetime
+from json import JSONDecodeError
 
 from background_task import background
 from django.conf import settings
@@ -11,6 +13,9 @@ from sebania.exceptions.custom_exception import CustomException
 from sebania.exceptions.error_code import ErrorCode
 from sebania.utils.db_utils import get_ferme_for_user
 from thomas_ai.tasks.extract import extract
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 mistral_api_key = settings.MISTRAL_API_KEY
 mistral_client = Mistral(api_key=mistral_api_key)
@@ -54,7 +59,16 @@ def analyze(vocal_id: int):
     vocal.transcription_to_output_duration = duration
     vocal.analyzed_at = timezone.now()
     if (output is not None) and (output != ''):
-        vocal.output = json.loads(output)
+        try:
+            vocal.output = json.loads(output)
+        except JSONDecodeError as e:
+            error_msg = "Impossible de décoder l'output {} : {}".format(output, e.msg)
+            logger.error(error_msg)
+            vocal.finished_at = timezone.now()
+            vocal.errors = error_msg
+            vocal.save()
+            return
+
     vocal.save()
 
     # Envoi dans la queue suivante pour l'extraction des tâches à partir du JSON généré
