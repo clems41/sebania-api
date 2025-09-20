@@ -68,7 +68,7 @@ class ParcelleSerializer(serializers.ModelSerializer):
 
 
 class ParcelleOutputSerializer(serializers.ModelSerializer):
-    type = serializers.CharField()
+    type = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = Parcelle
@@ -77,7 +77,10 @@ class ParcelleOutputSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ferme = self.context.get("ferme")
         type_nom = validated_data.pop("type")
-        type_parcelle = db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.TYPE_PARCELLE_NOM_NOT_FOUND, type_nom), nom__iexact=type_nom)
+        if type_nom is None:
+            type_parcelle = db_utils.get_one_or_raise_exception(TypeParcelle, CustomException(ErrorCode.TYPE_PARCELLE_NOM_NOT_FOUND, type_nom), nom__iexact=type_nom)
+        else:
+            type_parcelle = TypeParcelle.objects.get(id=1)
         parcelle = Parcelle.objects.create(ferme=ferme, type=type_parcelle, **validated_data)
         parcelle.fill_empty_fields(all_fields=True)
         return parcelle

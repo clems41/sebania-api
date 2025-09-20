@@ -829,6 +829,23 @@ class TestExtractParcelle(TaskTestcase):
         ]
         self._run_testcase(output, expected_entities)
 
+    def test_extract_parcelles_missing_type_ok(self):
+        output = [{"nom": "Nord Ouest", "type": "", "largeur": 30, "longueur": 100, "superficie": 0, "largeur_planche": 0.8, "nombre_planches": 30, "largeur_passe_pieds": 0}]
+        expected_entities = [
+            {
+                "nom": "Nord Ouest",
+                "longueur": 100.0,
+                "largeur": 30.0,
+                "superficie": 3000.0,
+                "nombre_planches": 30.0,
+                "largeur_planche": 0.8,
+                "largeur_passe_pieds": 0.2,
+                "type_id": 1,
+                "superficie_cultivee": 2400.0
+            },
+        ]
+        self._run_testcase(output, expected_entities)
+
     def test_minimum_ok(self):
         output = [
             {
@@ -855,22 +872,6 @@ class TestExtractParcelle(TaskTestcase):
                 "superficie_cultivee": None
             },
         ]
-        self._run_testcase(output, expected_entities)
-
-    def test_type_vide_nok(self):
-        output = [
-            {
-                "nom": "Bloc Ouest A",
-                "longueur": 60,
-                "largeur": 30,
-                "superficie": 1800,
-                "nombre_planches": 30,
-                "largeur_planche": 0.8,
-                "largeur_passe_pieds": 0.2,
-                "type": ""
-            },
-        ]
-        expected_entities = []
         self._run_testcase(output, expected_entities)
 
     def _run_testcase(self, output: {}, expected_entities):
