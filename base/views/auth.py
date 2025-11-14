@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.decorators import action
@@ -23,6 +24,22 @@ class AuthViewSet(ViewSet):
         responsable = register_user_data.save()
         serializer = UserSerializer(responsable)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @extend_schema(description="Désactivation du compte utilisateur (soft delete)")
+    @action(detail=False, methods=['delete'], url_path='account', serializer_class=None, url_name="account",
+            basename="auth-account")
+    def delete_account(self, request):
+        user = request.user
+
+        # Désactiver le compte utilisateur
+        user.is_active = False
+        user.deleted_at = timezone.now()
+        user.save()
+
+        # Déconnecter l'utilisateur
+        logout(request)
+
+        return Response(status=status.HTTP_200_OK)
 
     @extend_schema(description="Déconnexion de l'utilisateur avec suppression de sa session et des données en cache")
     @action(detail=False, methods=['put'], url_path='logout', serializer_class=None, url_name="logout",
